@@ -1,0 +1,53 @@
+# robots.txt for MeasureApp Landing Page
+# https://endless-measureapp.netlify.app/
+
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://endless-measureapp.netlify.app/sitemap.xml
+
+# クロール速度の調整（オプション）
+Crawl-delay: 1
+
+# 特定のボットの設定
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Slurp
+Allow: /
+
+# AI クローラー
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+User-agent: Claude-Web
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+# ブロックするボット（スパム対策）
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
