@@ -142,9 +142,192 @@
             border-top: 2px solid #FFE5F0;
             background: linear-gradient(135deg, #FFE5F0 0%, #E5F4FF 50%, #FFF8E5 100%);
         }
+    
+        /* ナビゲーション */
+        nav {
+            background: linear-gradient(135deg, #FFE5F0 0%, #E5F4FF 100%);
+            padding: 20px;
+            border-bottom: 2px solid var(--color-primary);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF1493 0%, #FFB6D9 50%, #B4E4FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--color-primary);
+        }
+
+        /* サムネイル画像 */
+        .article-thumbnail {
+            width: 100%;
+            height: 300px;
+            border-radius: 20px;
+            margin: 40px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .article-thumbnail::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+        }
+
+        .article-thumbnail::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(255, 255, 255, 0.03) 20px,
+                rgba(255, 255, 255, 0.03) 40px
+            );
+        }
+
+        .thumbnail-icon {
+            font-size: 8rem;
+            color: white;
+            opacity: 0.3;
+            z-index: 1;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .thumbnail-badge {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 8px 18px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        /* おすすめコラム */
+        .recommended-column {
+            margin-top: 80px;
+            padding: 40px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 30px rgba(0,0,0,0.1);
+        }
+
+        .recommended-column h3 {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .recommended-card {
+            display: flex;
+            gap: 30px;
+            text-decoration: none;
+            color: var(--color-text);
+            transition: all 0.3s ease;
+        }
+
+        .recommended-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .recommended-thumbnail {
+            width: 200px;
+            height: 150px;
+            border-radius: 12px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recommended-thumbnail::before {
+            content: '';
+            position: absolute;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
+            width: 100%;
+            height: 100%;
+        }
+
+        .recommended-icon {
+            font-size: 4rem;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .recommended-content h4 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+        }
+
+        .recommended-content p {
+            color: var(--color-text-light);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { gap: 15px; font-size: 0.9rem; }
+            .recommended-card { flex-direction: column; }
+            .recommended-thumbnail { width: 100%; }
+        }
+
     </style>
 </head>
 <body>
+    <nav>
+        <div class="nav-container">
+            <a href="../index.html" class="nav-logo">Endless Flight</a>
+            <div class="nav-links">
+                <a href="../index.html">Top</a>
+                <a href="index.html">コラム</a>
+                <a href="../lp/">アプリ</a>
+                <a href="https://note.com/endless_flight" target="_blank">Note</a>
+            </div>
+        </div>
+    </nav>
+
+
     <div class="container">
         <header>
             <a href="index.html" class="back-link">← コラム一覧に戻る</a>
