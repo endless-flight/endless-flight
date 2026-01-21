@@ -82,11 +82,23 @@
             padding: 80px 20px;
             text-align: center;
             background: linear-gradient(135deg, #FFFBF5 0%, #FFF8F0 100%);
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .logo-svg {
             width: 200px;
             height: 200px;
+            margin: 0 auto 30px;
+            display: block;
+        }
+
+        .logo-image {
+            width: 300px;
+            height: 300px;
             margin: 0 auto 30px;
             display: block;
             filter: drop-shadow(0 4px 15px rgba(255, 20, 147, 0.2));
@@ -107,6 +119,46 @@
             color: var(--color-text-light);
             margin-bottom: 20px;
             font-weight: 600;
+        }
+
+        /* スクロールインジケーター */
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            animation: bounce 2s infinite;
+            cursor: pointer;
+        }
+
+        .scroll-indicator span {
+            color: var(--color-text-light);
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .scroll-arrow {
+            width: 30px;
+            height: 30px;
+            border-left: 3px solid var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            transform: rotate(-45deg);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
         }
 
         /* コラムセクション */
@@ -609,14 +661,27 @@
         }
 
         @media (max-width: 768px) {
+            .nav-logo { font-size: 1.2rem; }
             .nav-links { gap: 15px; font-size: 0.9rem; }
+            .logo-section { 
+                padding: 60px 15px;
+                min-height: 80vh;
+            }
+            .logo-svg,
+            .logo-image { 
+                width: 200px; 
+                height: 200px; 
+            }
             .logo-section h2 { font-size: 2rem; }
+            .logo-subtitle { font-size: 1rem; }
             .section-title { font-size: 2rem; }
             .articles-grid { grid-template-columns: 1fr; }
             .app-card { flex-direction: column; padding: 30px; }
             .app-image { width: 200px; height: 200px; font-size: 3rem; }
             .column-section { padding: 40px 15px; }
             .other-section { padding: 40px 15px; }
+            .scroll-indicator span { font-size: 0.8rem; }
+            .scroll-arrow { width: 25px; height: 25px; }
         }
     </style>
 </head>
@@ -636,34 +701,16 @@
 
     <!-- ロゴセクション -->
     <section class="logo-section">
-        <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style="stop-color:#FF1493"/>
-                    <stop offset="50%" style="stop-color:#FFB6D9"/>
-                    <stop offset="100%" style="stop-color:#B4E4FF"/>
-                </linearGradient>
-            </defs>
-            <rect x="40" y="50" width="80" height="15" fill="url(#logoGradient)"/>
-            <rect x="40" y="50" width="15" height="100" fill="url(#logoGradient)"/>
-            <rect x="40" y="92.5" width="60" height="15" fill="url(#logoGradient)"/>
-            <rect x="40" y="135" width="80" height="15" fill="url(#logoGradient)"/>
-            <rect x="130" y="50" width="15" height="100" fill="url(#logoGradient)"/>
-            <rect x="130" y="50" width="70" height="15" fill="url(#logoGradient)"/>
-            <rect x="130" y="92.5" width="50" height="15" fill="url(#logoGradient)"/>
-            <line x1="100" y1="70" x2="170" y2="70" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="90" y1="80" x2="160" y2="80" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="80" y1="90" x2="150" y2="90" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="70" y1="100" x2="140" y2="100" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="60" y1="110" x2="130" y2="110" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="50" y1="120" x2="120" y2="120" stroke="url(#logoGradient)" stroke-width="3"/>
-            <line x1="40" y1="130" x2="110" y2="130" stroke="url(#logoGradient)" stroke-width="3"/>
-        </svg>
-        <h2>Endless Flight</h2>
-        <p class="logo-subtitle">エンドレスフライト</p>
-        <p style="max-width: 600px; margin: 0 auto; color: var(--color-text-light); font-size: 1.05rem;">「とりあえず触ってみよう」でAI、Python学習を始めました。<br>
+        <img src="endless-flight-logo.png" class="logo-image" alt="Endless Flight">
+        <p style="max-width: 600px; margin: 0 auto; color: var(--color-text-light); font-size: 1.05rem; margin-top: 40px;">「とりあえず触ってみよう」でAI、Python学習を始めました。<br>
         日常のちょっとした作業や推し活をAIやPythonで楽にできないか、試行錯誤中。<br>
         できるようになったことも、つまずいたことも等身大で記録していきます。</p>
+        
+        <!-- スクロールインジケーター -->
+        <div class="scroll-indicator" onclick="document.querySelector('.column-section').scrollIntoView({behavior: 'smooth'})">
+            <span>Scroll</span>
+            <div class="scroll-arrow"></div>
+        </div>
     </section>
 
     <!-- コラムセクション -->
