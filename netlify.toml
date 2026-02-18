@@ -1,16 +1,41 @@
-[build]
-  publish = "."
-  command = ""
+# =============================================================
+# netlify.toml — Netlify デプロイ設定
+# リポジトリのルート（mobile-order.html と同じ階層）に置く
+# =============================================================
 
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
-
+# -------------------------------------------------------------
+# 全ページ共通のセキュリティヘッダー
+# -------------------------------------------------------------
 [[headers]]
   for = "/*"
   [headers.values]
+    # クリックジャッキング防止（iframe埋め込みを全拒否）
     X-Frame-Options = "DENY"
+
+    # MIMEスニッフィング防止
     X-Content-Type-Options = "nosniff"
-    Referrer-Policy = "no-referrer"
-    X-XSS-Protection = "1; mode=block"
+
+    # リファラー情報の漏洩を最小化
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # 不要なブラウザ機能を無効化
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=()"
+
+# -------------------------------------------------------------
+# ユーザー向けページ（mobile-order.html）
+# -------------------------------------------------------------
+[[headers]]
+  for = "/mobile-order.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com; img-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'self'"
+
+# -------------------------------------------------------------
+# 管理画面（admin-dc1f18ba.html）
+# 検索エンジンへのインデックスを拒否 + より厳格な CSP
+# -------------------------------------------------------------
+[[headers]]
+  for = "/admin-dc1f18ba.html"
+  [headers.values]
+    Content-Security-Policy = "default-src 'self'; script-src 'self' 'unsafe-inline' https://www.gstatic.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src https://*.firebaseio.com wss://*.firebaseio.com https://*.googleapis.com https://identitytoolkit.googleapis.com https://securetoken.googleapis.com; img-src 'self' data:; frame-src 'none'; object-src 'none'; base-uri 'self'"
+    # 検索エンジンにインデックスさせない
+    X-Robots-Tag = "noindex, nofollow"
