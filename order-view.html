@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>注文確認 | Mobile Order</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Cormorant+Garamond:wght@400;600&display=swap" rel="stylesheet">
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import { getDatabase, ref, get, update } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+  // ============================================================
+  // 🔥 FIREBASE CONFIG — admin-dc1f18ba.html・mobile-order.html と同じ値
+  // ============================================================
+  const firebaseConfig = {
+    apiKey:            "AIzaSyAREokLFrgO_Wh6x0Dobm4a-oUPOonXu94",
+    authDomain:        "mobaileordersystem.firebaseapp.com",
+    databaseURL:       "https://mobaileordersystem-default-rtdb.firebaseio.com",
+    projectId:         "mobaileordersystem",
+    storageBucket:     "mobaileordersystem.firebasestorage.app",
+    messagingSenderId: "280115059343",
+    appId:             "1:280115059343:web:f3dc729af540662722eefa"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db  = getDatabase(app);
+
+  // ============================================================
+  // QRコードを読んだときのURL例:
+  //   order-view.html?id=-OKxxx...（FirebaseのキーがorderId）
+  // URLパラメータから orderId を取得して Firebase を照合
+  // ============================================================
+  window.addEventListener('DOMContentLoaded', async () => {
+    const params  = new URLSearchParams(window.location.search);
+    const orderId = params.get('id');
+
+    if (!orderId) {
+      showState('empty');
+      return;
+    }
+
+    // orderId を表示
+    document.getElementById('order-id-display').textContent = orderId;
+    showState('loading');
+
+    try {
+      const snap = await get(ref(db, 'orders/' + orderId));
+      if (!snap.exists()) {
+        showState('notfound');
+        return;
+      }
+
+      const order = snap.val();
+      renderOrder(orderId, order);
+      showState('found');
+    } catch (e) {
+      console.error(e);
+      showState('error');
+    }
+  });
+
+  // 注文を「対応済み」に更新
+  window.markDone = async () => {
+    const params  = new URLSearchParams(window.location.search);
+    const orderId = params.get('id');
+    if (!orderId) return;
+
+    const btn = document.getElementById('done-btn');
+    btn.disabled = true;
+    btn.textContent = '更新中...';
+
+    try {
+      await update(ref(db, 'orders/' + orderId), { status: 'done', doneAt: new Date().toISOString() });
+      btn.textContent = '✅ 対応済みにしました';
+      btn.style.background = '#059669';
+      document.getElementById('status-badge').textContent = '対応済み';
+      document.getElementById('status-badge').className = 'status-badge done';
+    } catch (e) {
+      btn.disabled = false;
+      btn.textContent = '対応済みにする';
+      alert('更新に失敗しました: ' + e.message);
+    }
+  };
+
+  function renderOrder(orderId, order) {
+    // ステータスバッジ
+    const badge = document.getElementById('status-badge');
+    if (order.status === 'done') {
+      badge.textContent = '対応済み';
+      badge.className = 'status-badge done';
+      document.getElementById('done-btn').textContent = '✅ 対応済み';
+      document.getElementById('done-btn').disabled = true;
+      document.getElementById('done-btn').style.background = '#059669';
+    } else {
+      badge.textContent = '未対応';
+      badge.className = 'status-badge pending';
+    }
+
+    // 注文時刻
+    if (order.createdAt) {
+      const d = new Date(order.createdAt);
+      document.getElementById('order-time').textContent =
+        d.toLocaleTimeString('ja-JP', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // 商品リスト
+    const items = order.items || [];
+    document.getElementById('item-list').innerHTML = items.map(item => `
+      <div class="item-row">
+        <div class="item-name">${escHtml(item.name ?? '不明な商品')}</div>
+        <div class="item-right">
+          <div class="item-qty">× ${item.qty}</div>
+          <div class="item-price">¥${((item.price ?? 0) * item.qty).toLocaleString()}</div>
+        </div>
+      </div>
+    `).join('');
+
+    // 合計
+    document.getElementById('total-display').textContent = `¥${(order.total ?? 0).toLocaleString()}`;
+  }
+
+  function showState(state) {
+    ['loading','found','notfound','empty','error'].forEach(s => {
+      document.getElementById('state-' + s).style.display = 'none';
+    });
+    document.getElementById('state-' + state).style.display = 'flex';
+  }
+
+  function escHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+  }
+</script>
+
+<style>
+  :root {
+    --primary: #c0003c;
+    --primary-pale: #fff0f3;
+    --bg: #fafaf9;
+    --surface: #ffffff;
+    --surface2: #f5f4f2;
+    --border: #e8e4df;
+    --text: #1a1714;
+    --text-muted: #8a847e;
+    --text-light: #b5afa9;
+    --green: #059669;
+    --green-pale: #ecfdf5;
+    --shadow: rgba(26,23,20,0.07);
+    --shadow-md: rgba(26,23,20,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  body {
+    font-family: 'Noto Sans JP', sans-serif;
+    background: var(--bg); color: var(--text);
+    min-height: 100dvh; max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* HEADER */
+  .header {
+    background: rgba(250,250,249,0.97);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 18px; height: 58px;
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 10;
+    box-shadow: 0 1px 8px var(--shadow);
+  }
+
+  .header-logo { font-family: 'Cormorant Garamond', serif; font-size: 16px; font-weight: 600; letter-spacing: 3px; color: var(--primary); }
+  .header-sub { font-size: 9px; letter-spacing: 1.5px; color: var(--text-muted); text-transform: uppercase; margin-top: 1px; }
+  .header-role { font-size: 11px; color: var(--text-muted); background: var(--surface2); border: 1px solid var(--border); padding: 4px 10px; border-radius: 20px; }
+
+  /* MAIN */
+  .main { padding: 20px 18px 40px; }
+
+  /* STATES */
+  .state {
+    display: none; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 60px 20px; text-align: center; gap: 12px;
+  }
+
+  .state-icon { font-size: 56px; opacity: 0.25; }
+  .state-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .state-desc { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
+
+  /* SPINNER */
+  .spinner {
+    width: 40px; height: 40px;
+    border: 3px solid var(--border);
+    border-top-color: var(--primary);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ORDER CARD */
+  .order-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; overflow: hidden;
+    box-shadow: 0 4px 20px var(--shadow-md);
+    margin-bottom: 16px;
+    animation: fadeIn 0.25s ease;
+  }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* ORDER HEADER */
+  .order-header {
+    background: linear-gradient(135deg, #fff 0%, #fff8f9 100%);
+    padding: 20px 20px 16px; border-bottom: 1px solid var(--border);
+  }
+
+  .order-header-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+  .order-label { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; }
+
+  .order-id {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; letter-spacing: 2px; color: var(--text-muted);
+    word-break: break-all;
+  }
+
+  .status-badge {
+    font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px;
+    flex-shrink: 0; margin-left: 10px;
+  }
+  .status-badge.pending { background: #fff7ed; color: #c2410c; border: 1px solid rgba(194,65,12,0.2); }
+  .status-badge.done    { background: var(--green-pale); color: var(--green); border: 1px solid rgba(5,150,105,0.2); }
+
+  .order-time-row { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
+
+  /* ITEMS */
+  .items-section { padding: 16px 20px; }
+  .items-title { font-size: 10px; letter-spacing: 2px; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 12px; }
+
+  .item-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 11px 0; border-bottom: 1px solid var(--border);
+  }
+  .item-row:last-child { border-bottom: none; }
+
+  .item-name { font-size: 14px; font-weight: 700; flex: 1; line-height: 1.4; }
+  .item-right { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .item-qty { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+  .item-price { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: var(--primary); }
+
+  /* TOTAL */
+  .total-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 20px; background: var(--surface2);
+    border-top: 1px solid var(--border);
+  }
+  .total-label { font-size: 13px; font-weight: 700; color: var(--text); }
+  .total-amount { font-family: 'Cormorant Garamond', serif; font-size: 32px; font-weight: 600; color: var(--primary); line-height: 1; }
+
+  /* DONE BUTTON */
+  .done-btn {
+    display: block; width: 100%;
+    background: var(--primary); color: #fff;
+    border: none; border-radius: 14px; padding: 17px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 14px; font-weight: 700; letter-spacing: 1px;
+    cursor: pointer; transition: background 0.2s, transform 0.12s;
+    box-shadow: 0 4px 14px rgba(192,0,60,0.22);
+    margin-bottom: 12px;
+  }
+  .done-btn:hover { background: #e8003d; }
+  .done-btn:active { transform: scale(0.98); }
+  .done-btn:disabled { opacity: 0.7; cursor: not-allowed; transform: none; }
+
+  .note {
+    font-size: 11px; color: var(--text-light); text-align: center; line-height: 1.6; padding: 0 8px;
+  }
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div>
+    <div class="header-logo">Order View</div>
+    <div class="header-sub">Staff Only</div>
+  </div>
+  <div class="header-role">販売スタッフ用</div>
+</header>
+
+<main class="main">
+
+  <!-- ローディング -->
+  <div class="state" id="state-loading" style="display:flex;">
+    <div class="spinner"></div>
+    <div class="state-title">注文を照会中...</div>
+  </div>
+
+  <!-- 注文が見つかった -->
+  <div class="state" id="state-found" style="display:none; flex-direction:column; align-items:stretch; padding:20px 0;">
+
+    <div class="order-card">
+      <!-- ヘッダー -->
+      <div class="order-header">
+        <div class="order-header-top">
+          <div>
+            <div class="order-label">Order ID</div>
+            <div class="order-id" id="order-id-display">—</div>
+          </div>
+          <div class="status-badge pending" id="status-badge">未対応</div>
+        </div>
+        <div class="order-time-row">
+          🕐 注文時刻：<strong id="order-time">—</strong>
+        </div>
+      </div>
+
+      <!-- 商品リスト -->
+      <div class="items-section">
+        <div class="items-title">注文内容</div>
+        <div id="item-list"></div>
+      </div>
+
+      <!-- 合計 -->
+      <div class="total-row">
+        <div class="total-label">お支払い合計</div>
+        <div class="total-amount" id="total-display">¥0</div>
+      </div>
+    </div>
+
+    <!-- 対応済みボタン -->
+    <button class="done-btn" id="done-btn" onclick="markDone()">
+      対応済みにする
+    </button>
+    <div class="note">
+      決済タブレットへの入力・決済完了後に<br>「対応済み」にしてください
+    </div>
+  </div>
+
+  <!-- 注文が見つからない -->
+  <div class="state" id="state-notfound">
+    <div class="state-icon">🔍</div>
+    <div class="state-title">注文が見つかりません</div>
+    <div class="state-desc">このQRコードの注文データが存在しません。<br>お客様に再度QRを生成してもらってください。</div>
+  </div>
+
+  <!-- QRなしで直接アクセス -->
+  <div class="state" id="state-empty">
+    <div class="state-icon">📱</div>
+    <div class="state-title">QRコードを読み取ってください</div>
+    <div class="state-desc">お客様のスマホに表示された<br>QRコードをカメラで読み取ってください。</div>
+  </div>
+
+  <!-- エラー -->
+  <div class="state" id="state-error">
+    <div class="state-icon">⚠️</div>
+    <div class="state-title">接続エラー</div>
+    <div class="state-desc">Firebase への接続に失敗しました。<br>ネットワーク状況を確認して再度読み取ってください。</div>
+  </div>
+
+</main>
+
+</body>
+</html>
