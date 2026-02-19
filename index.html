@@ -150,15 +150,9 @@
         }
 
         @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {
-                transform: translateX(-50%) translateY(0);
-            }
-            40% {
-                transform: translateX(-50%) translateY(-10px);
-            }
-            60% {
-                transform: translateX(-50%) translateY(-5px);
-            }
+            0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+            40% { transform: translateX(-50%) translateY(-10px); }
+            60% { transform: translateX(-50%) translateY(-5px); }
         }
 
         /* コラムセクション */
@@ -244,45 +238,24 @@
             justify-content: center;
         }
 
-        .article-thumbnail.tech {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
+        .article-thumbnail.tech { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .article-thumbnail.oshi { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .article-thumbnail.investment { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
 
-        .article-thumbnail.oshi {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .article-thumbnail.investment {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        /* グラデーションオーバーレイ効果 */
         .article-thumbnail::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(circle at 30% 50%, rgba(255, 255, 255, 0.2) 0%, transparent 60%);
             opacity: 0.6;
         }
 
-        /* 幾何学パターン */
         .article-thumbnail::after {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 20px,
-                rgba(255, 255, 255, 0.03) 20px,
-                rgba(255, 255, 255, 0.03) 40px
-            );
+            top: -50%; right: -50%;
+            width: 200%; height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 20px, rgba(255, 255, 255, 0.03) 20px, rgba(255, 255, 255, 0.03) 40px);
         }
 
         .thumbnail-icon {
@@ -293,11 +266,9 @@
             filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
         }
 
-        /* プレミアムバッジ風のカテゴリ */
         .article-category {
             position: absolute;
-            top: 15px;
-            left: 15px;
+            top: 15px; left: 15px;
             padding: 8px 18px;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
@@ -308,32 +279,11 @@
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
 
-        .article-category.tech {
-            color: #667eea;
-        }
+        .article-category.tech { color: #667eea; }
+        .article-category.oshi { color: #f5576c; }
+        .article-category.investment { color: #00f2fe; }
 
-        .article-category.oshi {
-            color: #f5576c;
-        }
-
-        .article-category.investment {
-            color: #00f2fe;
-        }
-
-        .article-category {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            padding: 6px 16px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 700;
-        }
-
-        .article-content {
-            padding: 25px;
-        }
+        .article-content { padding: 25px; }
 
         .article-title {
             font-family: var(--font-heading);
@@ -359,13 +309,8 @@
             letter-spacing: 0.5px;
         }
 
-        .article-badge.popular {
-            background: linear-gradient(135deg, #FF6B6B 0%, #FF1493 100%);
-        }
-
-        .article-badge.new {
-            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
-        }
+        .article-badge.popular { background: linear-gradient(135deg, #FF6B6B 0%, #FF1493 100%); }
+        .article-badge.new { background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%); }
 
         .article-description {
             color: var(--color-text-light);
@@ -390,11 +335,7 @@
             margin-bottom: 30px;
         }
 
-        .ranking-list {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
+        .ranking-list { display: flex; flex-direction: column; gap: 20px; }
 
         .ranking-item {
             display: flex;
@@ -414,8 +355,7 @@
         }
 
         .ranking-number {
-            width: 50px;
-            height: 50px;
+            width: 50px; height: 50px;
             background: linear-gradient(135deg, var(--color-accent) 0%, #FFAA2C 100%);
             color: white;
             border-radius: 50%;
@@ -427,36 +367,14 @@
             flex-shrink: 0;
         }
 
-        .ranking-item:first-child .ranking-number {
-            background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%);
-        }
+        .ranking-item:first-child .ranking-number { background: linear-gradient(135deg, #FFD700 0%, #FFA500 100%); }
+        .ranking-item:nth-child(2) .ranking-number { background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%); }
+        .ranking-item:nth-child(3) .ranking-number { background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%); }
 
-        .ranking-item:nth-child(2) .ranking-number {
-            background: linear-gradient(135deg, #C0C0C0 0%, #A8A8A8 100%);
-        }
+        .ranking-content h3 { font-family: var(--font-heading); font-size: 1.1rem; font-weight: 700; margin-bottom: 5px; }
+        .ranking-content p { font-size: 0.9rem; color: var(--color-text-light); }
 
-        .ranking-item:nth-child(3) .ranking-number {
-            background: linear-gradient(135deg, #CD7F32 0%, #B87333 100%);
-        }
-
-        .ranking-content h3 {
-            font-family: var(--font-heading);
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .ranking-content p {
-            font-size: 0.9rem;
-            color: var(--color-text-light);
-        }
-
-        /* セクションリンク */
-        .section-link {
-            text-align: center;
-            margin-top: 40px;
-        }
-
+        .section-link { text-align: center; margin-top: 40px; }
         .section-link a {
             display: inline-block;
             padding: 15px 40px;
@@ -468,11 +386,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
-
-        .section-link a:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 20px rgba(255, 20, 147, 0.4);
-        }
+        .section-link a:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(255, 20, 147, 0.4); }
 
         /* アプリ・Noteセクション */
         .other-section {
@@ -495,8 +409,7 @@
         }
 
         .app-image {
-            width: 300px;
-            height: 300px;
+            width: 300px; height: 300px;
             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
             border-radius: 20px;
             display: flex;
@@ -508,44 +421,26 @@
             overflow: hidden;
         }
 
-        /* グラデーションオーバーレイ */
         .app-image::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.3) 0%, transparent 70%);
         }
 
-        /* 幾何学パターン */
         .app-image::after {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                45deg,
-                transparent,
-                transparent 30px,
-                rgba(255, 255, 255, 0.05) 30px,
-                rgba(255, 255, 255, 0.05) 60px
-            );
+            top: -50%; right: -50%;
+            width: 200%; height: 200%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 30px, rgba(255, 255, 255, 0.05) 30px, rgba(255, 255, 255, 0.05) 60px);
         }
 
-        .app-icon {
-            font-size: 8rem;
-            filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2));
-            z-index: 1;
-        }
+        .app-icon { font-size: 8rem; filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.2)); z-index: 1; }
 
         .app-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
+            top: 20px; right: 20px;
             padding: 8px 20px;
             background: linear-gradient(135deg, #FF6B6B 0%, #FF1493 100%);
             color: white;
@@ -558,12 +453,7 @@
             box-shadow: 0 4px 15px rgba(255, 20, 147, 0.4);
         }
 
-        .app-content h3 {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-        }
+        .app-content h3 { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; margin-bottom: 20px; }
 
         .note-card {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -575,63 +465,26 @@
             overflow: hidden;
         }
 
-        /* グラデーションオーバーレイ */
         .note-card::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            top: 0; left: 0; right: 0; bottom: 0;
             background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.15) 0%, transparent 60%);
         }
 
-        /* 幾何学パターン */
         .note-card::after {
             content: '';
             position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 40px,
-                rgba(255, 255, 255, 0.03) 40px,
-                rgba(255, 255, 255, 0.03) 80px
-            );
+            top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: repeating-linear-gradient(-45deg, transparent, transparent 40px, rgba(255, 255, 255, 0.03) 40px, rgba(255, 255, 255, 0.03) 80px);
         }
 
-        .note-card h3 {
-            font-family: var(--font-heading);
-            font-size: 2rem;
-            font-weight: 800;
-            margin-bottom: 20px;
-            color: white;
-            position: relative;
-            z-index: 1;
-        }
+        .note-card h3 { font-family: var(--font-heading); font-size: 2rem; font-weight: 800; margin-bottom: 20px; color: white; position: relative; z-index: 1; }
+        .note-card p { color: rgba(255, 255, 255, 0.9); margin-bottom: 30px; font-size: 1.05rem; position: relative; z-index: 1; }
+        .note-card a { position: relative; z-index: 1; }
 
-        .note-card p {
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 30px;
-            font-size: 1.05rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .note-card a {
-            position: relative;
-            z-index: 1;
-        }
-
-        .note-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            display: block;
-            filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2));
-        }
+        .note-icon { font-size: 4rem; margin-bottom: 20px; display: block; filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.2)); }
 
         .note-badge {
             display: inline-block;
@@ -654,24 +507,13 @@
             border-top: 3px solid var(--color-primary);
         }
 
-        footer a {
-            color: var(--color-primary);
-            text-decoration: none;
-            font-weight: 600;
-        }
+        footer a { color: var(--color-primary); text-decoration: none; font-weight: 600; }
 
         @media (max-width: 768px) {
             .nav-logo { font-size: 1.2rem; }
-            .nav-links { gap: 15px; font-size: 0.9rem; }
-            .logo-section { 
-                padding: 60px 15px;
-                min-height: 80vh;
-            }
-            .logo-svg,
-            .logo-image { 
-                width: 200px; 
-                height: 200px; 
-            }
+            .nav-links { gap: 12px; font-size: 0.85rem; }
+            .logo-section { padding: 60px 15px; min-height: 80vh; }
+            .logo-svg, .logo-image { width: 200px; height: 200px; }
             .logo-section h2 { font-size: 2rem; }
             .logo-subtitle { font-size: 1rem; }
             .section-title { font-size: 2rem; }
@@ -695,6 +537,7 @@
                 <a href="column/">コラム</a>
                 <a href="lp/">アプリ</a>
                 <a href="https://note.com/endless_flight" target="_blank">Note</a>
+                <a href="mobile-order-lp.html">ライブ物販</a>
             </div>
         </div>
     </nav>
@@ -706,7 +549,6 @@
         日常のちょっとした作業や推し活をAIやPythonで楽にできないか、試行錯誤中。<br>
         できるようになったことも、つまずいたことも等身大で記録していきます。</p>
         
-        <!-- スクロールインジケーター -->
         <div class="scroll-indicator" onclick="document.querySelector('.column-section').scrollIntoView({behavior: 'smooth'})">
             <span>Scroll</span>
             <div class="scroll-arrow"></div>
@@ -720,7 +562,6 @@
             <p style="color: var(--color-text-light); font-size: 1.05rem;">AI・Python学習、推し活をテーマにした記事</p>
         </div>
 
-        <!-- カテゴリフィルター -->
         <div class="filter-container">
             <button class="filter-btn active" data-category="all">すべて</button>
             <button class="filter-btn" data-category="tech">プログラミング・AI</button>
@@ -728,7 +569,6 @@
             <button class="filter-btn" data-category="investment">投資・分析</button>
         </div>
 
-        <!-- 記事グリッド -->
         <div class="articles-grid">
             <a href="column/swift-beginner-7days.html" class="article-card" data-category="tech">
                 <div class="article-thumbnail tech">
@@ -856,7 +696,6 @@
             </a>
         </div>
 
-        <!-- 人気記事ランキング -->
         <div class="ranking-section">
             <h3 class="ranking-title">🏆 人気記事ランキング TOP5</h3>
             <div class="ranking-list">
@@ -940,21 +779,18 @@
     </section>
 
     <footer>
-        <p>&copy; 2026 エンドレスフライト | <a href="column/">コラム</a> | <a href="lp/">アプリ</a> | <a href="https://note.com/endless_flight" target="_blank">note</a></p>
+        <p>&copy; 2026 エンドレスフライト | <a href="column/">コラム</a> | <a href="lp/">アプリ</a> | <a href="https://note.com/endless_flight" target="_blank">note</a> | <a href="mobile-order-lp.html">ライブ物販</a></p>
     </footer>
 
     <script>
-        // カテゴリフィルター
         const filterBtns = document.querySelectorAll('.filter-btn');
         const articleCards = document.querySelectorAll('.article-card');
 
         filterBtns.forEach(btn => {
             btn.addEventListener('click', () => {
                 const category = btn.dataset.category;
-                
                 filterBtns.forEach(b => b.classList.remove('active'));
                 btn.classList.add('active');
-                
                 articleCards.forEach(card => {
                     if (category === 'all' || card.dataset.category === category) {
                         card.style.display = 'block';
