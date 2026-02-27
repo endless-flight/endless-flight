@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>補助金Pro｜3分でわかる、あなたに最適な補助金診断</title>
+<meta name="description" content="2025〜2026年度最新の補助金9種類に対応。3分の質問に答えるだけで、あなたの事業に最適な補助金と申請可能額がわかります。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700;900&family=Shippori+Mincho:wght@700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   RESET & BASE
+   ============================================================ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: 'Noto Sans JP', sans-serif;
+  background: #F7F5F0;
+  color: #1A1A2E;
+  overflow-x: hidden;
+  line-height: 1.7;
+}
+img { max-width: 100%; display: block; }
+a { text-decoration: none; color: inherit; }
+
+/* ============================================================
+   CSS VARIABLES
+   ============================================================ */
+:root {
+  --ink:       #1A1A2E;
+  --ink-light: #4A4A6A;
+  --cream:     #F7F5F0;
+  --warm:      #EDEAE3;
+  --gold:      #C8973A;
+  --gold-lt:   #F0C97A;
+  --red:       #D94F3D;
+  --green:     #2A7A56;
+  --blue:      #1A4E8A;
+  --blue-lt:   #E8EFF9;
+  --border:    rgba(26,26,46,0.1);
+  --shadow-sm: 0 2px 12px rgba(26,26,46,0.06);
+  --shadow-md: 0 8px 40px rgba(26,26,46,0.1);
+  --shadow-lg: 0 24px 80px rgba(26,26,46,0.14);
+  --radius:    16px;
+}
+
+/* ============================================================
+   UTILITIES
+   ============================================================ */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.container--narrow { max-width: 760px; margin: 0 auto; padding: 0 24px; }
+.text-gold { color: var(--gold); }
+.text-red  { color: var(--red); }
+.text-green{ color: var(--green); }
+.serif { font-family: 'Shippori Mincho', serif; }
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+@keyframes pulse-ring {
+  0%   { transform: scale(1);   opacity: 0.6; }
+  100% { transform: scale(1.6); opacity: 0; }
+}
+@keyframes bounce-arrow {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(8px); }
+}
+@keyframes countUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-fade-up { animation: fadeUp 0.7s ease both; }
+.anim-delay-1 { animation-delay: 0.1s; }
+.anim-delay-2 { animation-delay: 0.2s; }
+.anim-delay-3 { animation-delay: 0.35s; }
+.anim-delay-4 { animation-delay: 0.5s; }
+
+/* scroll reveal */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ============================================================
+   HEADER / NAV
+   ============================================================ */
+.site-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(247,245,240,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  height: 64px;
+  display: flex; align-items: center;
+  transition: box-shadow 0.3s;
+}
+.site-header.scrolled { box-shadow: var(--shadow-sm); }
+.nav-inner {
+  width: 100%; max-width: 1080px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--ink);
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-logo span { color: var(--gold); }
+.nav-cta {
+  background: var(--red);
+  color: white;
+  font-size: 13px; font-weight: 700;
+  padding: 10px 22px;
+  border-radius: 50px;
+  border: none; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: background 0.2s, transform 0.2s;
+  letter-spacing: 0.04em;
+}
+.nav-cta:hover { background: #c0392b; transform: translateY(-1px); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  padding-top: 64px;
+  background:
+    linear-gradient(160deg, #1A1A2E 0%, #0F2040 55%, #1A3A60 100%);
+  position: relative;
+  overflow: hidden;
+  min-height: 100svh;
+  display: flex; align-items: center;
+}
+
+/* Grid pattern bg */
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,151,58,0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,151,58,0.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* Gold glow orbs */
+.hero-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+}
+.hero-orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(200,151,58,0.2) 0%, transparent 70%);
+  top: -200px; right: -100px;
+}
+.hero-orb-2 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(26,78,138,0.4) 0%, transparent 70%);
+  bottom: -100px; left: -100px;
+}
+
+.hero-inner {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 1080px; margin: 0 auto; padding: 80px 24px;
+  display: grid; grid-template-columns: 1fr 480px; gap: 60px; align-items: center;
+}
+@media (max-width: 880px) {
+  .hero-inner { grid-template-columns: 1fr; padding: 60px 24px; }
+  .hero-form-col { order: 2; }
+}
+
+/* Hero copy */
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(200,151,58,0.15);
+  border: 1px solid rgba(200,151,58,0.4);
+  color: var(--gold-lt);
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  padding: 6px 16px; border-radius: 50px;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+}
+.hero-eyebrow::before {
+  content: '';
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gold);
+  animation: pulse-ring 1.5s ease infinite;
+  flex-shrink: 0;
+}
+
+.hero-h1 {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(32px, 4vw, 52px);
+  font-weight: 800;
+  color: white;
+  line-height: 1.25;
+  margin-bottom: 8px;
+}
+.hero-h1 em {
+  font-style: normal;
+  background: linear-gradient(90deg, var(--gold-lt), var(--gold), var(--gold-lt));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 3s linear infinite;
+}
+
+.hero-catch {
+  font-size: clamp(15px, 2vw, 18px);
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+.hero-stats {
+  display: flex; gap: 32px; flex-wrap: wrap;
+  margin-bottom: 40px;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 36px; font-weight: 800;
+  color: var(--gold-lt);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.hero-stat-num sup { font-size: 18px; }
+.hero-stat-label { font-size: 11px; color: rgba(255,255,255,0.5); letter-spacing: 0.08em; }
+
+.hero-logos {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+}
+.hero-logo-label { font-size: 11px; color: rgba(255,255,255,0.4); }
+.logo-pill {
+  background: rgba(255,255,255,0.07);
+  border: 1px solid rgba(255,255,255,0.12);
+  color: rgba(255,255,255,0.7);
+  font-size: 11px; font-weight: 700;
+  padding: 6px 14px; border-radius: 6px;
+  letter-spacing: 0.06em;
+}
+
+/* Hero Form Card */
+.hero-form-card {
+  background: white;
+  border-radius: 24px;
+  padding: 36px;
+  box-shadow: 0 32px 100px rgba(0,0,0,0.35);
+  position: relative;
+}
+.hero-form-card::before {
+  content: '';
+  position: absolute;
+  top: -1px; left: 0; right: 0; height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+  border-radius: 24px 24px 0 0;
+}
+.form-headline {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--ink);
+  text-align: center;
+  margin-bottom: 6px;
+}
+.form-sub { font-size: 13px; color: var(--ink-light); text-align: center; margin-bottom: 24px; }
+
+/* Progress bar in form */
+.form-progress {
+  display: flex; align-items: center; gap: 4px;
+  margin-bottom: 28px;
+}
+.fp-step {
+  flex: 1; height: 3px; border-radius: 2px;
+  background: #E8E6E0;
+  transition: background 0.4s;
+}
+.fp-step.active  { background: var(--gold); }
+.fp-step.done    { background: var(--green); }
+.fp-label {
+  font-size: 11px; color: var(--ink-light);
+  white-space: nowrap; margin-left: 8px;
+}
+
+/* Form question */
+.fq-label {
+  font-size: 12px; font-weight: 700; color: var(--gold);
+  letter-spacing: 0.1em; margin-bottom: 8px; text-transform: uppercase;
+}
+.fq-text {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 17px; font-weight: 700; color: var(--ink);
+  line-height: 1.5; margin-bottom: 18px;
+}
+.fq-options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.fq-options.single { grid-template-columns: 1fr; }
+@media (max-width: 500px) { .fq-options { grid-template-columns: 1fr; } }
+
+.fq-option {
+  border: 1.5px solid #E0DDD6;
+  border-radius: 10px;
+  padding: 12px 14px;
+  cursor: pointer;
+  transition: all 0.18s;
+  display: flex; align-items: center; gap: 10px;
+  background: #FAFAF8;
+  font-size: 13px; color: var(--ink);
+  font-weight: 500;
+}
+.fq-option:hover { border-color: var(--gold); background: #FFF8EE; }
+.fq-option.selected {
+  border-color: var(--gold);
+  background: linear-gradient(135deg, #FFF8EE, #FFF3DC);
+  color: var(--ink);
+  box-shadow: 0 0 0 3px rgba(200,151,58,0.15);
+}
+.fq-option .opt-em { font-size: 18px; flex-shrink: 0; }
+
+/* Form nav buttons */
+.form-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; gap: 10px; }
+.btn-prev {
+  background: none; border: 1px solid #D8D5CE;
+  color: var(--ink-light); font-size: 13px; font-weight: 700;
+  padding: 11px 20px; border-radius: 50px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+}
+.btn-prev:hover { border-color: var(--ink); color: var(--ink); }
+.btn-next {
+  flex: 1;
+  background: var(--gold);
+  color: white; font-size: 14px; font-weight: 700;
+  padding: 13px 24px; border-radius: 50px; cursor: pointer; border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.btn-next:hover { background: #b8872a; transform: translateY(-1px); }
+.btn-next:disabled { background: #D8D5CE; cursor: not-allowed; transform: none; }
+.btn-submit {
+  width: 100%;
+  background: linear-gradient(135deg, #D94F3D, #C0392B);
+  color: white; font-size: 15px; font-weight: 700;
+  padding: 16px; border-radius: 50px; cursor: pointer; border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  margin-top: 22px;
+  transition: all 0.2s;
+  box-shadow: 0 6px 24px rgba(217,79,61,0.3);
+  letter-spacing: 0.04em;
+}
+.btn-submit:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(217,79,61,0.4); }
+
+/* Contact inputs */
+.inp-group { margin-bottom: 12px; }
+.inp-label { font-size: 11px; font-weight: 700; color: var(--ink-light); margin-bottom: 5px; letter-spacing: 0.06em; }
+.inp-label span { color: var(--red); }
+.inp-field {
+  width: 100%;
+  background: #FAFAF8;
+  border: 1.5px solid #E0DDD6;
+  border-radius: 8px;
+  padding: 11px 14px;
+  font-size: 14px; color: var(--ink);
+  font-family: 'Noto Sans JP', sans-serif;
+  outline: none;
+  transition: border 0.2s;
+}
+.inp-field:focus { border-color: var(--gold); background: #FFF8EE; }
+.inp-field::placeholder { color: #B0ADA6; }
+select.inp-field option { background: white; }
+.inp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+@media (max-width: 460px) { .inp-grid { grid-template-columns: 1fr; } }
+
+/* Loading in form */
+.form-loading { text-align: center; padding: 32px 0; display: none; }
+.form-spinner {
+  width: 48px; height: 48px;
+  border: 3px solid #E8E6E0;
+  border-top-color: var(--gold);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  margin: 0 auto 16px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+.form-loading-txt { font-size: 14px; color: var(--ink-light); font-weight: 500; }
+
+/* Result in form */
+.form-result { display: none; }
+.result-match-num {
+  text-align: center;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 48px; font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.result-match-num span { font-size: 20px; color: var(--ink-light); }
+.result-match-label { text-align: center; font-size: 13px; color: var(--ink-light); margin-bottom: 20px; }
+.result-top-card {
+  background: linear-gradient(135deg, #FFF8EE, #FFF3DC);
+  border: 2px solid var(--gold);
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 12px;
+}
+.rtc-badge {
+  display: inline-block;
+  background: var(--gold);
+  color: white;
+  font-size: 10px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+  margin-bottom: 8px; letter-spacing: 0.1em;
+}
+.rtc-name {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16px; font-weight: 800; color: var(--ink);
+  margin-bottom: 4px;
+}
+.rtc-amount { font-size: 22px; font-weight: 900; color: var(--red); }
+.rtc-amount sub { font-size: 12px; }
+.result-sub-list { list-style: none; display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.result-sub-item {
+  display: flex; align-items: center; gap: 10px;
+  background: #FAFAF8; border: 1px solid #E8E6E0;
+  border-radius: 10px; padding: 12px 14px;
+  font-size: 13px; font-weight: 500; color: var(--ink);
+}
+.result-sub-item .ri-num {
+  width: 22px; height: 22px; border-radius: 50%;
+  background: #E8E6E0; color: var(--ink-light);
+  font-size: 11px; font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.result-sub-item .ri-amt { margin-left: auto; font-size: 12px; color: var(--ink-light); white-space: nowrap; }
+
+.btn-result-cal {
+  width: 100%;
+  background: linear-gradient(135deg, #D94F3D, #C0392B);
+  color: white; font-size: 14px; font-weight: 700;
+  padding: 15px; border-radius: 50px; cursor: pointer; border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  transition: all 0.2s;
+  box-shadow: 0 6px 24px rgba(217,79,61,0.3);
+  margin-bottom: 10px;
+}
+.btn-result-cal:hover { transform: translateY(-2px); box-shadow: 0 10px 32px rgba(217,79,61,0.4); }
+.btn-result-retry {
+  width: 100%; background: none;
+  border: 1px solid #D8D5CE; color: var(--ink-light);
+  font-size: 13px; font-weight: 700;
+  padding: 12px; border-radius: 50px; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.2s;
+}
+.btn-result-retry:hover { border-color: var(--ink); color: var(--ink); }
+
+.scroll-hint {
+  text-align: center;
+  margin-top: 16px;
+  font-size: 12px; color: rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 6px;
+}
+.scroll-arrow { font-size: 20px; animation: bounce-arrow 1.5s ease infinite; }
+
+/* ============================================================
+   SECTION BASE
+   ============================================================ */
+section { padding: 96px 0; }
+.section-eyebrow {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.18em;
+  color: var(--gold); text-transform: uppercase;
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(26px, 3.5vw, 40px);
+  font-weight: 800; color: var(--ink);
+  line-height: 1.3; margin-bottom: 16px;
+}
+.section-lead { font-size: 16px; color: var(--ink-light); line-height: 1.8; }
+
+/* ============================================================
+   MERIT / FEATURES
+   ============================================================ */
+.merit-section { background: white; }
+
+.merit-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  margin-top: 56px;
+}
+@media (max-width: 760px) { .merit-grid { grid-template-columns: 1fr; } }
+
+.merit-card {
+  background: var(--cream);
+  border-radius: 20px;
+  padding: 36px 28px;
+  border: 1px solid var(--border);
+  transition: transform 0.3s, box-shadow 0.3s;
+  position: relative; overflow: hidden;
+}
+.merit-card::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s;
+}
+.merit-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.merit-card:hover::after { transform: scaleX(1); }
+
+.merit-icon {
+  font-size: 40px; margin-bottom: 20px;
+  display: block;
+}
+.merit-num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 48px; font-weight: 800;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.merit-num sub { font-size: 20px; }
+.merit-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--ink); margin-bottom: 10px;
+}
+.merit-desc { font-size: 14px; color: var(--ink-light); line-height: 1.8; }
+
+/* ============================================================
+   HOJOKIN LIST
+   ============================================================ */
+.list-section { background: var(--cream); }
+
+.hojokin-table {
+  margin-top: 48px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.hj-row {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px 32px;
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  align-items: center; gap: 24px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.hj-row:hover { transform: translateX(6px); box-shadow: var(--shadow-md); }
+@media (max-width: 640px) {
+  .hj-row { grid-template-columns: 40px 1fr; padding: 20px; }
+  .hj-amount { grid-column: 2; }
+}
+
+.hj-rank {
+  width: 48px; height: 48px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px; font-weight: 800;
+  flex-shrink: 0;
+}
+.hj-rank-gold { background: #FFF3DC; color: var(--gold); border: 2px solid var(--gold); }
+.hj-rank-silver { background: #F0F0F0; color: #888; border: 2px solid #CCC; }
+.hj-rank-bronze { background: #FFF0E8; color: #C87A50; border: 2px solid #DEB090; }
+.hj-rank-default { background: var(--cream); color: var(--ink-light); border: 1px solid var(--border); }
+
+.hj-name {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 18px; font-weight: 800;
+  color: var(--ink); margin-bottom: 8px;
+}
+.hj-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 6px; }
+.hj-tag {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 3px 10px; border-radius: 20px;
+  background: var(--blue-lt); color: var(--blue);
+  border: 1px solid rgba(26,78,138,0.15);
+}
+.hj-tag.tg { background: #E8F7EF; color: var(--green); border-color: rgba(42,122,86,0.2); }
+.hj-tag.tr { background: #FEF0EE; color: var(--red); border-color: rgba(217,79,61,0.2); }
+.hj-tag.ty { background: #FFF8EE; color: var(--gold); border-color: rgba(200,151,58,0.25); }
+.hj-desc { font-size: 13px; color: var(--ink-light); }
+.hj-amount {
+  text-align: right; flex-shrink: 0;
+}
+.hj-amount-num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22px; font-weight: 800;
+  color: var(--red); white-space: nowrap;
+}
+.hj-amount-label { font-size: 11px; color: var(--ink-light); }
+
+/* ============================================================
+   FLOW / HOW IT WORKS
+   ============================================================ */
+.flow-section { background: white; }
+
+.flow-steps {
+  margin-top: 56px;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 0; position: relative;
+}
+.flow-steps::before {
+  content: '';
+  position: absolute;
+  top: 40px; left: 10%; right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+}
+@media (max-width: 700px) {
+  .flow-steps { grid-template-columns: 1fr 1fr; row-gap: 32px; }
+  .flow-steps::before { display: none; }
+}
+@media (max-width: 400px) {
+  .flow-steps { grid-template-columns: 1fr; }
+}
+
+.flow-step { text-align: center; padding: 0 16px; position: relative; }
+.flow-num {
+  width: 80px; height: 80px; border-radius: 50%;
+  background: var(--ink);
+  color: var(--gold);
+  font-family: 'Shippori Mincho', serif;
+  font-size: 28px; font-weight: 800;
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 20px;
+  border: 3px solid var(--gold);
+  position: relative; z-index: 1;
+  transition: transform 0.3s;
+}
+.flow-step:hover .flow-num { transform: scale(1.1); }
+.flow-step-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 16px; font-weight: 800;
+  color: var(--ink); margin-bottom: 8px;
+}
+.flow-step-desc { font-size: 13px; color: var(--ink-light); line-height: 1.7; }
+
+/* ============================================================
+   SERVICE MENU
+   ============================================================ */
+.service-section { background: white; }
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  margin-top: 56px;
+}
+@media (max-width: 900px) { .service-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 560px) { .service-grid { grid-template-columns: 1fr; } }
+
+/* 5番目カード（補助金）は2列にまたがって目立たせる */
+.service-card-highlight {
+  grid-column: 1 / -1;
+}
+@media (max-width: 560px) { .service-card-highlight { grid-column: 1; } }
+
+.svc-card {
+  background: var(--cream);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 32px 28px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.svc-card:hover { transform: translateY(-6px); box-shadow: var(--shadow-md); }
+.svc-card::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: var(--svc-color, var(--gold));
+  transform: scaleX(0); transform-origin: left;
+  transition: transform 0.4s;
+}
+.svc-card:hover::after { transform: scaleX(1); }
+
+/* Highlight card (補助金) */
+.svc-card.highlight {
+  background: linear-gradient(135deg, #1A1A2E 0%, #0F2040 55%, #1A3A60 100%);
+  border-color: rgba(200,151,58,0.4);
+  color: white;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+}
+.svc-card.highlight::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,151,58,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,151,58,0.04) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.svc-card.highlight::after {
+  background: linear-gradient(90deg, var(--gold), var(--gold-lt), var(--gold));
+  transform: scaleX(1);
+}
+@media (max-width: 700px) {
+  .svc-card.highlight { grid-template-columns: 1fr; gap: 24px; }
+}
+
+.svc-icon {
+  font-size: 40px;
+  margin-bottom: 16px;
+  display: block;
+  line-height: 1;
+}
+.svc-num {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  color: var(--svc-color, var(--gold));
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+.svc-card.highlight .svc-num { color: var(--gold-lt); }
+.svc-name {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 20px; font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 10px;
+  line-height: 1.3;
+}
+.svc-card.highlight .svc-name { color: white; font-size: 24px; }
+.svc-desc {
+  font-size: 13px; color: var(--ink-light); line-height: 1.8;
+  margin-bottom: 14px;
+}
+.svc-card.highlight .svc-desc { color: rgba(255,255,255,0.65); font-size: 14px; }
+.svc-point {
+  display: flex; align-items: flex-start; gap: 8px;
+  font-size: 13px; color: var(--ink); line-height: 1.7;
+}
+.svc-point::before {
+  content: '✓';
+  color: var(--svc-color, var(--gold));
+  font-weight: 900; flex-shrink: 0;
+  margin-top: 1px;
+}
+.svc-card.highlight .svc-point { color: rgba(255,255,255,0.85); }
+.svc-card.highlight .svc-point::before { color: var(--gold-lt); }
+
+.svc-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: var(--gold);
+  color: white;
+  font-size: 13px; font-weight: 700;
+  padding: 8px 20px; border-radius: 50px;
+  margin-top: 20px;
+  letter-spacing: 0.04em;
+}
+.highlight-right { position: relative; z-index: 1; }
+.highlight-bigtext {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(48px, 6vw, 80px);
+  font-weight: 800;
+  color: var(--gold-lt);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.highlight-bigtext span { font-size: 0.45em; color: rgba(255,255,255,0.5); vertical-align: middle; }
+.highlight-caption { font-size: 14px; color: rgba(255,255,255,0.65); line-height: 1.7; }
+.highlight-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+.h-tag {
+  background: rgba(200,151,58,0.18);
+  border: 1px solid rgba(200,151,58,0.35);
+  color: var(--gold-lt);
+  font-size: 12px; font-weight: 700;
+  padding: 5px 14px; border-radius: 20px;
+}
+
+/* ============================================================
+   VOICE / TESTIMONIALS
+   ============================================================ */
+.voice-section { background: var(--cream); }
+.voice-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  margin-top: 48px;
+}
+@media (max-width: 760px) { .voice-grid { grid-template-columns: 1fr; } }
+
+.voice-card {
+  background: white;
+  border-radius: var(--radius);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+  position: relative;
+}
+.voice-quote {
+  font-size: 64px; line-height: 0.5;
+  color: var(--gold); opacity: 0.3;
+  font-family: Georgia, serif;
+  margin-bottom: 16px;
+}
+.voice-text { font-size: 14px; color: var(--ink); line-height: 1.85; margin-bottom: 20px; }
+.voice-amount {
+  background: #FFF8EE; border: 1px solid rgba(200,151,58,0.25);
+  border-radius: 8px; padding: 10px 14px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 18px;
+}
+.voice-amount-num {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22px; font-weight: 800; color: var(--red);
+}
+.voice-amount-label { font-size: 12px; color: var(--ink-light); }
+.voice-author {
+  display: flex; align-items: center; gap: 12px;
+  border-top: 1px solid var(--border); padding-top: 16px;
+}
+.voice-avatar {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-lt));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+}
+.voice-name { font-size: 14px; font-weight: 700; color: var(--ink); }
+.voice-role { font-size: 12px; color: var(--ink-light); }
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+.faq-section { background: white; }
+.faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.faq-item:hover { box-shadow: var(--shadow-sm); }
+.faq-q {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px; cursor: pointer;
+  background: white; user-select: none;
+}
+.faq-q:hover { background: #FAFAF8; }
+.faq-q-icon {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: var(--gold); color: white;
+  font-size: 14px; font-weight: 900;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.faq-q-text { font-size: 15px; font-weight: 700; color: var(--ink); flex: 1; }
+.faq-arrow {
+  font-size: 12px; color: var(--ink-light);
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.4s ease, padding 0.3s;
+  background: #FAFAF8;
+}
+.faq-item.open .faq-a { max-height: 300px; }
+.faq-a-inner { padding: 0 24px 20px 68px; font-size: 14px; color: var(--ink-light); line-height: 1.85; }
+
+/* ============================================================
+   CTA BAND
+   ============================================================ */
+.cta-band {
+  background: linear-gradient(135deg, #1A1A2E 0%, #0F2040 60%, #1A3A60 100%);
+  padding: 100px 0;
+  position: relative; overflow: hidden;
+  text-align: center;
+}
+.cta-band::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image:
+    linear-gradient(rgba(200,151,58,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,151,58,0.05) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
+.cta-band .container { position: relative; z-index: 1; }
+.cta-band-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 800; color: white;
+  line-height: 1.3; margin-bottom: 16px;
+}
+.cta-band-title em { font-style: normal; color: var(--gold-lt); }
+.cta-band-sub { font-size: 16px; color: rgba(255,255,255,0.65); margin-bottom: 48px; }
+.cta-band-btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--red);
+  color: white; font-size: 16px; font-weight: 700;
+  padding: 18px 48px; border-radius: 50px;
+  border: none; cursor: pointer;
+  font-family: 'Noto Sans JP', sans-serif;
+  box-shadow: 0 8px 32px rgba(217,79,61,0.4);
+  transition: all 0.2s;
+  letter-spacing: 0.04em;
+}
+.cta-band-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 48px rgba(217,79,61,0.5); }
+.cta-band-note { margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.4); }
+
+/* ============================================================
+   FOOTER
+   ============================================================ */
+.site-footer {
+  background: var(--ink);
+  color: rgba(255,255,255,0.5);
+  padding: 48px 0 32px;
+  font-size: 13px;
+}
+.footer-inner {
+  display: flex; justify-content: space-between; align-items: flex-start;
+  flex-wrap: wrap; gap: 24px; margin-bottom: 40px;
+}
+.footer-logo {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22px; font-weight: 800;
+  color: white; margin-bottom: 8px;
+}
+.footer-logo span { color: var(--gold); }
+.footer-copy-note { font-size: 12px; max-width: 300px; line-height: 1.7; }
+.footer-links { display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { color: rgba(255,255,255,0.5); transition: color 0.2s; }
+.footer-links a:hover { color: white; }
+.footer-divider { border-color: rgba(255,255,255,0.08); margin-bottom: 24px; }
+.footer-bottom { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+
+/* ============================================================
+   CALENDAR MODAL
+   ============================================================ */
+.modal-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 200;
+  display: none; align-items: center; justify-content: center;
+  backdrop-filter: blur(6px);
+  padding: 20px;
+}
+.modal-overlay.open { display: flex; }
+.modal-box {
+  background: white;
+  border-radius: 24px;
+  width: 100%; max-width: 520px;
+  max-height: 90vh; overflow-y: auto;
+  padding: 36px;
+  animation: fadeUp 0.35s ease;
+  position: relative;
+}
+.modal-close {
+  position: absolute; top: 20px; right: 20px;
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 50%; width: 36px; height: 36px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 16px; color: var(--ink-light);
+  transition: all 0.2s;
+}
+.modal-close:hover { background: var(--warm); color: var(--ink); }
+.modal-title {
+  font-family: 'Shippori Mincho', serif;
+  font-size: 22px; font-weight: 800; color: var(--ink);
+  margin-bottom: 6px;
+}
+.modal-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 24px; }
+
+/* Calendar in modal */
+.cal-nav {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 16px;
+}
+.cal-nav-btn {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 8px; padding: 7px 14px;
+  font-size: 13px; cursor: pointer; font-family: 'Noto Sans JP', sans-serif;
+  transition: all 0.15s; color: var(--ink);
+}
+.cal-nav-btn:hover { background: var(--warm); }
+.cal-nav-title { font-size: 14px; font-weight: 700; color: var(--ink); }
+.cal-grid {
+  display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px;
+  margin-bottom: 20px;
+}
+.cal-day-header {
+  text-align: center; font-size: 11px; font-weight: 700;
+  color: var(--ink-light); padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.cal-slot {
+  background: var(--cream); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 4px;
+  text-align: center; font-size: 12px; font-weight: 500;
+  cursor: pointer; transition: all 0.15s; color: var(--ink);
+}
+.cal-slot:hover { background: #FFF8EE; border-color: var(--gold); }
+.cal-slot.booked-by-user { background: linear-gradient(135deg, #FFF8EE, #FFF3DC); border-color: var(--gold); color: var(--gold); font-weight: 700; }
+.cal-slot.unavail { background: #F0EFEC; color: #C0BDB6; cursor: not-allowed; }
+.cal-slot-time { font-size: 11px; color: inherit; margin-top: 2px; }
+
+.cal-confirm-btn {
+  width: 100%;
+  background: var(--red); color: white;
+  font-size: 14px; font-weight: 700;
+  padding: 14px; border-radius: 50px; cursor: pointer; border: none;
+  font-family: 'Noto Sans JP', sans-serif;
+  box-shadow: 0 4px 16px rgba(217,79,61,0.3);
+  transition: all 0.2s;
+  margin-top: 4px;
+}
+.cal-confirm-btn:hover { transform: translateY(-1px); box-shadow: 0 6px 24px rgba(217,79,61,0.4); }
+.cal-confirm-btn:disabled { background: #D8D5CE; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* GAS info modal */
+.gas-code {
+  background: #1A1A2E; border-radius: 10px;
+  padding: 16px; margin-top: 14px;
+  font-family: 'Courier New', monospace;
+  font-size: 11px; color: #7FDBCA;
+  line-height: 1.7; overflow-x: auto;
+  white-space: pre;
+}
+
+/* Toast */
+.toast {
+  position: fixed; bottom: 32px; left: 50%;
+  transform: translateX(-50%) translateY(80px);
+  background: var(--green); color: white;
+  padding: 14px 28px; border-radius: 50px;
+  font-size: 14px; font-weight: 700;
+  z-index: 9999; white-space: nowrap;
+  box-shadow: var(--shadow-md);
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.toast.show { transform: translateX(-50%) translateY(0); }
+
+/* ============================================================
+   RESPONSIVE UTILS
+   ============================================================ */
+@media (max-width: 640px) {
+  section { padding: 64px 0; }
+  .hero-stats { gap: 20px; }
+  .hj-row { padding: 18px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<header class="site-header" id="site-header">
+  <div class="nav-inner">
+    <div class="nav-logo">補助金<span>Pro</span></div>
+    <button class="nav-cta" onclick="scrollToForm()">無料で診断する →</button>
+  </div>
+</header>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero">
+  <div class="hero-orb hero-orb-1"></div>
+  <div class="hero-orb hero-orb-2"></div>
+  <div class="hero-inner">
+
+    <!-- Copy -->
+    <div class="hero-copy">
+      <div class="hero-eyebrow anim-fade-up">2025〜2026年度 最新対応</div>
+      <h1 class="hero-h1 anim-fade-up anim-delay-1">
+        3分で判明。<br>あなたの会社が<br>もらえる<em>補助金</em>
+      </h1>
+      <p class="hero-catch anim-fade-up anim-delay-2">
+        最新9種類の補助金データベースと照合し、<br>
+        申請可能額と採択率を即座に診断。<br>
+        診断後はそのまま専門家への相談予約まで完結。
+      </p>
+
+      <div class="hero-stats anim-fade-up anim-delay-3">
+        <div class="hero-stat">
+          <div class="hero-stat-num"><sup>累計</sup>3,200<sup>件+</sup></div>
+          <div class="hero-stat-label">診断実績</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">87<sup>%</sup></div>
+          <div class="hero-stat-label">採択率（支援先平均）</div>
+        </div>
+        <div class="hero-stat">
+          <div class="hero-stat-num">9<sup>種類</sup></div>
+          <div class="hero-stat-label">対応補助金数</div>
+        </div>
+      </div>
+
+      <div class="hero-logos anim-fade-up anim-delay-4">
+        <span class="hero-logo-label">対応補助金</span>
+        <span class="logo-pill">ものづくり</span>
+        <span class="logo-pill">IT導入</span>
+        <span class="logo-pill">持続化</span>
+        <span class="logo-pill">省力化</span>
+        <span class="logo-pill">事業再構築</span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <div class="hero-form-col anim-fade-up anim-delay-2" id="form-anchor">
+      <div class="hero-form-card">
+
+        <!-- Q1〜Q4 -->
+        <div id="form-q-wrap">
+          <div class="form-headline">補助金かんたん診断</div>
+          <div class="form-sub">質問に答えるだけ・無料・60秒</div>
+
+          <div class="form-progress">
+            <div class="fp-step" id="fp1"></div>
+            <div class="fp-step" id="fp2"></div>
+            <div class="fp-step" id="fp3"></div>
+            <div class="fp-step" id="fp4"></div>
+            <div class="fp-step" id="fp5"></div>
+            <span class="fp-label" id="fp-label">1 / 5</span>
+          </div>
+
+          <!-- Q1 -->
+          <div id="fq1">
+            <div class="fq-label">STEP 01</div>
+            <div class="fq-text">事業形態を教えてください</div>
+            <div class="fq-options">
+              <div class="fq-option" data-q="1" data-val="法人（株式会社・合同会社等）" onclick="fqSelect(this)"><span class="opt-em">🏢</span>法人</div>
+              <div class="fq-option" data-q="1" data-val="個人事業主・フリーランス" onclick="fqSelect(this)"><span class="opt-em">👤</span>個人事業主</div>
+              <div class="fq-option" data-q="1" data-val="NPO・社団法人等" onclick="fqSelect(this)"><span class="opt-em">🤝</span>NPO・社団法人</div>
+              <div class="fq-option" data-q="1" data-val="これから創業予定" onclick="fqSelect(this)"><span class="opt-em">🚀</span>創業予定</div>
+            </div>
+            <div class="form-nav" style="justify-content:flex-end">
+              <button class="btn-next" id="fq1-next" disabled onclick="fqNext(1)">次へ →</button>
+            </div>
+          </div>
+
+          <!-- Q2 -->
+          <div id="fq2" style="display:none">
+            <div class="fq-label">STEP 02</div>
+            <div class="fq-text">従業員数は？</div>
+            <div class="fq-options single">
+              <div class="fq-option" data-q="2" data-val="0人（代表者のみ）" onclick="fqSelect(this)"><span class="opt-em">1️⃣</span>0人（代表者のみ）</div>
+              <div class="fq-option" data-q="2" data-val="1〜5人" onclick="fqSelect(this)"><span class="opt-em">👥</span>1〜5人（小規模事業者枠）</div>
+              <div class="fq-option" data-q="2" data-val="6〜20人" onclick="fqSelect(this)"><span class="opt-em">🏬</span>6〜20人</div>
+              <div class="fq-option" data-q="2" data-val="21〜300人" onclick="fqSelect(this)"><span class="opt-em">🏭</span>21〜300人</div>
+              <div class="fq-option" data-q="2" data-val="301人以上" onclick="fqSelect(this)"><span class="opt-em">🏗️</span>301人以上</div>
+            </div>
+            <div class="form-nav">
+              <button class="btn-prev" onclick="fqPrev(2)">← 戻る</button>
+              <button class="btn-next" id="fq2-next" disabled onclick="fqNext(2)">次へ →</button>
+            </div>
+          </div>
+
+          <!-- Q3 -->
+          <div id="fq3" style="display:none">
+            <div class="fq-label">STEP 03</div>
+            <div class="fq-text">主な業種を教えてください</div>
+            <div class="fq-options">
+              <div class="fq-option" data-q="3" data-val="製造業" onclick="fqSelect(this)"><span class="opt-em">⚙️</span>製造業</div>
+              <div class="fq-option" data-q="3" data-val="IT・情報通信業" onclick="fqSelect(this)"><span class="opt-em">💻</span>IT・情報通信</div>
+              <div class="fq-option" data-q="3" data-val="小売・卸売業" onclick="fqSelect(this)"><span class="opt-em">🛒</span>小売・卸売</div>
+              <div class="fq-option" data-q="3" data-val="飲食・宿泊業" onclick="fqSelect(this)"><span class="opt-em">🍽️</span>飲食・宿泊</div>
+              <div class="fq-option" data-q="3" data-val="建設・不動産" onclick="fqSelect(this)"><span class="opt-em">🏠</span>建設・不動産</div>
+              <div class="fq-option" data-q="3" data-val="医療・介護・福祉" onclick="fqSelect(this)"><span class="opt-em">🏥</span>医療・介護</div>
+              <div class="fq-option" data-q="3" data-val="サービス業（その他）" onclick="fqSelect(this)"><span class="opt-em">💼</span>サービス業</div>
+              <div class="fq-option" data-q="3" data-val="農林水産業" onclick="fqSelect(this)"><span class="opt-em">🌾</span>農林水産</div>
+            </div>
+            <div class="form-nav">
+              <button class="btn-prev" onclick="fqPrev(3)">← 戻る</button>
+              <button class="btn-next" id="fq3-next" disabled onclick="fqNext(3)">次へ →</button>
+            </div>
+          </div>
+
+          <!-- Q4 -->
+          <div id="fq4" style="display:none">
+            <div class="fq-label">STEP 04</div>
+            <div class="fq-text">補助金で実現したいことは？</div>
+            <div class="fq-options">
+              <div class="fq-option" data-q="4" data-val="新製品・新サービスの開発" onclick="fqSelect(this)"><span class="opt-em">🔬</span>新製品・サービス開発</div>
+              <div class="fq-option" data-q="4" data-val="ITシステム・ソフトウェア導入" onclick="fqSelect(this)"><span class="opt-em">📱</span>IT・DX推進</div>
+              <div class="fq-option" data-q="4" data-val="設備投資・省力化" onclick="fqSelect(this)"><span class="opt-em">🦾</span>設備投資・省力化</div>
+              <div class="fq-option" data-q="4" data-val="販路開拓・マーケティング" onclick="fqSelect(this)"><span class="opt-em">📣</span>販路開拓</div>
+              <div class="fq-option" data-q="4" data-val="新事業・業種転換" onclick="fqSelect(this)"><span class="opt-em">🔄</span>新事業・業種転換</div>
+              <div class="fq-option" data-q="4" data-val="省エネ・脱炭素" onclick="fqSelect(this)"><span class="opt-em">🌿</span>省エネ・GX</div>
+            </div>
+            <div class="form-nav">
+              <button class="btn-prev" onclick="fqPrev(4)">← 戻る</button>
+              <button class="btn-next" id="fq4-next" disabled onclick="fqNext(4)">次へ →</button>
+            </div>
+          </div>
+
+          <!-- Q5: 連絡先 -->
+          <div id="fq5" style="display:none">
+            <div class="fq-label">STEP 05</div>
+            <div class="fq-text">診断結果を受け取る</div>
+            <div class="inp-grid" style="margin-bottom:10px">
+              <div class="inp-group">
+                <div class="inp-label">会社名・屋号 <span>*</span></div>
+                <input class="inp-field" id="in-company" type="text" placeholder="株式会社〇〇">
+              </div>
+              <div class="inp-group">
+                <div class="inp-label">お名前 <span>*</span></div>
+                <input class="inp-field" id="in-name" type="text" placeholder="山田 太郎">
+              </div>
+            </div>
+            <div class="inp-grid" style="margin-bottom:10px">
+              <div class="inp-group">
+                <div class="inp-label">メールアドレス <span>*</span></div>
+                <input class="inp-field" id="in-email" type="email" placeholder="info@example.com">
+              </div>
+              <div class="inp-group">
+                <div class="inp-label">電話番号</div>
+                <input class="inp-field" id="in-tel" type="tel" placeholder="090-0000-0000">
+              </div>
+            </div>
+            <div class="inp-group">
+              <div class="inp-label">年商（概算）</div>
+              <select class="inp-field" id="in-revenue">
+                <option value="">選択してください</option>
+                <option>500万円未満</option>
+                <option>500万〜1,000万円</option>
+                <option>1,000万〜5,000万円</option>
+                <option>5,000万〜1億円</option>
+                <option>1億円以上</option>
+              </select>
+            </div>
+            <!-- webhook hidden field for admin -->
+            <input type="hidden" id="in-webhook" value="">
+            <div class="form-nav">
+              <button class="btn-prev" onclick="fqPrev(5)">← 戻る</button>
+            </div>
+            <button class="btn-submit" onclick="submitForm()">🔍 無料で診断結果を見る</button>
+          </div>
+        </div>
+
+        <!-- Loading -->
+        <div class="form-loading" id="form-loading">
+          <div class="form-spinner"></div>
+          <div class="form-loading-txt">補助金データと照合中…</div>
+          <div style="font-size:12px;color:#B0ADA6;margin-top:8px">9種類の最新補助金を分析しています</div>
+        </div>
+
+        <!-- Result -->
+        <div class="form-result" id="form-result">
+          <div class="result-match-num" id="res-match-num">—<span>件</span></div>
+          <div class="result-match-label" id="res-match-label">の補助金が申請可能です</div>
+
+          <div class="result-top-card" id="res-top-card">
+            <div class="rtc-badge">最有力候補 No.1</div>
+            <div class="rtc-name" id="res-top-name">—</div>
+            <div class="rtc-amount" id="res-top-amount">—<sub>まで</sub></div>
+          </div>
+
+          <ul class="result-sub-list" id="res-sub-list"></ul>
+
+          <button class="btn-result-cal" onclick="openCalModal()">
+            📅 無料相談を予約する（60分・完全無料）
+          </button>
+          <button class="btn-result-retry" onclick="retryForm()">↩ もう一度診断する</button>
+        </div>
+
+      </div><!-- /hero-form-card -->
+
+      <div class="scroll-hint">
+        <span>詳しく見る</span>
+        <span class="scroll-arrow">↓</span>
+      </div>
+    </div>
+
+  </div><!-- /hero-inner -->
+</section>
+
+<!-- ===== MERIT ===== -->
+<section class="merit-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">選ばれる3つの理由</div>
+    <h2 class="section-title reveal">補助金Proが<br>選ばれる理由</h2>
+    <p class="section-lead reveal">専門知識がなくても大丈夫。診断から採択まで、トータルでサポートします。</p>
+
+    <div class="merit-grid">
+      <div class="merit-card reveal">
+        <span class="merit-icon">⚡</span>
+        <div class="merit-num">3<sub>分</sub></div>
+        <div class="merit-title">最短3分で診断完了</div>
+        <div class="merit-desc">難しい質問は一切なし。事業内容と目的を選ぶだけで、あなたに最適な補助金を瞬時に特定します。</div>
+      </div>
+      <div class="merit-card reveal anim-delay-1">
+        <span class="merit-icon">📊</span>
+        <div class="merit-num">9<sub>種類</sub></div>
+        <div class="merit-title">最新9種の補助金に対応</div>
+        <div class="merit-desc">2025〜2026年度の最新情報に対応。新設のものづくり・新事業進出補助金など見落としがちな補助金も網羅。</div>
+      </div>
+      <div class="merit-card reveal anim-delay-2">
+        <span class="merit-icon">🎯</span>
+        <div class="merit-num">87<sub>%</sub></div>
+        <div class="merit-title">採択率87%の実績</div>
+        <div class="merit-desc">診断後の無料相談では、採択実績豊富な専門家が申請書類作成から審査対策まで完全サポート。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOJOKIN LIST ===== -->
+<section class="list-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">対応補助金一覧</div>
+    <h2 class="section-title reveal">2025〜2026年度<br>最新補助金データベース</h2>
+    <p class="section-lead reveal">以下9種類の補助金を診断対象としています。お客様の回答内容に応じてマッチ度を算出します。</p>
+
+    <div class="hojokin-table">
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-gold">1</div>
+        <div>
+          <div class="hj-name">ものづくり補助金</div>
+          <div class="hj-tags"><span class="hj-tag">製品・サービス高付加価値化</span><span class="hj-tag">グローバル枠</span><span class="hj-tag ty">2025年度</span></div>
+          <div class="hj-desc">革新的な製品開発・サービス開発を支援。補助率1/2〜2/3。賃上げ加点あり。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">1,250万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-silver">2</div>
+        <div>
+          <div class="hj-name">IT導入補助金2025</div>
+          <div class="hj-tags"><span class="hj-tag tg">通常枠</span><span class="hj-tag tg">インボイス枠</span><span class="hj-tag tg">複数社連携枠</span></div>
+          <div class="hj-desc">業務効率化・DX推進のためのITツール・システム導入を支援。補助率1/2〜4/5。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">450万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-bronze">3</div>
+        <div>
+          <div class="hj-name">小規模事業者持続化補助金</div>
+          <div class="hj-tags"><span class="hj-tag">通常枠</span><span class="hj-tag">創業型</span><span class="hj-tag">共同・協業型</span></div>
+          <div class="hj-desc">小規模事業者の販路開拓・マーケティング活動を支援。補助率2/3。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">200万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">4</div>
+        <div>
+          <div class="hj-name">中小企業省力化投資補助金</div>
+          <div class="hj-tags"><span class="hj-tag tr">IoT・ロボット</span><span class="hj-tag tr">カタログ型</span></div>
+          <div class="hj-desc">人手不足解消のためロボット等の汎用製品導入を支援。補助率1/2。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">1,500万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">5</div>
+        <div>
+          <div class="hj-name">中小企業新事業進出補助金</div>
+          <div class="hj-tags"><span class="hj-tag ty">2025年度新設</span><span class="hj-tag ty">新分野進出</span></div>
+          <div class="hj-desc">新たな事業分野への進出を目指す中小企業を支援する新設補助金。補助率1/2。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">9,000万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">6</div>
+        <div>
+          <div class="hj-name">中小企業成長加速化補助金</div>
+          <div class="hj-tags"><span class="hj-tag ty">2025年度新設</span><span class="hj-tag ty">売上100億目標</span></div>
+          <div class="hj-desc">売上高100億円を目指す中小企業の大規模投資を最大3年間支援。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">1億円以上</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">7</div>
+        <div>
+          <div class="hj-name">事業承継・M&A補助金</div>
+          <div class="hj-tags"><span class="hj-tag">承継促進枠</span><span class="hj-tag">廃業・再チャレンジ枠</span></div>
+          <div class="hj-desc">親族内承継・従業員承継・M&Aによる外部承継を支援。補助率1/2〜2/3。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">1,000万円</div><div class="hj-amount-label">補助上限</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">8</div>
+        <div>
+          <div class="hj-name">省エネ・非化石転換補助金</div>
+          <div class="hj-tags"><span class="hj-tag tg">GX対応</span><span class="hj-tag tg">省エネ設備</span></div>
+          <div class="hj-desc">省エネ設備の導入や脱炭素への転換を支援。エネルギーコスト削減と環境対応を同時実現。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">補助率1/3〜1/2</div><div class="hj-amount-label">補助率</div></div>
+      </div>
+      <div class="hj-row reveal">
+        <div class="hj-rank hj-rank-default">9</div>
+        <div>
+          <div class="hj-name">Go-Tech事業（研究開発支援）</div>
+          <div class="hj-tags"><span class="hj-tag">産学連携</span><span class="hj-tag">高度研究開発</span></div>
+          <div class="hj-desc">大学・公設試験場等と連携した高度な研究開発・試作品開発を最大3年間支援。</div>
+        </div>
+        <div class="hj-amount"><div class="hj-amount-num">3億円</div><div class="hj-amount-label">3年間上限</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FLOW ===== -->
+<section class="flow-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">ご利用の流れ</div>
+    <h2 class="section-title reveal">診断から採択まで<br>4ステップ</h2>
+
+    <div class="flow-steps">
+      <div class="flow-step reveal">
+        <div class="flow-num">01</div>
+        <div class="flow-step-title">3分で診断</div>
+        <div class="flow-step-desc">4つの質問に答えるだけ。専門知識不要です。</div>
+      </div>
+      <div class="flow-step reveal anim-delay-1">
+        <div class="flow-num">02</div>
+        <div class="flow-step-title">結果を確認</div>
+        <div class="flow-step-desc">対象補助金とマッチ度を一覧表示。</div>
+      </div>
+      <div class="flow-step reveal anim-delay-2">
+        <div class="flow-num">03</div>
+        <div class="flow-step-title">無料相談を予約</div>
+        <div class="flow-step-desc">60分Zoom。専門家が申請戦略を解説。</div>
+      </div>
+      <div class="flow-step reveal anim-delay-3">
+        <div class="flow-num">04</div>
+        <div class="flow-step-title">採択・受給</div>
+        <div class="flow-step-desc">書類作成から審査対策まで完全サポート。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SERVICE MENU ===== -->
+<section class="service-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">サービスメニュー</div>
+    <h2 class="section-title reveal">補助金活用から集客まで<br>ワンストップで支援</h2>
+    <p class="section-lead reveal">補助金採択後の投資先として最適なWebマーケティング支援を提供。<br>資金調達〜活用まで一貫してサポートします。</p>
+
+    <div class="service-grid">
+
+      <!-- 1. ホームページ制作 -->
+      <div class="svc-card reveal" style="--svc-color:#1A4E8A">
+        <span class="svc-icon">🌐</span>
+        <div class="svc-num">Service 01</div>
+        <div class="svc-name">ホームページ制作</div>
+        <div class="svc-desc">魅力的なデザイン・使いやすさ・視認性を兼ね備えたサイトを制作。企業イメージやコンセプトに合わせ、訪問者を惹きつけるコンテンツを提供します。</div>
+        <div class="svc-point">企業ブランドに合ったオリジナルデザイン</div>
+        <div class="svc-point" style="margin-top:6px">スマートフォン完全対応・高速表示</div>
+      </div>
+
+      <!-- 2. SEO対策 -->
+      <div class="svc-card reveal anim-delay-1" style="--svc-color:#2A7A56">
+        <span class="svc-icon">🔍</span>
+        <div class="svc-num">Service 02</div>
+        <div class="svc-name">SEO対策</div>
+        <div class="svc-desc">Google検索の上位表示を目指したキーワード選定とコンテンツ最適化。適切な対策により、ホームページへの自然流入アクセスアップを支援します。</div>
+        <div class="svc-point">競合分析に基づくキーワード戦略</div>
+        <div class="svc-point" style="margin-top:6px">コンテンツSEO・テクニカルSEO対応</div>
+      </div>
+
+      <!-- 3. ECサイト構築 -->
+      <div class="svc-card reveal anim-delay-2" style="--svc-color:#C8973A">
+        <span class="svc-icon">🛒</span>
+        <div class="svc-num">Service 03</div>
+        <div class="svc-name">ECサイト構築</div>
+        <div class="svc-desc">商品に最適なデザインと機能を備えたオリジナルのネットショップを作成。モバイル対応・SEO・セキュリティなど運営に必要なツールをパッケージで提供。</div>
+        <div class="svc-point">決済・在庫管理・顧客管理まで一括対応</div>
+        <div class="svc-point" style="margin-top:6px">モバイルファースト設計・SSL対応</div>
+      </div>
+
+      <!-- 4. リスティング広告 -->
+      <div class="svc-card reveal" style="--svc-color:#D94F3D">
+        <span class="svc-icon">📣</span>
+        <div class="svc-num">Service 04</div>
+        <div class="svc-name">リスティング広告</div>
+        <div class="svc-desc">Google広告など各種広告ネットワークを活用したターゲティング広告。コストと効果のバランスを重視した運用で、費用対効果の高い集客を実現します。</div>
+        <div class="svc-point">ターゲット精度の高い広告設計</div>
+        <div class="svc-point" style="margin-top:6px">月次レポートで効果を透明化</div>
+      </div>
+
+      <!-- 5. 補助金・助成金（ハイライトカード） -->
+      <div class="svc-card highlight reveal service-card-highlight anim-delay-1">
+        <div style="position:relative;z-index:1">
+          <span class="svc-icon">📋</span>
+          <div class="svc-num">Service 05</div>
+          <div class="svc-name">補助金・助成金<br>申請サポート</div>
+          <div class="svc-desc">提携行政書士による、公的な書類作成および申請手続きの全面バックアップ。面倒な手続きをプロに任せて、採択率を最大化します。</div>
+          <div class="svc-point">提携行政書士が書類作成から申請まで代行</div>
+          <div class="svc-point" style="margin-top:8px">9種類の最新補助金に対応</div>
+          <div class="svc-point" style="margin-top:8px">採択後の実績報告書作成もサポート</div>
+          <div class="svc-badge">🎯 完全成功報酬型</div>
+        </div>
+        <div class="highlight-right">
+          <div class="highlight-bigtext">¥0<span>／採択前</span></div>
+          <div class="highlight-caption">
+            採択されなければ費用は一切発生しません。<br>
+            リスクなくプロの知見を活用した<br>
+            資金調達が可能です。
+          </div>
+          <div class="highlight-tags">
+            <span class="h-tag">完全成功報酬</span>
+            <span class="h-tag">採択前費用ゼロ</span>
+            <span class="h-tag">行政書士提携</span>
+            <span class="h-tag">最大1億円超</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="voice-section">
+  <div class="container">
+    <div class="section-eyebrow reveal">お客様の声</div>
+    <h2 class="section-title reveal">診断から採択まで<br>喜びの声が届いています</h2>
+
+    <div class="voice-grid">
+      <div class="voice-card reveal">
+        <div class="voice-quote">"</div>
+        <div class="voice-text">補助金に詳しくなかったのですが、診断後の相談で「ものづくり補助金」に絞って集中的にサポートいただき、初挑戦で採択されました。</div>
+        <div class="voice-amount">
+          <div class="voice-amount-num">750万円</div>
+          <div class="voice-amount-label">採択・受給額</div>
+        </div>
+        <div class="voice-author">
+          <div class="voice-avatar">🏭</div>
+          <div>
+            <div class="voice-name">山本 浩二さん</div>
+            <div class="voice-role">製造業・従業員12名 / 埼玉県</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-card reveal anim-delay-1">
+        <div class="voice-quote">"</div>
+        <div class="voice-text">IT導入補助金でERPシステムを導入できました。業務工数が40%削減され、補助金以上の効果を実感しています。</div>
+        <div class="voice-amount">
+          <div class="voice-amount-num">350万円</div>
+          <div class="voice-amount-label">採択・受給額</div>
+        </div>
+        <div class="voice-author">
+          <div class="voice-avatar">💼</div>
+          <div>
+            <div class="voice-name">鈴木 美咲さん</div>
+            <div class="voice-role">卸売業・従業員8名 / 大阪府</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="voice-card reveal anim-delay-2">
+        <div class="voice-quote">"</div>
+        <div class="voice-text">個人事業主でも補助金がもらえると知らなかったです。持続化補助金で店舗リニューアルができ、売上が1.5倍になりました。</div>
+        <div class="voice-amount">
+          <div class="voice-amount-num">100万円</div>
+          <div class="voice-amount-label">採択・受給額</div>
+        </div>
+        <div class="voice-author">
+          <div class="voice-avatar">🍽️</div>
+          <div>
+            <div class="voice-name">田中 拓也さん</div>
+            <div class="voice-role">飲食店・個人事業主 / 福岡県</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="faq-section">
+  <div class="container container--narrow">
+    <div class="section-eyebrow reveal">よくある質問</div>
+    <h2 class="section-title reveal">FAQ</h2>
+
+    <div class="faq-list" id="faq-list">
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-icon">Q</div>
+          <div class="faq-q-text">診断は本当に無料ですか？</div>
+          <div class="faq-arrow">▼</div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">はい、診断・結果確認・初回相談（60分Zoom）まですべて完全無料です。費用が発生するのは、実際に申請サポートをご依頼いただいた場合のみです。</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-icon">Q</div>
+          <div class="faq-q-text">創業したばかりでも申請できますか？</div>
+          <div class="faq-arrow">▼</div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">補助金の種類によっては創業直後でも申請可能です。特に小規模事業者持続化補助金の「創業型」やIT導入補助金は開業後間もなくても対象となるケースがあります。まず診断でご確認ください。</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-icon">Q</div>
+          <div class="faq-q-text">診断結果は必ず採択されることを保証しますか？</div>
+          <div class="faq-arrow">▼</div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">診断は採択可能性の目安であり、採択を保証するものではありません。ただし、相談後に適切な補助金を選定し、採択率を最大化するための申請書類作成・アドバイスを提供しています。</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-icon">Q</div>
+          <div class="faq-q-text">相談はオンラインのみですか？</div>
+          <div class="faq-arrow">▼</div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">基本的にZoomでのオンライン相談となりますが、関東・関西エリアであれば対面でのご対応も可能です。ご希望の場合は予約時にご連絡ください。</div></div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q" onclick="toggleFaq(this)">
+          <div class="faq-q-icon">Q</div>
+          <div class="faq-q-text">入力した情報はどのように管理されますか？</div>
+          <div class="faq-arrow">▼</div>
+        </div>
+        <div class="faq-a"><div class="faq-a-inner">ご入力いただいた情報は、補助金診断・相談サービスの提供目的のみに利用します。第三者への提供は行いません。詳しくはプライバシーポリシーをご確認ください。</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA BAND ===== -->
+<section class="cta-band">
+  <div class="container">
+    <h2 class="cta-band-title reveal">今すぐ診断して、<br><em>最大1億円超</em>の補助金を<br>受け取るチャンスを掴もう</h2>
+    <p class="cta-band-sub reveal">3分の診断 → 60分の無料相談 → 採択まで完全サポート</p>
+    <button class="cta-band-btn reveal" onclick="scrollToForm()">
+      ⚡ 無料で補助金診断を始める
+    </button>
+    <p class="cta-band-note reveal">完全無料 • 登録不要 • 3分で完了</p>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div>
+        <div class="footer-logo">補助金<span>Pro</span></div>
+        <div class="footer-copy-note">補助金の申請をトータルサポートする専門チームです。2025〜2026年度の最新情報に対応しています。</div>
+      </div>
+      <div class="footer-links">
+        <a href="#">サービス概要</a>
+        <a href="#">プライバシーポリシー</a>
+        <a href="#">特定商取引法に基づく表記</a>
+        <a href="#">お問い合わせ</a>
+      </div>
+    </div>
+    <hr class="footer-divider">
+    <div class="footer-bottom">
+      <span>© 2025 補助金Pro All Rights Reserved.</span>
+      <span>本診断は参考情報です。各補助金の詳細は公式サイトをご確認ください。</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== CALENDAR MODAL ===== -->
+<div class="modal-overlay" id="cal-modal">
+  <div class="modal-box">
+    <button class="modal-close" onclick="closeModal('cal-modal')">✕</button>
+    <div class="modal-title">📅 無料相談を予約する</div>
+    <div class="modal-sub">ご希望の日時をお選びください。Googleカレンダーへの招待をお送りします。</div>
+
+    <div class="cal-nav">
+      <button class="cal-nav-btn" onclick="calPrev()">＜ 前週</button>
+      <span class="cal-nav-title" id="cal-title">—</span>
+      <button class="cal-nav-btn" onclick="calNext()">次週 ＞</button>
+    </div>
+
+    <div class="cal-grid" id="cal-grid"></div>
+
+    <button class="cal-confirm-btn" id="cal-confirm-btn" disabled onclick="confirmBooking()">
+      この日時で予約する
+    </button>
+  </div>
+</div>
+
+<!-- ===== Toast ===== -->
+<div class="toast" id="toast"></div>
+
+<!-- ===== SCRIPTS ===== -->
+<script>
+/* ============================================================
+   SCROLL REVEAL
+   ============================================================ */
+const revealEls = document.querySelectorAll('.reveal');
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); revealObserver.unobserve(e.target); } });
+}, { threshold: 0.12 });
+revealEls.forEach(el => revealObserver.observe(el));
+
+/* ============================================================
+   NAV SCROLL
+   ============================================================ */
+window.addEventListener('scroll', () => {
+  document.getElementById('site-header').classList.toggle('scrolled', window.scrollY > 40);
+});
+
+function scrollToForm() {
+  document.getElementById('form-anchor').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ============================================================
+   HOJOKIN DATABASE
+   ============================================================ */
+const DB = [
+  { name: "ものづくり補助金", amount: "最大1,250万円", tags: ["製品・サービス高付加価値化"], desc: "革新的製品・サービス開発支援",
+    match: (q) => (["新製品・新サービスの開発","設備投資・省力化"].includes(q[4]) ? 45 : 0)
+      + (["法人（株式会社・合同会社等）","個人事業主・フリーランス"].includes(q[1]) ? 15 : 0) + 35 },
+  { name: "IT導入補助金2025", amount: "最大450万円", tags: ["通常枠","インボイス枠"],
+    desc: "業務効率化・DX推進ITツール導入",
+    match: (q) => (q[4]==="ITシステム・ソフトウェア導入" ? 50 : 0) + 35 },
+  { name: "小規模事業者持続化補助金", amount: "最大200万円", tags: ["通常枠","創業型"],
+    desc: "小規模事業者の販路開拓支援",
+    match: (q) => (q[4]==="販路開拓・マーケティング" ? 45 : 0)
+      + (["0人（代表者のみ）","1〜5人","6〜20人"].includes(q[2]) ? 20 : -10) + 20 },
+  { name: "中小企業省力化投資補助金", amount: "最大1,500万円", tags: ["IoT・ロボット"],
+    desc: "省力化設備（ロボット等）導入支援",
+    match: (q) => (q[4]==="設備投資・省力化" ? 50 : 0) + 30 },
+  { name: "中小企業新事業進出補助金", amount: "最大9,000万円", tags: ["2025年度新設"],
+    desc: "新分野進出・業種転換支援",
+    match: (q) => (q[4]==="新事業・業種転換" ? 55 : 0) + 25 },
+  { name: "中小企業成長加速化補助金", amount: "1億円以上", tags: ["2025年度新設"],
+    desc: "売上100億円目指す大規模投資",
+    match: (q) => (["21〜300人","301人以上"].includes(q[2]) ? 30 : -20)
+      + (q[4]==="新事業・業種転換" ? 30 : 0) + 30 },
+  { name: "事業承継・M&A補助金", amount: "最大1,000万円", tags: ["承継促進枠"],
+    desc: "事業承継・M&Aによる外部承継支援",
+    match: (q) => (q[4]==="事業承継・M&A" ? 60 : 0) + 20 },
+  { name: "省エネ・非化石転換補助金", amount: "補助率1/3〜1/2", tags: ["GX対応"],
+    desc: "省エネ設備導入・脱炭素転換支援",
+    match: (q) => (q[4]==="省エネ・脱炭素" ? 60 : 0) + 20 },
+  { name: "Go-Tech事業", amount: "最大3億円(3年間)", tags: ["産学連携"],
+    desc: "大学連携・高度研究開発支援",
+    match: (q) => (q[4]==="新製品・新サービスの開発" && q[1]==="法人（株式会社・合同会社等）" ? 40 : 0) + 15 },
+];
+
+/* ============================================================
+   FORM STATE
+   ============================================================ */
+const ans = {};
+let currentStep = 1;
+
+function fqSelect(el) {
+  const q = el.dataset.q;
+  document.querySelectorAll(`.fq-option[data-q="${q}"]`).forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  ans[q] = el.dataset.val;
+  const btn = document.getElementById(`fq${q}-next`);
+  if (btn) btn.disabled = false;
+}
+
+function fqNext(step) {
+  if (!ans[step]) return;
+  document.getElementById(`fq${step}`).style.display = 'none';
+  document.getElementById(`fq${step+1}`).style.display = 'block';
+  currentStep = step + 1;
+  updateProgress(currentStep);
+}
+function fqPrev(step) {
+  document.getElementById(`fq${step}`).style.display = 'none';
+  document.getElementById(`fq${step-1}`).style.display = 'block';
+  currentStep = step - 1;
+  updateProgress(currentStep);
+}
+
+function updateProgress(step) {
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`fp${i}`);
+    el.className = 'fp-step' + (i < step ? ' done' : i === step ? ' active' : '');
+  }
+  document.getElementById('fp-label').textContent = `${step} / 5`;
+}
+updateProgress(1);
+
+/* ============================================================
+   SUBMIT
+   ============================================================ */
+async function submitForm() {
+  const company = document.getElementById('in-company').value.trim();
+  const name    = document.getElementById('in-name').value.trim();
+  const email   = document.getElementById('in-email').value.trim();
+  if (!company || !name || !email) { showToast('⚠️ 必須項目を入力してください', '#D94F3D'); return; }
+
+  // Hide form, show loader
+  document.getElementById('form-q-wrap').style.display = 'none';
+  document.getElementById('form-loading').style.display = 'block';
+
+  await new Promise(r => setTimeout(r, 2400));
+
+  // Scoring
+  const scored = DB.map(h => ({ ...h, score: Math.min(99, Math.max(15, h.match(ans))) }))
+    .sort((a,b) => b.score - a.score);
+
+  // GAS Webhook
+  const webhook = document.getElementById('in-webhook').value.trim();
+  const payload = {
+    company, name, email,
+    tel: document.getElementById('in-tel').value,
+    revenue: document.getElementById('in-revenue').value,
+    q1: ans[1], q2: ans[2], q3: ans[3], q4: ans[4],
+    results: scored.slice(0,3).map(h=>h.name).join(' / ')
+  };
+  if (webhook) {
+    try {
+      fetch(webhook, { method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload) });
+    } catch(_) {}
+  }
+
+  // Show result
+  document.getElementById('form-loading').style.display = 'none';
+  showResults(scored);
+}
+
+function showResults(scored) {
+  const matchCount = scored.filter(h => h.score >= 60).length || 1;
+  document.getElementById('res-match-num').innerHTML = `${matchCount}<span>件</span>`;
+  const top = scored[0];
+  document.getElementById('res-top-name').textContent = top.name;
+  document.getElementById('res-top-amount').innerHTML = `${top.amount}<sub>まで</sub>`;
+
+  const list = document.getElementById('res-sub-list');
+  list.innerHTML = '';
+  scored.slice(1, 4).forEach((h, i) => {
+    const li = document.createElement('li');
+    li.className = 'result-sub-item';
+    li.innerHTML = `<div class="ri-num">${i+2}</div>${h.name}<div class="ri-amt">${h.amount}</div>`;
+    list.appendChild(li);
+  });
+
+  document.getElementById('form-result').style.display = 'block';
+}
+
+function retryForm() {
+  document.getElementById('form-result').style.display = 'none';
+  document.getElementById('form-q-wrap').style.display = 'block';
+  for (let i = 1; i <= 5; i++) {
+    const el = document.getElementById(`fq${i}`);
+    if (el) el.style.display = (i === 1 ? 'block' : 'none');
+  }
+  document.querySelectorAll('.fq-option').forEach(o => o.classList.remove('selected'));
+  Object.keys(ans).forEach(k => delete ans[k]);
+  for (let i = 1; i <= 4; i++) {
+    const btn = document.getElementById(`fq${i}-next`);
+    if (btn) btn.disabled = true;
+  }
+  currentStep = 1;
+  updateProgress(1);
+}
+
+/* ============================================================
+   CALENDAR
+   ============================================================ */
+let calOffset = 1; // start next week
+let selectedSlot = null;
+
+const DAYS_JP = ['月','火','水','木','金'];
+const TIMES = ['10:00','11:00','14:00','15:00','16:00'];
+
+function getWeekDates(offset) {
+  const today = new Date();
+  const mon = new Date(today);
+  mon.setDate(today.getDate() - (today.getDay() || 7) + 1 + offset * 7);
+  return Array.from({length:5}, (_,i) => { const d = new Date(mon); d.setDate(mon.getDate()+i); return d; });
+}
+
+function renderCal() {
+  const dates = getWeekDates(calOffset);
+  const m0 = dates[0], m4 = dates[4];
+  document.getElementById('cal-title').textContent =
+    `${m0.getMonth()+1}/${m0.getDate()}（月）〜${m4.getMonth()+1}/${m4.getDate()}（金）`;
+
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = '';
+
+  // Day headers
+  dates.forEach((d, i) => {
+    const h = document.createElement('div');
+    h.className = 'cal-day-header';
+    h.textContent = `${DAYS_JP[i]} ${d.getMonth()+1}/${d.getDate()}`;
+    grid.appendChild(h);
+  });
+
+  // Time slots per day
+  TIMES.forEach(t => {
+    dates.forEach((d, di) => {
+      const avail = Math.random() > 0.38 && d >= new Date();
+      const key = `${d.toDateString()}-${t}`;
+      const slot = document.createElement('div');
+      slot.className = 'cal-slot' + (!avail ? ' unavail' : '');
+      slot.innerHTML = `${t}`;
+      if (avail) {
+        slot.onclick = () => pickSlot(slot, key, `${d.getMonth()+1}/${d.getDate()}（${DAYS_JP[di]}）${t}`);
+        if (selectedSlot && selectedSlot.key === key) slot.classList.add('booked-by-user');
+      }
+      grid.appendChild(slot);
+    });
+  });
+}
+
+function pickSlot(el, key, label) {
+  document.querySelectorAll('.cal-slot').forEach(s => s.classList.remove('booked-by-user'));
+  el.classList.add('booked-by-user');
+  selectedSlot = { key, label };
+  document.getElementById('cal-confirm-btn').disabled = false;
+}
+function calPrev() { calOffset--; selectedSlot = null; document.getElementById('cal-confirm-btn').disabled = true; renderCal(); }
+function calNext() { calOffset++; selectedSlot = null; document.getElementById('cal-confirm-btn').disabled = true; renderCal(); }
+
+function openCalModal() {
+  calOffset = 1; selectedSlot = null;
+  renderCal();
+  document.getElementById('cal-modal').classList.add('open');
+}
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function confirmBooking() {
+  if (!selectedSlot) return;
+  const name = document.getElementById('in-name').value || 'お客様';
+  const email = document.getElementById('in-email').value || '';
+  const title = encodeURIComponent(`【補助金無料相談】${name} 様`);
+  const details = encodeURIComponent(`補助金診断に基づく無料相談（60分・Zoom）\n目的: ${ans[4]||''}\nご連絡先: ${email}`);
+  window.open(`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&details=${details}`, '_blank');
+  closeModal('cal-modal');
+  showToast(`✅ ${selectedSlot.label} で予約しました！`);
+}
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+function toggleFaq(el) {
+  const item = el.closest('.faq-item');
+  const isOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!isOpen) item.classList.add('open');
+}
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+function showToast(msg, bg = '#2A7A56') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = bg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 4000);
+}
+</script>
+</body>
+</html>
