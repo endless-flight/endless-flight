@@ -2,76 +2,59 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>AIセキュリティ教科書</title>
+<title>AIセキュリティ入門（非エンジニア向け）</title>
 
 <style>
-
 body{
 font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto;
-background:#f5f6fa;
-margin:0;
 line-height:1.8;
-color:#222;
+background:#f5f6f7;
+margin:0;
 }
 
 .container{
 max-width:900px;
 margin:auto;
 background:white;
-padding:50px;
+padding:40px;
 }
 
 h1{
-font-size:40px;
-margin-bottom:10px;
+font-size:36px;
+border-bottom:3px solid #222;
+padding-bottom:10px;
 }
 
 h2{
-margin-top:60px;
-border-left:6px solid #4f46e5;
-padding-left:14px;
+margin-top:50px;
+font-size:26px;
+border-left:6px solid #333;
+padding-left:12px;
 }
 
 h3{
 margin-top:30px;
-}
-
-.codebox{
-background:#f4f4f4;
-padding:20px;
-border-radius:10px;
-font-family:monospace;
-margin:20px 0;
-font-size:16px;
+font-size:20px;
 }
 
 .diagram{
-background:#fafafa;
+background:#f0f0f0;
 padding:20px;
-border-radius:10px;
+border-radius:8px;
 font-family:monospace;
+white-space:pre;
 margin:20px 0;
 }
 
-.note{
-background:#eef2ff;
-padding:18px;
-border-radius:10px;
-margin-top:10px;
-}
-
-.danger{
-background:#fff1f2;
-padding:18px;
-border-radius:10px;
-}
-
-.section{
-margin-top:40px;
+.box{
+background:#fafafa;
+border-left:5px solid #444;
+padding:20px;
+margin:20px 0;
 }
 
 ul{
-margin-top:10px;
+padding-left:20px;
 }
 
 </style>
@@ -81,145 +64,214 @@ margin-top:10px;
 
 <div class="container">
 
-<h1>AIセキュリティ教科書</h1>
-<p>非エンジニア向け AIセキュリティ入門</p>
+<h1>AIセキュリティ入門（非エンジニア向け）</h1>
 
-<div class="note">
-AIは便利ですが、使い方を間違えると重大なセキュリティ事故を引き起こします。
-このページでは、AIセキュリティの基本構造をシンプルに解説します。
-</div>
 
 <h2>第1章 AIセキュリティの基本構造</h2>
 
-<p>AIのセキュリティ事故は、ほぼ次の構造で起きます。</p>
+<p>AIを使ったシステムの事故は、ほぼこの構造に集約されます。</p>
 
 <div class="diagram">
-① 情報を読む  
-↓  
-② 情報を処理する  
-↓  
+① 情報を読む
+↓
+② 情報を処理する
+↓
 ③ 外部に送る
 </div>
 
-<p>つまり本質はこの流れです。</p>
+<p>つまり</p>
 
 <div class="diagram">
-秘密取得  
-↓  
-自由に処理  
-↓  
+秘密取得
+↓
+自由に処理
+↓
 外部送信
 </div>
 
-<div class="note">
-AIはこの流れを自動で高速実行できるため、人間よりも情報漏洩のスピードが圧倒的に速いのが特徴です。
+<p>
+AIはこの流れを自動で実行できるため、
+人間よりも情報漏洩の速度が圧倒的に速いという特徴があります。
+</p>
+
+
+<h2>第2章 AIで起きる7つの事故パターン</h2>
+
+<h3>1 Prompt Injection（プロンプトインジェクション）</h3>
+
+<p>AIが読む文章の中に、隠された命令を仕込む攻撃です。</p>
+
+<div class="diagram">
+Webページ
+↓
+AIが内容を読む
+↓
+ページ内の命令を実行
+↓
+秘密情報を送信
 </div>
 
-<h2>第2章 .env神話</h2>
+<div class="diagram">
+外部入力
+↓
+AIが命令として解釈
+↓
+秘密取得
+↓
+外部送信
+</div>
 
-<p>.envファイルは多くの開発者が使っています。</p>
+<ul>
+<li>人間には見えない</li>
+<li>AIだけが読む</li>
+<li>HTMLやCSSで隠せる</li>
+</ul>
 
-<div class="codebox">
+
+<h3>2 プロンプト汚染（Prompt Supply Chain）</h3>
+
+<div class="diagram">
+公開プロンプト
+↓
+AIが使用
+↓
+隠された命令実行
+↓
+データ送信
+</div>
+
+<div class="diagram">
+信頼したプロンプト
+↓
+悪意命令
+↓
+秘密取得
+↓
+外部送信
+</div>
+
+
+<h3>3 AIツール悪用</h3>
+
+<p>AIエージェントはツールを使えます。</p>
+
+<ul>
+<li>データベース</li>
+<li>API</li>
+<li>ファイル</li>
+<li>メール</li>
+<li>Slack</li>
+</ul>
+
+<div class="diagram">
+AI
+↓
+ツール実行
+↓
+秘密取得
+↓
+外部送信
+</div>
+
+
+<h3>4 環境変数漏洩（.env問題）</h3>
+
+<div class="diagram">
 .env
 
-API_KEY=xxxxx  
-DB_PASSWORD=xxxxx  
+API_KEY=xxxxx
+DATABASE_URL=xxxxx
 TOKEN=xxxxx
 </div>
 
-<p>しかしこれはただの設定ファイルです。</p>
-
-<div class="danger">
-AIやツールがこのファイルを読める場合、秘密情報は簡単に取得されます。
-</div>
-
-<p>典型的な事故パターン</p>
-
 <div class="diagram">
-AI  
-↓  
-.env読み込み  
-↓  
-ログ出力  
-↓  
-外部流出
+AIが.envを読む
+↓
+ログに出力
+↓
+ログ外部保存
+↓
+第三者取得
+↓
+API悪用
 </div>
 
-<h2>第3章 AIの構造</h2>
 
-<p>AIシステムは主に3つの要素で構成されています。</p>
+<h3>5 ログ漏洩</h3>
 
 <ul>
-<li>プロンプト</li>
-<li>ツール</li>
-<li>データ</li>
+<li>デバッグログ</li>
+<li>プロンプトログ</li>
+<li>エージェント履歴</li>
 </ul>
 
 <div class="diagram">
-プロンプト  
-↓  
-AI  
-↓  
-ツール
+ログ
+↓
+秘密混入
+↓
+SaaS保存
+↓
+漏洩
 </div>
 
-<p>AIはツールを通じて様々な操作ができます。</p>
 
-<ul>
-<li>API実行</li>
-<li>ファイル読み込み</li>
-<li>検索</li>
-<li>データ操作</li>
-</ul>
-
-<h2>第4章 AIツール連携</h2>
-
-<p>AIは外部ツールと連携することで強力になります。</p>
+<h3>6 OAuthトークン漏洩</h3>
 
 <div class="diagram">
-AI  
-↓  
-ツール  
-↓  
-API  
-↓  
-システム
+refresh token
+↓
+トークン再発行
+↓
+API操作
+↓
+アカウント乗っ取り
 </div>
 
-<div class="danger">
-AIが管理APIを操作できる場合、システムを直接操作できてしまいます。
-</div>
 
-<h2>第5章 AIセキュリティ事故トップ10</h2>
-
-<ul>
-<li>プロンプトインジェクション</li>
-<li>秘密情報漏洩</li>
-<li>ログ漏洩</li>
-<li>ツール権限悪用</li>
-<li>トークン漏洩</li>
-<li>自動課金</li>
-<li>Cookie盗難</li>
-<li>モデル汚染</li>
-<li>データ抽出</li>
-<li>AIサプライチェーン攻撃</li>
-</ul>
-
-<h2>第6章 実際の事故例</h2>
-
-<p>AIが.envを読み込み、認証情報がログに出力された事例があります。</p>
+<h3>7 Cookieハイジャック</h3>
 
 <div class="diagram">
-.env  
-↓  
-AI読み込み  
-↓  
-ログ出力  
-↓  
-攻撃者取得
+マルウェア
+↓
+Cookie取得
+↓
+セッション再利用
+↓
+2FA回避
+↓
+ログイン
 </div>
 
-<h2>第7章 必須セキュリティ対策</h2>
+<p>2段階認証でも防げません。</p>
+
+
+<h2>第3章 AIセキュリティの本質</h2>
+
+<div class="box">
+初心者の考え  
+<br><br>
+秘密を守る
+</div>
+
+<p>しかし実際のセキュリティ設計は</p>
+
+<div class="box">
+秘密は必ず漏れる
+</div>
+
+<p>という前提で作ります。</p>
+
+
+<h2>第4章 ゼロトラスト設計</h2>
+
+<div class="diagram">
+侵入は防げない
+↓
+被害を最小化する
+</div>
+
+<p>必須対策</p>
 
 <ul>
 <li>Secret Manager</li>
@@ -231,82 +283,124 @@ AI読み込み
 <li>AIサンドボックス</li>
 </ul>
 
-<h3>Secret Manager</h3>
-
 <div class="diagram">
-Secret Manager  
-↓  
-短時間トークン  
-↓  
-AI
-</div>
-
-<h3>権限最小化</h3>
-
-<div class="diagram">
-AI  
-↓  
-読み取り権限のみ
-</div>
-
-<h3>レート制限</h3>
-
-<div class="diagram">
-API  
-↓  
-1分100回まで
-</div>
-
-<h2>第8章 ゼロトラストAI設計</h2>
-
-<p>AIは信用してはいけません。</p>
-
-<div class="diagram">
-AI  
-↓  
-制限  
-↓  
-監視  
-↓  
-ログ
-</div>
-
-<div class="note">
-AIが暴走しても被害が広がらない設計が重要です。
-</div>
-
-<h2>第9章 AI開発者の誤解</h2>
-
-<ul>
-<li>.envなら安全</li>
-<li>内部ツールだから大丈夫</li>
-<li>AIは勝手なことをしない</li>
-</ul>
-
-<div class="danger">
-これらはすべて誤解です。
-</div>
-
-<h2>第10章 AI時代のセキュリティ原則</h2>
-
-<p>AIセキュリティの基本原則</p>
-
-<ul>
-<li>AIを信用しない</li>
-<li>秘密を持たせない</li>
-<li>権限を最小化する</li>
-<li>ログを監視する</li>
-<li>被害を前提に設計する</li>
-</ul>
-
-<div class="diagram">
-AI  
-↓  
-制限  
-↓  
-監視  
-↓  
+キー漏洩
+↓
+権限小さい
+↓
+短時間
+↓
+低レート
+↓
+課金上限
+↓
 被害最小化
+</div>
+
+
+<h2>第5章 なぜAIは人間より危険なのか</h2>
+
+<h3>人間</h3>
+
+<div class="diagram">
+情報を見る
+↓
+考える
+↓
+行動する
+</div>
+
+<ul>
+<li>疑う</li>
+<li>迷う</li>
+<li>失敗に気づく</li>
+</ul>
+
+
+<h3>AI</h3>
+
+<div class="diagram">
+情報を読む
+↓
+命令として解釈
+↓
+すぐ実行
+</div>
+
+<ul>
+<li>疑わない</li>
+<li>止まらない</li>
+<li>疲れない</li>
+</ul>
+
+
+<h3>AIの危険な能力</h3>
+
+<ul>
+<li>Webを読む</li>
+<li>ファイルを読む</li>
+<li>APIを使う</li>
+<li>ツールを実行する</li>
+<li>外部通信する</li>
+</ul>
+
+<div class="diagram">
+情報取得
+↓
+処理
+↓
+送信
+</div>
+
+<div class="diagram">
+秘密取得
+↓
+自由処理
+↓
+外部送信
+</div>
+
+
+<h2>第6章 AIセキュリティの必須対策</h2>
+
+<h3>① Secret Manager</h3>
+
+<div class="diagram">
+アプリ
+↓
+Secret Manager
+↓
+一時取得
+↓
+処理
+↓
+破棄
+</div>
+
+<ul>
+<li>秘密をファイルに保存しない</li>
+</ul>
+
+
+<h3>② 短命トークン</h3>
+
+<div class="diagram">
+トークン発行
+↓
+短時間利用
+↓
+自動失効
+</div>
+
+
+<h3>③ 権限最小化</h3>
+
+<div class="diagram">
+悪い例
+管理者権限
+
+良い例
+読み取りのみ
 </div>
 
 </div>
