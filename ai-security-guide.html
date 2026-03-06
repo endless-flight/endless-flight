@@ -1,81 +1,1384 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>AIセキュリティ入門（非エンジニア向け）</title>
-    <style>
-        body { font-family: sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 20px; }
-        h1 { border-bottom: 2px solid #333; padding-bottom: 10px; }
-        h2 { background: #f4f4f4; padding: 10px; border-left: 5px solid #333; margin-top: 30px; }
-        h3 { color: #2c3e50; }
-        .box { border: 1px solid #ccc; padding: 15px; border-radius: 5px; background: #f9f9f9; }
-        .flow { text-align: center; font-weight: bold; margin: 10px 0; }
-        .arrow { font-size: 1.2em; color: #666; }
-        ul { margin-bottom: 20px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AIセキュリティ入門 — 非エンジニア向けガイド</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --bg-card: #fdf8f0;
+    --bg-elevated: #ede6d8;
+    --border: #d4c9b0;
+    --accent: #5c3d1e;
+    --accent2: #b03a2e;
+    --accent3: #9a6b00;
+    --accent4: #2e6b3e;
+    --text: #3a2e1e;
+    --text-dim: #8a7a62;
+    --text-bright: #1a120a;
+    --font-mono: 'JetBrains Mono', monospace;
+    --font-body: 'Noto Sans JP', sans-serif;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    font-size: 15px;
+    line-height: 1.8;
+    overflow-x: hidden;
+  }
+
+  /* GRID BACKGROUND */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(92,61,30,0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(92,61,30,0.05) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* HEADER */
+  header {
+    position: relative;
+    padding: 80px 24px 60px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    z-index: 1;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 300px;
+    background: radial-gradient(ellipse, rgba(92,61,30,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .header-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s ease forwards;
+  }
+
+  h1 {
+    font-size: clamp(28px, 5vw, 52px);
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    margin-bottom: 16px;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s ease forwards;
+  }
+
+  h1 span { color: var(--accent); }
+
+  .header-sub {
+    font-size: 14px;
+    color: var(--text-dim);
+    font-family: var(--font-mono);
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s ease forwards;
+  }
+
+  /* NAV TOC */
+  .toc {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .toc-title {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+  }
+
+  .toc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 8px;
+  }
+
+  .toc-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text-dim);
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+
+  .toc-item:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(0,229,255,0.04);
+    transform: translateX(4px);
+  }
+
+  .toc-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent);
+    opacity: 0.6;
+    flex-shrink: 0;
+  }
+
+  /* MAIN */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 24px 80px;
+  }
+
+  /* CHAPTER */
+  .chapter {
+    margin-top: 64px;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+
+  .chapter:nth-child(1) { animation-delay: 0.1s; }
+  .chapter:nth-child(2) { animation-delay: 0.15s; }
+  .chapter:nth-child(3) { animation-delay: 0.2s; }
+
+  .chapter-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .chapter-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--accent);
+    opacity: 0.7;
+    letter-spacing: 0.1em;
+    padding-top: 6px;
+    flex-shrink: 0;
+  }
+
+  h2 {
+    font-size: clamp(18px, 3vw, 24px);
+    font-weight: 700;
+    color: var(--text-bright);
+    letter-spacing: -0.01em;
+    line-height: 1.3;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 28px 0 12px;
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  h3::before {
+    content: '//';
+    opacity: 0.4;
+    font-size: 13px;
+  }
+
+  p {
+    color: var(--text);
+    margin-bottom: 14px;
+  }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin: 16px 0;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 200px;
+  }
+
+  .flow-step {
+    color: var(--text-bright);
+    padding: 3px 0;
+  }
+
+  .flow-arrow {
+    color: var(--text-dim);
+    text-align: center;
+    font-size: 11px;
+    padding: 1px 0;
+  }
+
+  .flow-step.danger { color: var(--accent2); }
+  .flow-step.warn { color: var(--accent3); }
+  .flow-step.safe { color: var(--accent4); }
+  .flow-step.accent { color: var(--accent); }
+
+  .flow-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin: 16px 0;
+    align-items: flex-start;
+  }
+
+  /* ATTACK PATTERN CARDS */
+  .pattern-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .pattern-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pattern-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent2), transparent);
+  }
+
+  .pattern-card:hover {
+    border-color: rgba(255,60,110,0.4);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .pattern-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent2);
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+  }
+
+  .pattern-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 10px;
+  }
+
+  .pattern-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* COUNTERMEASURE CARDS */
+  .measure-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .measure-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all 0.25s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .measure-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, var(--accent4), transparent);
+  }
+
+  .measure-card:hover {
+    border-color: rgba(0,255,157,0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+
+  .measure-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--accent4);
+    letter-spacing: 0.15em;
+    margin-bottom: 6px;
+  }
+
+  .measure-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--text-bright);
+    margin-bottom: 10px;
+  }
+
+  .measure-desc {
+    font-size: 12px;
+    color: var(--text-dim);
+    line-height: 1.7;
+  }
+
+  /* CALLOUT */
+  .callout {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px 24px;
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .callout.danger {
+    border-left: 3px solid var(--accent2);
+    background: rgba(176,58,46,0.06);
+  }
+
+  .callout.info {
+    border-left: 3px solid var(--accent);
+    background: rgba(92,61,30,0.06);
+  }
+
+  .callout.success {
+    border-left: 3px solid var(--accent4);
+    background: rgba(46,107,62,0.06);
+  }
+
+  .callout.warn {
+    border-left: 3px solid var(--accent3);
+    background: rgba(154,107,0,0.06);
+  }
+
+  .callout-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .callout.danger .callout-label { color: var(--accent2); }
+  .callout.info .callout-label { color: var(--accent); }
+  .callout.success .callout-label { color: var(--accent4); }
+  .callout.warn .callout-label { color: var(--accent3); }
+
+  .callout p { margin: 0; font-size: 14px; }
+
+  /* COMPARISON */
+  .compare {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin: 20px 0;
+  }
+
+  .compare-box {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 18px;
+  }
+
+  .compare-box.bad { border-top: 2px solid var(--accent2); }
+  .compare-box.good { border-top: 2px solid var(--accent4); }
+
+  .compare-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .compare-box.bad .compare-label { color: var(--accent2); }
+  .compare-box.good .compare-label { color: var(--accent4); }
+
+  .compare-box p { font-size: 13px; color: var(--text); margin: 0; }
+
+  /* CODE BLOCK */
+  pre {
+    background: #ede6d8;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: #2e6b3e;
+    overflow-x: auto;
+    margin: 12px 0;
+    line-height: 1.6;
+  }
+
+  pre .key { color: var(--text-dim); }
+  pre .val { color: #9a6b00; }
+
+  /* CHECKLIST */
+  .checklist {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .check-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 14px;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    font-size: 13px;
+    transition: all 0.2s;
+  }
+
+  .check-item:hover {
+    border-color: var(--accent4);
+    background: rgba(0,255,157,0.03);
+  }
+
+  .check-icon {
+    font-family: var(--font-mono);
+    color: var(--accent4);
+    flex-shrink: 0;
+    font-size: 12px;
+    padding-top: 1px;
+  }
+
+  .check-content {
+    flex: 1;
+    color: var(--text);
+  }
+
+  .check-num {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    color: var(--text-dim);
+    flex-shrink: 0;
+    padding-top: 2px;
+    min-width: 28px;
+  }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: var(--bg-elevated);
+    border: 1px solid rgba(92,61,30,0.18);
+    border-radius: 10px;
+    padding: 24px 28px;
+    margin: 24px 0;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .highlight::after {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 120px; height: 120px;
+    background: radial-gradient(circle, rgba(92,61,30,0.06) 0%, transparent 70%);
+  }
+
+  .highlight p {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--text-bright);
+    margin: 0;
+  }
+
+  /* INCIDENT CARD */
+  .incident {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin: 12px 0;
+    position: relative;
+  }
+
+  .incident::before {
+    content: 'INCIDENT';
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    color: var(--accent2);
+    display: block;
+    margin-bottom: 6px;
+  }
+
+  .incident-title {
+    font-weight: 700;
+    color: var(--text-bright);
+    font-size: 13px;
+    margin-bottom: 8px;
+  }
+
+  .incident p {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin: 0;
+  }
+
+  /* DIVIDER */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 48px 0;
+  }
+
+  /* SUMMARY BLOCK */
+  .summary {
+    background: var(--bg-elevated);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 32px;
+    margin: 32px 0;
+    text-align: center;
+  }
+
+  .summary-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+
+  .summary h3 {
+    font-size: 20px;
+    color: var(--text-bright);
+    justify-content: center;
+    margin: 0 0 8px;
+  }
+
+  .summary h3::before { display: none; }
+
+  .summary p {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin: 0;
+  }
+
+  /* TAG PILL */
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 12px 0;
+  }
+
+  .tag {
+    background: rgba(92,61,30,0.08);
+    border: 1px solid rgba(92,61,30,0.2);
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 4px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ANIMATION */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* FOOTER */
+  footer {
+    position: relative;
+    z-index: 1;
+    border-top: 1px solid var(--border);
+    padding: 32px 24px;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--text-dim);
+    letter-spacing: 0.1em;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 640px) {
+    .compare { grid-template-columns: 1fr; }
+    .pattern-grid { grid-template-columns: 1fr; }
+    .measure-grid { grid-template-columns: 1fr; }
+    .flow-wrap { flex-direction: column; }
+  }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: #c4b89a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+</style>
 </head>
 <body>
 
-    <h1>AIセキュリティ入門（非エンジニア向け）</h1>
+<header>
+  <div class="header-label">Security Document / 非エンジニア向け</div>
+  <h1><span>AI</span>セキュリティ入門</h1>
+  <div class="header-sub">// 11 chapters · zero trust architecture · incident analysis</div>
+</header>
 
-    <section>
-        <h2>第1章 AIセキュリティの基本構造</h2>
-        <p>AIを使ったシステムの事故は、ほぼこの構造に集約されます。</p>
-        <div class="flow">
-            ① 情報を読む<br>
-            <span class="arrow">↓</span><br>
-            ② 情報を処理する<br>
-            <span class="arrow">↓</span><br>
-            ③ 外部に送る
+<!-- TOC -->
+<nav class="toc">
+  <div class="toc-title">// Table of Contents</div>
+  <div class="toc-grid">
+    <a href="#ch1" class="toc-item"><span class="toc-num">CH.01</span> AIセキュリティの基本構造</a>
+    <a href="#ch2" class="toc-item"><span class="toc-num">CH.02</span> 7つの事故パターン</a>
+    <a href="#ch3" class="toc-item"><span class="toc-num">CH.03</span> AIセキュリティの本質</a>
+    <a href="#ch4" class="toc-item"><span class="toc-num">CH.04</span> ゼロトラスト設計</a>
+    <a href="#ch5" class="toc-item"><span class="toc-num">CH.05</span> なぜAIは人間より危険か</a>
+    <a href="#ch6" class="toc-item"><span class="toc-num">CH.06</span> 必須対策 7項目</a>
+    <a href="#ch7" class="toc-item"><span class="toc-num">CH.07</span> 最強の防御構造</a>
+    <a href="#ch8" class="toc-item"><span class="toc-num">CH.08</span> AI事故トップ10</a>
+    <a href="#ch9" class="toc-item"><span class="toc-num">CH.09</span> AIサプライチェーン攻撃</a>
+    <a href="#ch10" class="toc-item"><span class="toc-num">CH.10</span> AIワーム</a>
+    <a href="#ch11" class="toc-item"><span class="toc-num">CH.11</span> セキュリティチェックリスト20</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- CHAPTER 1 -->
+<section class="chapter" id="ch1">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.01</span>
+    <h2>AIセキュリティの基本構造</h2>
+  </div>
+
+  <p>AIを使ったシステムの事故は、ほぼこの構造に集約されます。</p>
+
+  <div class="flow-wrap">
+    <div class="flow">
+      <div class="flow-step accent">① 情報を読む</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step accent">② 情報を処理する</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step accent">③ 外部に送る</div>
+    </div>
+    <div class="flow">
+      <div class="flow-step danger">秘密取得</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step danger">自由に処理</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step danger">外部送信</div>
+    </div>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-label">⚠ Critical Point</div>
+    <p>AIはこの流れを自動で実行できるため、人間よりも情報漏洩の速度が圧倒的に速いという特徴があります。</p>
+  </div>
+</section>
+
+<!-- CHAPTER 2 -->
+<section class="chapter" id="ch2">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.02</span>
+    <h2>AIで起きる7つの事故パターン</h2>
+  </div>
+
+  <p>AIセキュリティ事故は、ほぼ以下の7種類です。</p>
+
+  <div class="pattern-grid">
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 01</div>
+      <div class="pattern-title">Prompt Injection</div>
+      <div class="pattern-desc">AIが読む文章の中に、隠された命令を仕込む攻撃。HTMLやCSSで隠すことができ、人間には見えない。</div>
+      <div class="flow" style="margin-top:12px; font-size:11px; padding:12px 16px;">
+        <div class="flow-step">Webページ</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">AIが命令として解釈</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step danger">秘密取得 → 外部送信</div>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 02</div>
+      <div class="pattern-title">プロンプト汚染</div>
+      <div class="pattern-desc">公開プロンプトの中に悪意の命令が紛れているケース。信頼したプロンプトが攻撃の入口になる。</div>
+      <div class="flow" style="margin-top:12px; font-size:11px; padding:12px 16px;">
+        <div class="flow-step">公開プロンプト</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step">AIが使用</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step danger">隠された命令実行</div>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 03</div>
+      <div class="pattern-title">AIツール悪用</div>
+      <div class="pattern-desc">AIエージェントのツール権限が強すぎる場合の危険。DB・API・メール・Slackなど広範な操作が可能になる。</div>
+      <div class="tags">
+        <span class="tag">Database</span>
+        <span class="tag">API</span>
+        <span class="tag">Email</span>
+        <span class="tag">Slack</span>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 04</div>
+      <div class="pattern-title">環境変数漏洩（.env）</div>
+      <div class="pattern-desc">AIが.envを読み、ログに出力。ログが外部保存されてキーが悪用される。</div>
+      <pre style="margin-top:10px; font-size:11px; padding:10px 14px;"><span class="key">API_KEY</span>=<span class="val">xxxxx</span>
+<span class="key">DATABASE_URL</span>=<span class="val">xxxxx</span>
+<span class="key">TOKEN</span>=<span class="val">xxxxx</span></pre>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 05</div>
+      <div class="pattern-title">ログ漏洩</div>
+      <div class="pattern-desc">デバッグログ・プロンプトログ・エージェント履歴に秘密が混入し、SaaSに保存されて漏洩する。</div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 06</div>
+      <div class="pattern-title">OAuthトークン漏洩</div>
+      <div class="pattern-desc">refresh tokenが漏れると、アクセストークンの再発行→API操作→アカウント乗っ取りが可能になる。</div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">PATTERN 07</div>
+      <div class="pattern-title">Cookieハイジャック</div>
+      <div class="pattern-desc">マルウェアによるCookie盗難→セッション再利用→2FA回避→ログイン成功。2段階認証でも防げない。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHAPTER 3 -->
+<section class="chapter" id="ch3">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.03</span>
+    <h2>AIセキュリティの本質</h2>
+  </div>
+
+  <div class="compare">
+    <div class="compare-box bad">
+      <div class="compare-label">❌ 初心者の考え</div>
+      <p>秘密を守ることがセキュリティである</p>
+    </div>
+    <div class="compare-box good">
+      <div class="compare-label">✓ 実際の設計思想</div>
+      <p><strong>秘密は必ず漏れる</strong> という前提でシステムを設計する</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-label">ℹ Key Insight</div>
+    <p>多くの人が誤解しています。AIセキュリティの目的は「漏れないようにすること」ではなく、「漏れても壊れないシステムを作ること」です。</p>
+  </div>
+</section>
+
+<!-- CHAPTER 4 -->
+<section class="chapter" id="ch4">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.04</span>
+    <h2>ゼロトラスト設計</h2>
+  </div>
+
+  <p>AI時代の基本思想です。</p>
+
+  <div class="callout info">
+    <div class="callout-label">Zero Trust</div>
+    <p><strong>侵入は防げない → 被害を最小化する</strong></p>
+  </div>
+
+  <h3>必須対策（第6章で詳細解説）</h3>
+
+  <div class="checklist">
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">① Secret Manager — 秘密情報を安全に保管</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">② 短命トークン — トークンの寿命を短くする</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">③ 権限最小化 — 必要な権限だけ与える</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">④ レート制限 — API呼び出し回数を制限</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">⑤ 課金上限 — 高額請求を自動停止</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">⑥ 監査ログ — 全操作を記録・監査</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content">⑦ AIサンドボックス — AIを隔離環境で動かす</span></div>
+  </div>
+
+  <h3>被害最小化の仕組み</h3>
+
+  <div class="flow">
+    <div class="flow-step danger">キー漏洩</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">権限小さい</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">短時間</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">低レート</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">課金上限</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step safe">被害最小化</div>
+  </div>
+</section>
+
+<!-- CHAPTER 5 -->
+<section class="chapter" id="ch5">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.05</span>
+    <h2>なぜAIは人間より危険なのか</h2>
+  </div>
+
+  <div class="compare">
+    <div class="compare-box bad">
+      <div class="compare-label">人間のオペレーター</div>
+      <p>情報を見る → <strong>考える・疑う・迷う</strong> → 行動する<br><br>「失敗に気づく」というブレーキがある</p>
+    </div>
+    <div class="compare-box" style="border-top: 2px solid var(--accent2);">
+      <div class="compare-label" style="color:var(--accent2);">AIオペレーター</div>
+      <p>情報を読む → <strong>命令として解釈</strong> → すぐ実行<br><br>疑わない・止まらない・疲れない</p>
+    </div>
+  </div>
+
+  <h3>AIエージェントが持つ5つの能力</h3>
+
+  <div class="checklist">
+    <div class="check-item"><span class="check-num">01</span><span class="check-content">Webを読む</span></div>
+    <div class="check-item"><span class="check-num">02</span><span class="check-content">ファイルを読む</span></div>
+    <div class="check-item"><span class="check-num">03</span><span class="check-content">APIを使う</span></div>
+    <div class="check-item"><span class="check-num">04</span><span class="check-content">ツールを実行する</span></div>
+    <div class="check-item"><span class="check-num">05</span><span class="check-content">外部通信する</span></div>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-label">⚠ 危険な構造</div>
+    <p>この5つが組み合わさると「情報取得 → 処理 → 送信」が完全自動化されます。これがAIセキュリティ事故の本質です。</p>
+  </div>
+</section>
+
+<!-- CHAPTER 6 -->
+<section class="chapter" id="ch6">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.06</span>
+    <h2>AIセキュリティの必須対策（ゼロトラスト）</h2>
+  </div>
+
+  <div class="measure-grid">
+
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 01</div>
+      <div class="measure-title">Secret Manager</div>
+      <div class="measure-desc">秘密情報を安全に保管する仕組み。AWS Secrets Manager / HashiCorp Vault / Google Secret Managerなど。秘密をファイルに保存しない。</div>
+      <div class="flow" style="margin-top:12px; font-size:11px; padding:10px 14px;">
+        <div class="flow-step">アプリ → Secret Manager</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step safe">一時取得 → 処理 → 破棄</div>
+      </div>
+    </div>
+
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 02</div>
+      <div class="measure-title">短命トークン</div>
+      <div class="measure-desc">トークンの寿命を数分〜数時間に設定。もし漏れても時間切れで無効化される。</div>
+      <div class="flow" style="margin-top:12px; font-size:11px; padding:10px 14px;">
+        <div class="flow-step">トークン発行</div>
+        <div class="flow-arrow">↓</div>
+        <div class="flow-step safe">短時間利用 → 自動失効</div>
+      </div>
+    </div>
+
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 03</div>
+      <div class="measure-title">権限最小化 ★最重要</div>
+      <div class="measure-desc">必要な権限だけを与える。管理者権限は絶対に与えない。読み取り専用など最小限の権限設計が基本。</div>
+      <div class="compare" style="margin-top:10px;">
+        <div class="compare-box bad" style="padding:10px 12px;">
+          <div class="compare-label">❌ Bad</div>
+          <p style="font-size:12px;">管理者権限</p>
         </div>
-        <p>AIはこの流れを自動で実行できるため、人間よりも情報漏洩の速度が圧倒的に速いという特徴があります。</p>
-    </section>
+        <div class="compare-box good" style="padding:10px 12px;">
+          <div class="compare-label">✓ Good</div>
+          <p style="font-size:12px;">読み取りのみ</p>
+        </div>
+      </div>
+    </div>
 
-    <section>
-        <h2>第2章 AIで起きる7つの事故パターン</h2>
-        <ol>
-            <li><strong>Prompt Injection（プロンプトインジェクション）</strong>: AIが読む文章の中に隠された命令を仕込む攻撃。</li>
-            <li><strong>プロンプト汚染（Prompt Supply Chain）</strong>: 公開プロンプトに悪意ある命令が紛れているケース。</li>
-            <li><strong>AIツール悪用</strong>: AIエージェントのツール権限が強すぎることによる情報流出。</li>
-            <li><strong>環境変数漏洩（.env問題）</strong>: APIキーなどの認証情報がログ等を通じて流出する問題。</li>
-            <li><strong>ログ漏洩</strong>: デバッグログやプロンプト履歴に秘密情報が混入して漏洩する事故。</li>
-            <li><strong>OAuthトークン漏洩</strong>: refresh tokenが漏れ、アカウントが乗っ取られる事態。</li>
-            <li><strong>Cookieハイジャック</strong>: セッションを盗まれ、2段階認証を回避される攻撃。</li>
-        </ol>
-    </section>
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 04</div>
+      <div class="measure-title">レート制限</div>
+      <div class="measure-desc">APIの呼び出し回数を制限（例：1秒10回まで）。超過した場合は自動ブロック。大量攻撃を防ぐ。</div>
+    </div>
 
-    <section>
-        <h2>第3章 AIセキュリティの本質</h2>
-        <p>初心者は「秘密を守る」と考えがちですが、実際のセキュリティ設計は<strong>「秘密は必ず漏れる」という前提</strong>で作ります。</p>
-    </section>
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 05</div>
+      <div class="measure-title">課金上限</div>
+      <div class="measure-desc">AI時代に特に重要。被害の多くは高額請求。1日100ドルなど上限を設定し、到達したら自動停止。</div>
+    </div>
 
-    <section>
-        <h2>第4章 ゼロトラスト設計</h2>
-        <p>「侵入は防げない」という前提に立ち、被害を最小化する設計です。</p>
-        <ul>
-            <li>Secret Managerの利用</li>
-            <li>短命トークンの発行</li>
-            <li>権限の最小化</li>
-            <li>レート制限</li>
-            <li>課金上限の設定</li>
-            <li>監査ログの保存</li>
-            <li>AIサンドボックスの構築</li>
-        </ul>
-    </section>
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 06</div>
+      <div class="measure-title">監査ログ</div>
+      <div class="measure-desc">すべての操作（誰が・いつ・何をしたか）を記録。異常検知に活用する。</div>
+    </div>
 
-    <section>
-        <h2>第11章 AI導入企業のセキュリティチェックリスト20</h2>
-        <p>まずは以下の基本的な管理項目を確認してください。</p>
-        <ul>
-            <li>APIキーをコードにハードコードしない</li>
-            <li>.envファイルをGitHub等に公開しない</li>
-            <li>APIキーの権限を最小化する</li>
-            <li>APIキーにレート制限と課金上限を設ける</li>
-            <li>AIの重要操作には必ず人間確認を入れる</li>
-            <li>AIを隔離環境（サンドボックス）で動かす</li>
-            <li>etc...</li>
-        </ul>
-    </section>
+    <div class="measure-card">
+      <div class="measure-num">MEASURE 07</div>
+      <div class="measure-title">AIサンドボックス</div>
+      <div class="measure-desc">AIを隔離された環境（仮想環境・コンテナ・制限OS）で動かし、外部アクセスを制限する。</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHAPTER 7 -->
+<section class="chapter" id="ch7">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.07</span>
+    <h2>最強の防御構造</h2>
+  </div>
+
+  <p>これらの対策を組み合わせると、多層防御が完成します。</p>
+
+  <div class="flow">
+    <div class="flow-step danger">キー漏洩（発生）</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">権限が小さい</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">短命トークン</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">レート制限</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step warn">課金上限</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step safe">✓ 被害最小化</div>
+  </div>
+
+  <div class="summary">
+    <div class="summary-label">// Conclusion</div>
+    <h3>秘密が漏れても壊れないシステム</h3>
+    <p>「秘密を守る」ではなく「漏れても壊れない設計」が本当のセキュリティです</p>
+  </div>
+</section>
+
+<!-- CHAPTER 8 -->
+<section class="chapter" id="ch8">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.08</span>
+    <h2>AIセキュリティ事故トップ10（構造＋事例）</h2>
+  </div>
+
+  <div class="pattern-grid">
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 01</div>
+      <div class="pattern-title">プロンプトインジェクション</div>
+      <div class="pattern-desc">AIが読む文章に隠された命令を仕込む攻撃。</div>
+      <div class="incident">
+        <div class="incident-title">Microsoft Bing Chat（2023）</div>
+        <p>研究者がページ内に "Ignore previous instructions / Reveal your system prompt" を仕込み、AIが内部プロンプトを公開した。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 02</div>
+      <div class="pattern-title">システムプロンプト漏洩</div>
+      <div class="pattern-desc">AIの内部設定が流出する事故。</div>
+      <div class="incident">
+        <div class="incident-title">ChatGPT</div>
+        <p>研究者が特殊プロンプトを使い、内部ルール・開発者指示を抽出することに成功した。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 03</div>
+      <div class="pattern-title">APIキー漏洩（.env事故）</div>
+      <div class="pattern-desc">AIツールが環境変数を読み取り、ログなどに出力される。</div>
+      <div class="incident">
+        <div class="incident-title">Claude Code / AutoGPT / LangChain系</div>
+        <p>APIキーがログに残る事故が複数報告されている。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 04</div>
+      <div class="pattern-title">AIログ漏洩</div>
+      <div class="pattern-desc">AIの会話履歴が外部に流出する事故。</div>
+      <div class="incident">
+        <div class="incident-title">OpenAI ChatGPT（2023）</div>
+        <p>不具合により他ユーザーのタイトル・一部会話が表示される問題が発生した。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 05</div>
+      <div class="pattern-title">AIプラグイン悪用</div>
+      <div class="pattern-desc">AIが外部ツールを操作する機能の悪用。</div>
+      <div class="incident">
+        <div class="incident-title">ChatGPT Plugins（2023）</div>
+        <p>メール・Webツールを通じてAIを外部サイトに誘導する攻撃が実証された。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 06</div>
+      <div class="pattern-title">データ学習漏洩</div>
+      <div class="pattern-desc">AIが学習データの一部を出力してしまう問題。</div>
+      <div class="incident">
+        <div class="incident-title">Samsung Electronics</div>
+        <p>社員がソースコード・社内資料をChatGPTに入力。社内機密が外部AIに送信されたため社内利用が禁止された。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 07</div>
+      <div class="pattern-title">AI自動化暴走</div>
+      <div class="pattern-desc">AIエージェントが自動操作で被害を引き起こす事故。</div>
+      <div class="incident">
+        <div class="incident-title">AutoGPT 実験</div>
+        <p>APIを無限ループし、サーバー負荷・高額請求が発生した。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 08</div>
+      <div class="pattern-title">OAuthトークン漏洩</div>
+      <div class="pattern-desc">長期トークンが漏れるとアカウント操作が可能になる。</div>
+      <div class="incident">
+        <div class="incident-title">Slack / Google API / GitHub</div>
+        <p>各種SaaSでトークン流出事故が多数発生している。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 09</div>
+      <div class="pattern-title">GitHub秘密情報公開</div>
+      <div class="pattern-desc">開発者が誤ってAPIキー・AWSキーを公開リポジトリにpushする事故。</div>
+      <div class="incident">
+        <div class="incident-title">GitHub</div>
+        <p>クローラーによる取得・キー悪用が毎年数万件検出されている。</p>
+      </div>
+    </div>
+
+    <div class="pattern-card">
+      <div class="pattern-num">TOP 10</div>
+      <div class="pattern-title">Cookieハイジャック</div>
+      <div class="pattern-desc">ブラウザセッションを盗まれる攻撃。2FAでも防げない。</div>
+      <div class="incident">
+        <div class="incident-title">YouTube運営者 大量乗っ取り（2023）</div>
+        <p>Chrome Cookie盗難→セッション再利用による大量アカウント乗っ取りが発生した。</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CHAPTER 9 -->
+<section class="chapter" id="ch9">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.09</span>
+    <h2>AIサプライチェーン攻撃</h2>
+  </div>
+
+  <p>AI時代に急速に増えている攻撃です。</p>
+
+  <div class="compare">
+    <div class="compare-box bad">
+      <div class="compare-label">従来の攻撃</div>
+      <p>システムを直接攻撃する</p>
+    </div>
+    <div class="compare-box" style="border-top:2px solid var(--accent2);">
+      <div class="compare-label" style="color:var(--accent2);">AI時代の攻撃</div>
+      <p><strong>AIの部品を攻撃する</strong></p>
+    </div>
+  </div>
+
+  <h3>攻撃の基本構造</h3>
+
+  <div class="flow">
+    <div class="flow-step danger">攻撃者 → AI部品に細工</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">開発者が導入</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">AIが実行</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step danger">秘密取得 → 外部送信</div>
+  </div>
+
+  <h3>5つの攻撃種類</h3>
+
+  <div class="pattern-grid">
+    <div class="pattern-card">
+      <div class="pattern-num">TYPE 01</div>
+      <div class="pattern-title">悪意のあるプロンプト配布</div>
+      <div class="pattern-desc">公開プロンプト集・自動化テンプレに隠し命令が含まれているケース。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-num">TYPE 02</div>
+      <div class="pattern-title">MCPツール悪用</div>
+      <div class="pattern-desc">Model Context Protocol経由でAIと外部ツールを繋ぐ仕組みの悪用。ツールが悪意を持つと危険。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-num">TYPE 03</div>
+      <div class="pattern-title">AIライブラリ汚染</div>
+      <div class="pattern-desc">LangChain / LlamaIndex / AI SDKなどが改ざんされると、バックドアが起動する。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-num">TYPE 04</div>
+      <div class="pattern-title">モデル汚染</div>
+      <div class="pattern-desc">AIモデル自体にトリガーワードを仕込み、特定のデータを出力させる攻撃が研究で実証されている。</div>
+    </div>
+    <div class="pattern-card">
+      <div class="pattern-num">TYPE 05</div>
+      <div class="pattern-title">外部AIコンサルリスク</div>
+      <div class="pattern-desc">外部AI導入時に追加されたツールが権限付与されたまま残り、企業システムにフルアクセスになる危険。</div>
+    </div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-label">⚠ 最大のリスク</div>
+    <p>攻撃者は1人でも、被害は全ユーザーに及ぶ。悪意プロンプトが1000人に使われれば、1000人が被害を受ける「1対多数攻撃」。</p>
+  </div>
+
+  <h3>対策 4項目</h3>
+
+  <div class="checklist">
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>① AIツールの監査</strong> — 導入するツール・プラグイン・プロンプトを必ず確認する</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>② 権限分離</strong> — AIには最小権限しか与えない</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>③ ネットワーク制限</strong> — AIがアクセスできる範囲を制限する</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>④ ツールリスト管理</strong> — AIが使えるツールを許可リストで固定する</span></div>
+  </div>
+</section>
+
+<!-- CHAPTER 10 -->
+<section class="chapter" id="ch10">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.10</span>
+    <h2>AIワーム（AIがAIを感染させる攻撃）</h2>
+  </div>
+
+  <div class="compare">
+    <div class="compare-box bad">
+      <div class="compare-label">従来のウイルス</div>
+      <p>コンピューター → コンピューター</p>
+    </div>
+    <div class="compare-box" style="border-top:2px solid var(--accent2);">
+      <div class="compare-label" style="color:var(--accent2);">AI Worm</div>
+      <p><strong>AI → AI</strong> で自動拡散</p>
+    </div>
+  </div>
+
+  <h3>AIワームの仕組み</h3>
+
+  <div class="flow">
+    <div class="flow-step danger">AI①が攻撃命令を実行</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step">メール送信</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step danger">AI②が読む → 同じ命令を実行</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-step danger">AI③へ拡散（指数関数的）</div>
+  </div>
+
+  <div class="incident">
+    <div class="incident-title">研究事例（2024）</div>
+    <p>ChatGPT / Google Geminiなどを対象にAI Wormの実験が実施された。メールAI・ドキュメントAI・カレンダーAIを組み合わせることで自動拡散が可能なことが示された。</p>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-label">⚠ 最大の危険</div>
+    <p>人間が関与しない完全自動拡散。従来ウイルスは「人間クリック→感染」だが、AIワームは「AIが読む→AIが実行→自動拡散」。数時間で世界規模になる可能性がある。</p>
+  </div>
+
+  <h3>防御 4対策</h3>
+
+  <div class="checklist">
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>① AI入力フィルタ</strong> — メール・Web・ドキュメントなどAIが読むデータをチェック</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>② ツール制限</strong> — メール送信・API操作・ファイルアクセスなどAIが使えるツールを限定</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>③ 実行確認</strong> — AIの重要操作は必ず人間確認を入れる</span></div>
+    <div class="check-item"><span class="check-icon">[ ]</span><span class="check-content"><strong>④ ネットワーク分離</strong> — AI同士の通信（AI→外部AI）を制限する</span></div>
+  </div>
+</section>
+
+<!-- CHAPTER 11 -->
+<section class="chapter" id="ch11">
+  <div class="chapter-header">
+    <span class="chapter-num">CH.11</span>
+    <h2>AI導入企業のセキュリティチェックリスト20</h2>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-label">ℹ 重要</div>
+    <p>AI事故の多くは技術的に難しい問題ではなく、<strong>基本的な管理不足</strong>で起きます。まずはこの20項目を確認してください。</p>
+  </div>
+
+  <div class="checklist" style="margin-top:20px;">
+
+    <div class="check-item">
+      <span class="check-num">01</span>
+      <span class="check-content"><strong>APIキーをコードに書いていない</strong> — Secret Manager（AWS / Google / Azure）を使用している</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">02</span>
+      <span class="check-content"><strong>.envファイルを公開していない</strong> — .gitignoreに設定済みである</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">03</span>
+      <span class="check-content"><strong>APIキーの権限を最小化している</strong> — 管理者権限キーは使っていない</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">04</span>
+      <span class="check-content"><strong>APIキーにレート制限がある</strong> — 例：1分100回など</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">05</span>
+      <span class="check-content"><strong>APIキーに課金上限がある</strong> — 例：1日100ドルで自動停止</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">06</span>
+      <span class="check-content"><strong>トークンは短命にする</strong> — 永久APIキーは使用しない</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">07</span>
+      <span class="check-content"><strong>AIに管理者権限を与えない</strong> — AIは命令を疑わないため特に重要</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">08</span>
+      <span class="check-content"><strong>AIツールのリストを管理している</strong> — 許可リストで制御されている</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">09</span>
+      <span class="check-content"><strong>AIのネットワークアクセスを制限している</strong> — どこでもアクセス可能な状態になっていない</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">10</span>
+      <span class="check-content"><strong>AIログを確認している</strong> — APIキー・トークン・個人情報が混入していないか定期確認</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">11</span>
+      <span class="check-content"><strong>AIログを公開保存していない</strong> — 外部SaaSへの保存には注意</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">12</span>
+      <span class="check-content"><strong>外部プロンプトをそのまま使っていない</strong> — ネットのプロンプトに攻撃命令が含まれる可能性がある</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">13</span>
+      <span class="check-content"><strong>AIが読むWebサイトを制限している</strong> — 自由なWebアクセスはプロンプトインジェクションの危険がある</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">14</span>
+      <span class="check-content"><strong>AIの重要操作は人間確認を入れる</strong> — メール送信・支払い・削除はAI単独で実行させない</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">15</span>
+      <span class="check-content"><strong>AIをサンドボックスで動かす</strong> — コンテナ・仮想環境などの隔離環境で動作させる</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">16</span>
+      <span class="check-content"><strong>AIがアクセスできるファイルを制限</strong> — 全ファイルアクセスではなく専用フォルダのみ</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">17</span>
+      <span class="check-content"><strong>OAuthトークン管理</strong> — refresh tokenの定期更新を実施している</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">18</span>
+      <span class="check-content"><strong>Cookieセッション保護</strong> — セッション期限を短縮してCookieハイジャックに備えている</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">19</span>
+      <span class="check-content"><strong>外部AIコンサルの作業を監査</strong> — 追加ツール・権限設定・ログを確認している</span>
+    </div>
+
+    <div class="check-item">
+      <span class="check-num">20</span>
+      <span class="check-content"><strong>AIセキュリティ担当を決める</strong> — 責任者が不在だと事故が起きる</span>
+    </div>
+
+  </div>
+
+  <div class="summary" style="margin-top:40px;">
+    <div class="summary-label">// Final Principle</div>
+    <h3>AIは「疑わない・止まらない・疲れない」</h3>
+    <p>人間より危険なオペレーターを制御するために——<br>権限最小化・短命トークン・監査ログ・課金制限・ネットワーク制限</p>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  AIセキュリティ入門 — 非エンジニア向けガイド &nbsp;|&nbsp; Zero Trust Architecture &nbsp;|&nbsp; All rights reserved
+</footer>
 
 </body>
 </html>
