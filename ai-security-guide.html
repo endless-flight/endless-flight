@@ -8,17 +8,17 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@300;400;700&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f5f0e8;
-    --bg-card: #fdf8f0;
-    --bg-elevated: #ede6d8;
-    --border: #d4c9b0;
-    --accent: #5c3d1e;
-    --accent2: #b03a2e;
-    --accent3: #9a6b00;
-    --accent4: #2e6b3e;
-    --text: #3a2e1e;
-    --text-dim: #8a7a62;
-    --text-bright: #1a120a;
+    --bg: #ffffff;
+    --bg-card: #f8f9fa;
+    --bg-elevated: #f0f2f5;
+    --border: #e0e4ea;
+    --accent: #1a56db;
+    --accent2: #c81e1e;
+    --accent3: #92610a;
+    --accent4: #057a55;
+    --text: #1f2a37;
+    --text-dim: #6b7280;
+    --text-bright: #111928;
     --font-mono: 'JetBrains Mono', monospace;
     --font-body: 'Noto Sans JP', sans-serif;
   }
@@ -42,8 +42,8 @@
     position: fixed;
     inset: 0;
     background-image:
-      linear-gradient(rgba(92,61,30,0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(92,61,30,0.05) 1px, transparent 1px);
+      linear-gradient(rgba(26,86,219,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(26,86,219,0.04) 1px, transparent 1px);
     background-size: 40px 40px;
     pointer-events: none;
     z-index: 0;
@@ -67,7 +67,7 @@
     transform: translateX(-50%);
     width: 600px;
     height: 300px;
-    background: radial-gradient(ellipse, rgba(92,61,30,0.08) 0%, transparent 70%);
+    background: radial-gradient(ellipse, rgba(26,86,219,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
 
@@ -386,22 +386,22 @@
 
   .callout.danger {
     border-left: 3px solid var(--accent2);
-    background: rgba(176,58,46,0.06);
+    background: rgba(200,30,30,0.05);
   }
 
   .callout.info {
     border-left: 3px solid var(--accent);
-    background: rgba(92,61,30,0.06);
+    background: rgba(26,86,219,0.05);
   }
 
   .callout.success {
     border-left: 3px solid var(--accent4);
-    background: rgba(46,107,62,0.06);
+    background: rgba(5,122,85,0.05);
   }
 
   .callout.warn {
     border-left: 3px solid var(--accent3);
-    background: rgba(154,107,0,0.06);
+    background: rgba(146,97,10,0.05);
   }
 
   .callout-label {
@@ -452,20 +452,20 @@
 
   /* CODE BLOCK */
   pre {
-    background: #ede6d8;
+    background: #f0f2f5;
     border: 1px solid var(--border);
     border-radius: 8px;
     padding: 16px 20px;
     font-family: var(--font-mono);
     font-size: 12px;
-    color: #2e6b3e;
+    color: #057a55;
     overflow-x: auto;
     margin: 12px 0;
     line-height: 1.6;
   }
 
   pre .key { color: var(--text-dim); }
-  pre .val { color: #9a6b00; }
+  pre .val { color: #92610a; }
 
   /* CHECKLIST */
   .checklist {
@@ -517,7 +517,7 @@
   /* HIGHLIGHT BOX */
   .highlight {
     background: var(--bg-elevated);
-    border: 1px solid rgba(92,61,30,0.18);
+    border: 1px solid rgba(26,86,219,0.12);
     border-radius: 10px;
     padding: 24px 28px;
     margin: 24px 0;
@@ -530,7 +530,7 @@
     position: absolute;
     top: -40px; right: -40px;
     width: 120px; height: 120px;
-    background: radial-gradient(circle, rgba(92,61,30,0.06) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(26,86,219,0.05) 0%, transparent 70%);
   }
 
   .highlight p {
@@ -623,8 +623,8 @@
   }
 
   .tag {
-    background: rgba(92,61,30,0.08);
-    border: 1px solid rgba(92,61,30,0.2);
+    background: rgba(26,86,219,0.07);
+    border: 1px solid rgba(26,86,219,0.18);
     color: var(--accent);
     font-family: var(--font-mono);
     font-size: 11px;
@@ -663,7 +663,7 @@
   /* SCROLLBAR */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: var(--bg); }
-  ::-webkit-scrollbar-thumb { background: #c4b89a; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 </style>
 </head>
