@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja" style="color-scheme: light;">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,43 +9,218 @@
     <style>
         :root {
             --color-primary: #FFB6D9;
+            --color-secondary: #B4E4FF;
+            --color-accent: #FFC85C;
             --color-text: #2D3436;
+            --color-text-light: #636E72;
             --color-bg: #FFFBF5;
             --font-heading: 'Poppins', 'Noto Sans JP', sans-serif;
             --font-body: 'Nunito', 'Noto Sans JP', sans-serif;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: var(--font-body); line-height: 1.8; color: var(--color-text); background-color: var(--color-bg); }
 
-        /* ナビゲーション */
-        nav { background: linear-gradient(135deg, #FFE5F0 0%, #E5F4FF 100%); padding: 20px; border-bottom: 2px solid var(--color-primary); }
-        .nav-container { max-width: 1200px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .nav-logo { font-family: var(--font-heading); font-size: 1.5rem; font-weight: 900; color: #FF1493; text-decoration: none; }
-        .nav-links { display: flex; gap: 30px; }
-        .nav-links a { color: var(--color-text); text-decoration: none; font-weight: 600; }
+        body {
+            font-family: var(--font-body);
+            line-height: 1.8;
+            color: var(--color-text);
+            background-color: var(--color-bg);
+            overflow-x: hidden;
+        }
 
-        /* FV修正版 */
-        .logo-section { min-height: 80vh; display: flex; align-items: center; padding: 40px 80px; background: #FFFBF5; }
-        .fv-left { flex: 1; padding-right: 40px; }
-        .fv-headline { font-family: var(--font-heading); font-size: 4rem; font-weight: 900; line-height: 1.1; margin-bottom: 24px; }
-        .fv-sub { font-size: 1.1rem; color: #636E72; margin-bottom: 40px; }
-        
-        /* 右側ビジュアルエリア */
-        .fv-right { flex: 0 0 460px; display: flex; justify-content: center; align-items: center; }
-        
-        /* カードの配置イメージ */
-        
-        
-        .fv-card-stack { position: relative; width: 380px; height: 480px; }
-        .fv-app-card { position: absolute; background: white; border-radius: 28px; padding: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.1); width: 200px; }
-        .fv-app-card-1 { top: 50px; left: 80px; transform: rotate(-4deg); }
-        .fv-app-card-2 { bottom: 50px; left: 20px; transform: rotate(5deg); }
+        /* --- ナビゲーション --- */
+        nav {
+            background: linear-gradient(135deg, #FFE5F0 0%, #E5F4FF 100%);
+            padding: 20px;
+            border-bottom: 2px solid var(--color-primary);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
 
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF1493 0%, #FFB6D9 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--color-text);
+            text-decoration: none;
+            font-weight: 600;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: #FF1493; }
+
+        /* --- ヒーローセクション (FV) --- */
+        .logo-section {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 10%;
+            position: relative;
+            background: #FFFBF5;
+        }
+
+        /* 背景装飾 */
+        .logo-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 20% 50%, rgba(255,182,217,0.2), transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(180,228,255,0.2), transparent 50%);
+            z-index: 0;
+        }
+
+        .fv-left {
+            flex: 1;
+            z-index: 1;
+            max-width: 600px;
+        }
+
+        .fv-eyebrow {
+            display: inline-block;
+            background: white;
+            padding: 8px 20px;
+            border-radius: 100px;
+            color: #FF1493;
+            font-weight: 800;
+            font-size: 14px;
+            box-shadow: 0 4px 15px rgba(255,20,147,0.1);
+            margin-bottom: 24px;
+        }
+
+        .fv-headline {
+            font-family: var(--font-heading);
+            font-size: clamp(2.5rem, 5vw, 4.5rem);
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .fv-headline span {
+            background: linear-gradient(135deg, #FF1493, #B4E4FF);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .fv-sub {
+            font-size: 1.1rem;
+            color: var(--color-text-light);
+            margin-bottom: 30px;
+        }
+
+        /* 右側カードビジュアル */
+        .fv-right {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .fv-card-stack {
+            position: relative;
+            width: 300px;
+            height: 400px;
+        }
+
+        .fv-app-card {
+            position: absolute;
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+            width: 180px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .fv-app-card:hover { transform: translateY(-10px); }
+
+        .fv-app-card img { width: 60px; height: 60px; border-radius: 12px; margin-bottom: 10px; }
+
+        /* スクショに基づいた配置 */
+        .card-1 { top: 0; left: 50%; transform: translateX(-50%) rotate(-5deg); z-index: 3; }
+        .card-2 { bottom: 20px; left: -20px; transform: rotate(8deg); z-index: 2; }
+        .card-3 { bottom: 50px; right: -40px; transform: rotate(-3deg); z-index: 1; }
+
+        /* --- セクション共通 --- */
+        .section-container {
+            max-width: 1200px;
+            margin: 80px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 50px;
+        }
+
+        /* --- コラムグリッド --- */
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
+
+        .article-card:hover { transform: translateY(-5px); }
+
+        .article-thumb {
+            height: 180px;
+            background: linear-gradient(135deg, #FFB6D9, #B4E4FF);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+        }
+
+        .article-content { padding: 20px; }
+
+        /* --- フッター --- */
+        footer {
+            background: white;
+            padding: 40px;
+            text-align: center;
+            border-top: 2px solid #eee;
+        }
+
+        /* レスポンシブ */
         @media (max-width: 900px) {
-            .logo-section { flex-direction: column; text-align: center; }
-            .fv-left { padding-right: 0; }
-            .fv-right { margin-top: 40px; }
+            .logo-section { flex-direction: column; text-align: center; padding-top: 100px; }
+            .fv-left { margin-bottom: 100px; }
+            .fv-card-stack { width: 250px; height: 300px; }
         }
     </style>
 </head>
@@ -55,26 +230,75 @@
         <div class="nav-container">
             <a href="index.html" class="nav-logo">Endless Flight</a>
             <div class="nav-links">
-                <a href="index.html">Top</a>
-                <a href="column/">コラム</a>
-                <a href="lp/">アプリ</a>
-                <a href="https://note.com/endless_flight" target="_blank">Note</a>
+                <a href="#">Top</a>
+                <a href="#">コラム</a>
+                <a href="#">アプリ</a>
+                <a href="#">Note</a>
+                <a href="#">ライブ物販</a>
             </div>
         </div>
     </nav>
 
     <section class="logo-section">
         <div class="fv-left">
-            <h1 class="fv-headline">触って、作って、<br><span style="color: #FF1493;">飛び続ける</span></h1>
-            <p class="fv-sub">「とりあえず触ってみよう」でAI・Python学習を始めました。<br>日常のちょっとした作業を楽にする試行錯誤の記録です。</p>
+            <div class="fv-eyebrow">● AI × PYTHON × 推し活</div>
+            <h1 class="fv-headline">触って、作って、<br><span>飛び続ける</span></h1>
+            <p class="fv-sub">「とりあえず触ってみよう」でAI、Python学習を始めました。日常のちょっとした作業や推し活を便利にする試行錯誤の記録です。</p>
+            <div style="display: flex; gap: 15px;">
+                <a href="#" style="background: #FF1493; color: white; padding: 15px 30px; border-radius: 100px; text-decoration: none; font-weight: 800;">アプリを見る</a>
+                <a href="#" style="border: 2px solid #FFB6D9; color: #FF1493; padding: 15px 30px; border-radius: 100px; text-decoration: none; font-weight: 800;">Noteを読む</a>
+            </div>
         </div>
+
         <div class="fv-right">
             <div class="fv-card-stack">
-                <div class="fv-app-card fv-app-card-1">チケットポケット</div>
-                <div class="fv-app-card fv-app-card-2">AI x 個人開発</div>
+                <div class="fv-app-card card-1">
+                    <div style="font-size: 40px;">🎫</div>
+                    <div style="font-weight: 800; font-size: 14px;">チケットポケット</div>
+                    <div style="font-size: 10px; color: #FF1493; background: #FFF0F7; border-radius: 10px; margin-top: 5px;">推し活アプリ</div>
+                </div>
+                <div class="fv-app-card card-2">
+                    <div style="font-size: 40px;">🤖</div>
+                    <div style="font-weight: 800; font-size: 14px;">Claude × 個人開発</div>
+                </div>
+                <div class="fv-app-card card-3">
+                    <div style="font-size: 40px;">🐍</div>
+                    <div style="font-weight: 800; font-size: 14px;">Python学習記録</div>
+                </div>
             </div>
         </div>
     </section>
+
+    <section class="section-container">
+        <h2 class="section-title">最新のコラム</h2>
+        <div class="articles-grid">
+            <a href="#" class="article-card">
+                <div class="article-thumb">💻</div>
+                <div class="article-content">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Pythonで自動化してみた</h3>
+                    <p style="color: #666; font-size: 0.9rem;">面倒な作業をAIと一緒に解決する手順をまとめました。</p>
+                </div>
+            </a>
+            <a href="#" class="article-card">
+                <div class="article-thumb">✨</div>
+                <div class="article-content">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px;">推し活を最大化するAI活用法</h3>
+                    <p style="color: #666; font-size: 0.9rem;">ライブの物販整理や思い出保存に役立つツール作り。</p>
+                </div>
+            </a>
+            <a href="#" class="article-card">
+                <div class="article-thumb">🚀</div>
+                <div class="article-content">
+                    <h3 style="font-size: 1.2rem; margin-bottom: 10px;">Claudeと歩む開発日記</h3>
+                    <p style="color: #666; font-size: 0.9rem;">最新のAIモデルを使ってウェブサイトを作ってみた結果。</p>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 Endless Flight. All Rights Reserved.</p>
+    </footer>
 
 </body>
 </html>
