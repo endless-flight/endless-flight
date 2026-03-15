@@ -977,9 +977,8 @@ function getAudioContext() {
   return audioCtx;
 }
 
-// Apply biquad filters to a buffer and return a new processed AudioBuffer
-async function applyFilters(srcBuffer, filterDefs) {
-  const ctx = getAudioContext();
+// Apply biquad filter chain + output gain to an AudioBuffer via OfflineAudioContext
+async function applyFilters(srcBuffer, filterDefs, outputGain) {
   const offline = new OfflineAudioContext(
     srcBuffer.numberOfChannels,
     srcBuffer.length,
@@ -988,21 +987,19 @@ async function applyFilters(srcBuffer, filterDefs) {
   const src = offline.createBufferSource();
   src.buffer = srcBuffer;
 
-  // Build filter chain
   let node = src;
   filterDefs.forEach(def => {
     const f = offline.createBiquadFilter();
     f.type = def.type;
     f.frequency.value = def.freq;
     if (def.gain !== undefined) f.gain.value = def.gain;
-    if (def.Q !== undefined) f.Q.value = def.Q;
+    if (def.Q    !== undefined) f.Q.value    = def.Q;
     node.connect(f);
     node = f;
   });
 
-  // Gain node for overall level
   const gain = offline.createGain();
-  gain.gain.value = filterDefs.gain || 1.0;
+  gain.gain.value = outputGain || 1.0;
   node.connect(gain);
   gain.connect(offline.destination);
   src.start(0);
@@ -1010,27 +1007,34 @@ async function applyFilters(srcBuffer, filterDefs) {
 }
 
 async function buildProcessedBuffers(srcBuffer) {
-  // Version A: gentle noise-reduction-like clarity boost (high-shelf)
+  // ── A: What people hear ─────────────────────────────
+  // 原音に近い「録音の声」。少し明るく、クリアに整える
   processedBuffers.A = await applyFilters(srcBuffer, [
-    { type: 'highpass', freq: 100, Q: 0.7 },
-    { type: 'highshelf', freq: 4000, gain: 2 }
-  ]);
+    { type: 'highpass',  freq: 120,  Q: 0.8 },
+    { type: 'peaking',   freq: 3500, gain: 6,   Q: 1.5 },
+    { type: 'highshelf', freq: 8000, gain: 5 }
+  ], 1.1);
 
-  // Version B: bone conduction — boost low-mids, cut highs
+  // ── B: What you hear (bone conduction) ─────────────
+  // 低域を強くブースト＋高域を大幅カット＝こもった内側の声
   processedBuffers.B = await applyFilters(srcBuffer, [
-    { type: 'lowshelf',  freq: 250,  gain: 7  },
-    { type: 'peaking',   freq: 150,  gain: 5, Q: 1.0 },
-    { type: 'highshelf', freq: 4000, gain: -8 },
-    { type: 'peaking',   freq: 1000, gain: 2, Q: 0.8 }
-  ]);
+    { type: 'lowshelf',  freq: 400,  gain: 18 },   // 低域を大幅ブースト
+    { type: 'peaking',   freq: 200,  gain: 12, Q: 0.8 }, // 胸の共鳴
+    { type: 'peaking',   freq: 900,  gain:  6, Q: 1.0 }, // 頭蓋骨の共鳴
+    { type: 'highshelf', freq: 2000, gain: -20 },  // 高域をほぼカット
+    { type: 'peaking',   freq: 4000, gain: -14, Q: 1.0 } // さらに抑える
+  ], 0.7);
 
-  // Version C: ideal voice — warm low-mids + clarity boost + light presence
+  // ── C: Ideal voice ──────────────────────────────────
+  // 温かみ＋明瞭さ＋プレゼンス感を強化した理想の声
   processedBuffers.C = await applyFilters(srcBuffer, [
-    { type: 'lowshelf',  freq: 200,  gain: 3  },
-    { type: 'peaking',   freq: 2500, gain: 3, Q: 1.2 },
-    { type: 'highshelf', freq: 6000, gain: 4  },
-    { type: 'highpass',  freq: 80,   Q: 0.7  }
-  ]);
+    { type: 'highpass',  freq: 90,   Q: 0.7 },
+    { type: 'lowshelf',  freq: 250,  gain: 6 },    // 温かみ
+    { type: 'peaking',   freq: 400,  gain: 4,  Q: 1.8 }, // 胸声の豊かさ
+    { type: 'peaking',   freq: 2500, gain: 6,  Q: 1.2 }, // 声の明瞭さ
+    { type: 'peaking',   freq: 5000, gain: 5,  Q: 1.5 }, // プレゼンス
+    { type: 'highshelf', freq: 9000, gain: 4 }     // 抜けの良さ
+  ], 1.25);
 }
 
 // ── Generate flow ──────────────────────────────────────
