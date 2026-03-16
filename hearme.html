@@ -1064,19 +1064,55 @@ async function buildProcessedBuffers(srcBuffer) {
   ], 1.1);
 
   // ── B: What you hear (bone conduction) ────────────────────────
-  // 「自分が聞いている声」＝骨伝導でこもった低域だけが残る感覚
-  // Step1: biquad で高域を強くカット・低域を大ブースト
-  const bFiltered = await applyFilters(srcBuffer, [
-    { type: 'lowshelf',  freq: 500,  gain: 16 },
-    { type: 'peaking',   freq: 180,  gain: 14, Q: 0.7 },
-    { type: 'peaking',   freq: 700,  gain:  8, Q: 1.0 },
-    { type: 'highshelf', freq: 1800, gain: -24 },
-    { type: 'peaking',   freq: 3500, gain: -18, Q: 0.8 }
-  ], 0.6);
-  // Step2: PCM移動平均でさらにこもらせる（windowSize = sr/800 ≈ 24サンプル@44100Hz）
-  const bLowpassed = applyMovingAvgLowpass(bFiltered, Math.round(sr / 800));
-  // Step3: 元音と低域成分をブレンドして自然さを残しつつこもり感を強調
-  processedBuffers.B = blendBuffers(bLowpassed, bFiltered, 0.7, 0.3);
+  // 指定EQ + 350Hzレゾナンス + -0.7semitoneピッチシフト
+
+  // Step1: 指定のEQをpeakingフィルターで再現
+  // 各周波数ポイントをnarrow Q(2.0前後)のpeakingで打つ
+  const bEQ = await applyFilters(srcBuffer, [
+    { type: 'peaking', freq:   80, gain:  4.0, Q: 2.0 },
+    { type: 'peaking', freq:  120, gain:  5.0, Q: 2.0 },
+    { type: 'peaking', freq:  200, gain:  4.0, Q: 2.0 },
+    { type: 'peaking', freq:  400, gain:  2.0, Q: 2.0 },
+    { type: 'peaking', freq:  800, gain:  0.0, Q: 2.0 },
+    { type: 'peaking', freq: 1500, gain: -2.0, Q: 2.0 },
+    { type: 'peaking', freq: 3000, gain: -4.0, Q: 2.0 },
+    { type: 'peaking', freq: 6000, gain: -6.0, Q: 2.0 },
+    // Resonance: 350Hz +2.5dB Q1.2
+    { type: 'peaking', freq:  350, gain:  2.5, Q: 1.2 }
+  ], 1.0);
+
+  // Step2: -0.7 semitone ピッチシフト
+  // ピッチシフト率 = 2^(-0.7/12) ≈ 0.9602
+  // OfflineAudioContextでplaybackRateを使って実装
+  const pitchRatio = Math.pow(2, -0.7 / 12); // ≈ 0.9602
+  const shiftedLength = Math.round(bEQ.length / pitchRatio);
+  const bPitched = await (async () => {
+    const offline = new OfflineAudioContext(
+      bEQ.numberOfChannels,
+      shiftedLength,
+      bEQ.sampleRate
+    );
+    const src2 = offline.createBufferSource();
+    src2.buffer = bEQ;
+    src2.playbackRate.value = pitchRatio;
+    src2.connect(offline.destination);
+    src2.start(0);
+    return offline.startRendering();
+  })();
+
+  // Step3: 元の長さにトリム（録音と同じ秒数に揃える）
+  const ctx2 = getAudioContext();
+  const trimmed = ctx2.createBuffer(
+    bPitched.numberOfChannels,
+    Math.min(bPitched.length, srcBuffer.length),
+    bPitched.sampleRate
+  );
+  for (let ch = 0; ch < bPitched.numberOfChannels; ch++) {
+    trimmed.getChannelData(ch).set(
+      bPitched.getChannelData(ch).subarray(0, trimmed.length)
+    );
+  }
+  processedBuffers.B = trimmed;
 
   // ── C: Ideal voice ─────────────────────────────────────────────
   // 「理想の声」＝温かみ＋明瞭さ＋プレゼンスを全部強化し、少し音量も上げる
