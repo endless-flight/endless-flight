@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI攻撃リアルタイム監視ダッシュボード</title>
+<style>
+  :root {
+    --bg: #f5f6f8;
+    --bg2: #ffffff;
+    --bg3: #f0f1f4;
+    --border: rgba(0,0,0,0.08);
+    --border2: rgba(0,0,0,0.15);
+    --text: #1a1d27;
+    --text2: #6b7080;
+    --text3: #a0a5b8;
+    --red: #e24b4a;
+    --red-bg: rgba(226,75,74,0.08);
+    --amber: #ba7517;
+    --amber-bg: rgba(186,117,23,0.08);
+    --blue: #185fa5;
+    --blue-bg: rgba(24,95,165,0.08);
+    --green: #0f6e56;
+    --green-bg: rgba(15,110,86,0.08);
+    --purple: #534ab7;
+    --purple-bg: rgba(83,74,183,0.08);
+    --pink: #d4537e;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+    min-height: 100vh;
+    padding: 24px;
+  }
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .header-left { display: flex; align-items: center; gap: 12px; }
+  .logo { font-size: 11px; font-weight: 600; letter-spacing: 0.15em; color: var(--text3); text-transform: uppercase; }
+  .title { font-size: 18px; font-weight: 600; color: var(--text); }
+  .status-wrap { display: flex; align-items: center; gap: 8px; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--red); animation: pulse 1.5s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(226,75,74,0.4)} 50%{opacity:0.6;box-shadow:0 0 0 6px rgba(226,75,74,0)} }
+  .status-label { font-size: 11px; color: var(--red); font-weight: 500; letter-spacing: 0.05em; }
+  .clock { font-size: 12px; color: var(--text3); font-variant-numeric: tabular-nums; }
+
+  .metrics { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+  .metric {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 18px;
+  }
+  .metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px; }
+  .metric-value { font-size: 28px; font-weight: 700; color: var(--text); font-variant-numeric: tabular-nums; }
+  .metric-delta { font-size: 11px; margin-top: 6px; }
+  .up { color: var(--red); }
+  .down { color: var(--green); }
+  .warn { color: var(--amber); }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+  .card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 18px;
+  }
+  .card-title {
+    font-size: 10px;
+    font-weight: 600;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    margin-bottom: 16px;
+  }
+
+  /* attack bars */
+  .attack-row { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+  .attack-row:last-child { margin-bottom: 0; }
+  .attack-name { font-size: 12px; color: var(--text); flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-wrap { flex: 2; height: 5px; background: var(--bg3); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 1.2s ease; }
+  .bar-count { font-size: 12px; color: var(--text2); min-width: 28px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  /* threat alerts */
+  .threat-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .threat-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .badge { font-size: 9px; font-weight: 700; padding: 3px 7px; border-radius: 4px; white-space: nowrap; flex-shrink: 0; letter-spacing: 0.05em; }
+  .badge-critical { background: var(--red-bg); color: var(--red); border: 1px solid rgba(226,75,74,0.3); }
+  .badge-high { background: var(--amber-bg); color: #ef9f27; border: 1px solid rgba(186,117,23,0.3); }
+  .badge-medium { background: var(--blue-bg); color: var(--blue); border: 1px solid rgba(55,138,221,0.3); }
+  .threat-text { font-size: 12px; color: var(--text); line-height: 1.4; }
+  .threat-sub { font-size: 11px; color: var(--text2); margin-top: 3px; }
+
+  /* gate */
+  .gate-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .gate-row:last-child { border-bottom: none; }
+  .gate-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 15px; flex-shrink: 0; }
+  .gate-info { flex: 1; }
+  .gate-name { font-size: 13px; color: var(--text); }
+  .gate-desc { font-size: 11px; color: var(--text2); margin-top: 2px; }
+  .gate-status { font-size: 11px; font-weight: 600; white-space: nowrap; }
+  .s-ok { color: var(--green); }
+  .s-warn { color: #ef9f27; }
+  .s-ng { color: var(--red); }
+
+  /* flow */
+  .flow-section { margin-bottom: 14px; }
+  .flow-label { font-size: 10px; color: var(--text2); margin-bottom: 8px; letter-spacing: 0.05em; }
+  .flow-wrap { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .fn {
+    font-size: 11px;
+    padding: 5px 11px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    background: var(--bg3);
+    color: var(--text2);
+    white-space: nowrap;
+  }
+  .fn.red { background: var(--red-bg); border-color: rgba(226,75,74,0.3); color: var(--red); }
+  .fn.blue { background: var(--blue-bg); border-color: rgba(55,138,221,0.3); color: var(--blue); }
+  .fn.green { background: var(--green-bg); border-color: rgba(29,158,117,0.3); color: var(--green); }
+  .fa { font-size: 12px; color: var(--text3); }
+  .rec-box {
+    margin-top: 14px;
+    padding: 12px 14px;
+    background: var(--bg3);
+    border-radius: 8px;
+    border-left: 3px solid var(--amber);
+  }
+  .rec-label { font-size: 10px; color: var(--amber); font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 5px; }
+  .rec-text { font-size: 12px; color: var(--text2); line-height: 1.6; }
+
+  /* checklist */
+  .cl-summary { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 16px; }
+  .sum-item { background: var(--bg3); border-radius: 8px; padding: 12px; text-align: center; }
+  .sum-val { font-size: 22px; font-weight: 700; }
+  .sum-label { font-size: 10px; color: var(--text2); margin-top: 3px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .cl-progress-wrap { height: 4px; background: var(--bg3); border-radius: 2px; overflow: hidden; margin-bottom: 14px; }
+  .cl-progress-fill { height: 100%; border-radius: 2px; background: var(--green); transition: width .4s ease, background .4s; }
+  .cl-filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .cl-filter {
+    font-size: 11px;
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--text2);
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .cl-filter.active { background: var(--bg3); border-color: var(--border2); color: var(--text); }
+  .cl-item { display: flex; align-items: flex-start; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); cursor: pointer; transition: background .1s; border-radius: 6px; }
+  .cl-item:last-child { border-bottom: none; }
+  .cl-item:hover { background: var(--bg3); padding-left: 6px; padding-right: 6px; }
+  .cl-num { font-size: 10px; color: var(--text3); width: 22px; text-align: right; flex-shrink: 0; margin-top: 3px; font-variant-numeric: tabular-nums; }
+  .cl-cb {
+    width: 18px; height: 18px; border-radius: 4px;
+    border: 1.5px solid var(--border2);
+    flex-shrink: 0; margin-top: 1px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all .15s;
+    font-size: 11px;
+  }
+  .cl-cb.checked { background: var(--green); border-color: var(--green); color: #fff; }
+  .cl-body { flex: 1; }
+  .cl-item-title { font-size: 13px; color: var(--text); line-height: 1.4; }
+  .cl-item-desc { font-size: 11px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+  .cl-tag { font-size: 9px; padding: 2px 6px; border-radius: 3px; margin-left: 6px; vertical-align: middle; font-weight: 600; letter-spacing: 0.05em; }
+  .t-critical { background: var(--red-bg); color: var(--red); }
+  .t-basic { background: var(--green-bg); color: var(--green); }
+  .t-advanced { background: var(--blue-bg); color: var(--blue); }
+
+  /* timeline */
+  .tl-item { display: flex; gap: 12px; margin-bottom: 14px; }
+  .tl-item:last-child { margin-bottom: 0; }
+  .tl-left { display: flex; flex-direction: column; align-items: center; width: 16px; flex-shrink: 0; }
+  .tl-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; margin-top: 4px; }
+  .tl-line { flex: 1; width: 1px; background: var(--border); margin-top: 4px; }
+  .tl-time { font-size: 11px; color: var(--text3); font-variant-numeric: tabular-nums; }
+  .tl-msg { font-size: 12px; color: var(--text2); margin-top: 2px; line-height: 1.5; }
+
+  .score-wrap { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0; }
+  .score-num { font-size: 13px; font-weight: 600; color: var(--text); }
+
+  @media (max-width: 768px) {
+    body { padding: 16px; }
+    .metrics { grid-template-columns: repeat(2,1fr); }
+    .grid-2 { grid-template-columns: 1fr; }
+    .cl-summary { grid-template-columns: repeat(3,1fr); }
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-left">
+    <div>
+      <div class="logo">Endless Flight / Security</div>
+      <div class="title">AI攻撃リアルタイム監視ダッシュボード</div>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:16px;">
+    <div class="status-wrap">
+      <div class="status-dot"></div>
+      <div class="status-label">LIVE MONITORING</div>
+    </div>
+    <div class="clock" id="clock">--</div>
+  </div>
+</div>
+
+<div class="metrics">
+  <div class="metric">
+    <div class="metric-label">本日の検知件数</div>
+    <div class="metric-value" id="cnt">247</div>
+    <div class="metric-delta up">▲ 前日比 +18%</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">ブロック成功率</div>
+    <div class="metric-value">94.3%</div>
+    <div class="metric-delta down">● ゲート正常稼働中</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">入口インジェクション</div>
+    <div class="metric-value up" id="inject">38</div>
+    <div class="metric-delta up">▲ 要注意</div>
+  </div>
+  <div class="metric">
+    <div class="metric-label">チェックリスト達成率</div>
+    <div class="metric-value" id="cl-rate-top">0%</div>
+    <div class="metric-delta warn" id="cl-rate-sub">▲ 0/20 完了</div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">AI攻撃パターン別件数（本日）</div>
+    <div id="attack-bars"></div>
+  </div>
+  <div class="card">
+    <div class="card-title">直近の脅威アラート</div>
+    <div class="threat-item">
+      <span class="badge badge-critical">CRITICAL</span>
+      <div><div class="threat-text">プロンプトインジェクション検知</div><div class="threat-sub">RSS収集データに悪意ある指示文を検出 — 入口未通過</div></div>
+    </div>
+    <div class="threat-item">
+      <span class="badge badge-high">HIGH</span>
+      <div><div class="threat-text">エージェント間汚染の伝播試行</div><div class="threat-sub">サブエージェントAからBへの異常命令フロー</div></div>
+    </div>
+    <div class="threat-item">
+      <span class="badge badge-high">HIGH</span>
+      <div><div class="threat-text">AIワーム類似パターン</div><div class="threat-sub">Gmailエージェントからの自動転送試行を遮断</div></div>
+    </div>
+    <div class="threat-item">
+      <span class="badge badge-medium">MEDIUM</span>
+      <div><div class="threat-text">不審なAPIキーアクセス要求</div><div class="threat-sub">権限外リソースへのアクセス試行 — ゼロトラストで拒否</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2">
+  <div class="card">
+    <div class="card-title">セキュリティゲート状態（5項目）</div>
+    <div class="gate-row">
+      <div class="gate-icon" style="background:var(--green-bg);">🔒</div>
+      <div class="gate-info"><div class="gate-name">個人情報保護</div><div class="gate-desc">出力前スキャン・マスキング</div></div>
+      <div class="gate-status s-ok">● 正常</div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-icon" style="background:var(--green-bg);">🔑</div>
+      <div class="gate-info"><div class="gate-name">認証・APIキー管理</div><div class="gate-desc">Secret Manager連携・.env非公開</div></div>
+      <div class="gate-status s-ok">● 正常</div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-icon" style="background:var(--amber-bg);">🌐</div>
+      <div class="gate-info"><div class="gate-name">外部連携チェック</div><div class="gate-desc">入口インジェクション対策</div></div>
+      <div class="gate-status s-warn">▲ 要強化</div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-icon" style="background:var(--green-bg);">📡</div>
+      <div class="gate-info"><div class="gate-name">API通信監視</div><div class="gate-desc">レート制限・短命トークン</div></div>
+      <div class="gate-status s-ok">● 正常</div>
+    </div>
+    <div class="gate-row">
+      <div class="gate-icon" style="background:var(--red-bg);">🗂</div>
+      <div class="gate-info"><div class="gate-name">機密情報フィルタ</div><div class="gate-desc">出口対策のみ（入口未対応）</div></div>
+      <div class="gate-status s-warn">▲ 入口未対応</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">攻撃フロー可視化（入口 vs 出口）</div>
+    <div class="flow-section">
+      <div class="flow-label">⚠️ 入口（現在の空白地帯）</div>
+      <div class="flow-wrap">
+        <div class="fn red">RSS/Gmail</div>
+        <div class="fa">→</div>
+        <div class="fn red">悪意ある指示混入</div>
+        <div class="fa">→</div>
+        <div class="fn red">AIエージェント汚染</div>
+        <div class="fa">→</div>
+        <div class="fn">ゲート到達</div>
+      </div>
+    </div>
+    <div class="flow-section" style="margin-bottom:0;">
+      <div class="flow-label">✅ 出口（対策済み）</div>
+      <div class="flow-wrap">
+        <div class="fn">AI出力</div>
+        <div class="fa">→</div>
+        <div class="fn blue">5項目ゲート</div>
+        <div class="fa">→</div>
+        <div class="fn green">デプロイ許可</div>
+      </div>
+    </div>
+    <div class="rec-box">
+      <div class="rec-label">推奨対策</div>
+      <div class="rec-text">入力サニタイズ → システムプロンプトで外部データと指示を分離 → エージェント間権限最小化</div>
+    </div>
+  </div>
+</div>
+
+<div class="card" style="margin-bottom:16px;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+    <div class="card-title" style="margin-bottom:0;">AI導入企業 セキュリティチェックリスト20</div>
+    <div class="score-num" id="cl-score">0 / 20</div>
+  </div>
+  <div class="cl-progress-wrap"><div class="cl-progress-fill" id="cl-bar" style="width:0%;"></div></div>
+  <div class="cl-summary">
+    <div class="sum-item"><div class="sum-val down" id="sum-ok">0</div><div class="sum-label">対策済み</div></div>
+    <div class="sum-item"><div class="sum-val up" id="sum-ng">20</div><div class="sum-label">未対策</div></div>
+    <div class="sum-item"><div class="sum-val" id="sum-risk" style="color:var(--red);">高</div><div class="sum-label">リスクレベル</div></div>
+  </div>
+  <div class="cl-filters">
+    <button class="cl-filter active" onclick="filterCL('all',this)">すべて</button>
+    <button class="cl-filter" onclick="filterCL('critical',this)">🔴 重要</button>
+    <button class="cl-filter" onclick="filterCL('basic',this)">🟢 基本</button>
+    <button class="cl-filter" onclick="filterCL('advanced',this)">🔵 応用</button>
+    <button class="cl-filter" onclick="filterCL('unchecked',this)">未対策のみ</button>
+  </div>
+  <div id="cl-list"></div>
+</div>
+
+<div class="card">
+  <div class="card-title">攻撃タイムライン（本日）</div>
+  <div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot" style="background:var(--red);"></div><div class="tl-line"></div></div>
+      <div><div class="tl-time">08:42</div><div class="tl-msg">プロンプトインジェクション — RSS収集データ経由で悪意指示を検出、入口フィルタ未設置のため通過</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot" style="background:#ef9f27;"></div><div class="tl-line"></div></div>
+      <div><div class="tl-time">10:15</div><div class="tl-msg">AIサプライチェーン攻撃試行 — 外部プロンプトライブラリへの汚染試行をゲートで遮断</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot" style="background:var(--red);"></div><div class="tl-line"></div></div>
+      <div><div class="tl-time">13:07</div><div class="tl-msg">エージェント間汚染 — メールエージェントから複数エージェントへの異常命令伝播試行を検知</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot" style="background:var(--blue);"></div><div class="tl-line"></div></div>
+      <div><div class="tl-time">15:33</div><div class="tl-msg">OAuthトークン漏洩試行 — 短命トークン設計により被害ゼロで阻止</div></div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-left"><div class="tl-dot" style="background:#ef9f27;"></div></div>
+      <div><div class="tl-time">17:21</div><div class="tl-msg">環境変数への不正アクセス試行 — Secret Manager経由のため.env露出なし</div></div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center;margin-top:24px;font-size:11px;color:var(--text3);">
+  AI攻撃監視ダッシュボード — デモ版（ダミーデータ）| Endless Flight ·
+  <a href="https://endless-flight.github.io/endless-flight/ai-security-guide.html" style="color:var(--blue);text-decoration:none;">AIセキュリティ入門</a>
+</div>
+
+<script>
+const checks = [
+  {n:1,title:'APIキーをコードに書いていない',desc:'Secret Manager（AWS / Google / Azure）を使用している',tag:'critical'},
+  {n:2,title:'.envファイルを公開していない',desc:'.gitignoreに設定済みである',tag:'critical'},
+  {n:3,title:'APIキーの権限を最小化している',desc:'管理者権限キーは使っていない',tag:'critical'},
+  {n:4,title:'APIキーにレート制限がある',desc:'例：1分100回など',tag:'basic'},
+  {n:5,title:'APIキーに課金上限がある',desc:'例：1日100ドルで自動停止',tag:'basic'},
+  {n:6,title:'トークンは短命にする',desc:'永久APIキーは使用しない',tag:'basic'},
+  {n:7,title:'AIに管理者権限を与えない',desc:'AIは命令を疑わないため特に重要',tag:'critical'},
+  {n:8,title:'AIツールのリストを管理している',desc:'許可リストで制御されている',tag:'basic'},
+  {n:9,title:'AIのネットワークアクセスを制限している',desc:'どこでもアクセス可能な状態になっていない',tag:'advanced'},
+  {n:10,title:'AIログを確認している',desc:'APIキー・トークン・個人情報が混入していないか定期確認',tag:'basic'},
+  {n:11,title:'AIログを公開保存していない',desc:'外部SaaSへの保存には注意',tag:'basic'},
+  {n:12,title:'外部プロンプトをそのまま使っていない',desc:'ネットのプロンプトに攻撃命令が含まれる可能性がある',tag:'critical'},
+  {n:13,title:'AIが読むWebサイトを制限している',desc:'自由なWebアクセスはプロンプトインジェクションの危険がある',tag:'advanced'},
+  {n:14,title:'AIの重要操作は人間確認を入れる',desc:'メール送信・支払い・削除はAI単独で実行させない',tag:'critical'},
+  {n:15,title:'AIをサンドボックスで動かす',desc:'コンテナ・仮想環境などの隔離環境で動作させる',tag:'advanced'},
+  {n:16,title:'AIがアクセスできるファイルを制限',desc:'全ファイルアクセスではなく専用フォルダのみ',tag:'advanced'},
+  {n:17,title:'OAuthトークン管理',desc:'refresh tokenの定期更新を実施している',tag:'advanced'},
+  {n:18,title:'Cookieセッション保護',desc:'セッション期限を短縮してCookieハイジャックに備えている',tag:'basic'},
+  {n:19,title:'外部AIコンサルの作業を監査',desc:'追加ツール・権限設定・ログを確認している',tag:'advanced'},
+  {n:20,title:'AIセキュリティ担当を決める',desc:'責任者が不在だと事故が起きる',tag:'basic'},
+];
+
+const state = new Array(20).fill(false);
+let currentFilter = 'all';
+
+function tagLabel(t){ return t==='critical'?'重要':t==='basic'?'基本':'応用'; }
+function tagClass(t){ return t==='critical'?'t-critical':t==='basic'?'t-basic':'t-advanced'; }
+
+function render(){
+  const list = document.getElementById('cl-list');
+  list.innerHTML = '';
+  const filtered = checks.filter(c => {
+    if(currentFilter==='all') return true;
+    if(currentFilter==='unchecked') return !state[c.n-1];
+    return c.tag===currentFilter;
+  });
+  filtered.forEach(c => {
+    const checked = state[c.n-1];
+    const div = document.createElement('div');
+    div.className = 'cl-item';
+    div.innerHTML = `
+      <div class="cl-num">${String(c.n).padStart(2,'0')}</div>
+      <div class="cl-cb${checked?' checked':''}"><span>${checked?'✓':''}</span></div>
+      <div class="cl-body">
+        <div class="cl-item-title">${c.title}<span class="cl-tag ${tagClass(c.tag)}">${tagLabel(c.tag)}</span></div>
+        <div class="cl-item-desc">${c.desc}</div>
+      </div>`;
+    div.onclick = () => { state[c.n-1] = !state[c.n-1]; render(); updateMetrics(); };
+    list.appendChild(div);
+  });
+}
+
+function updateMetrics(){
+  const done = state.filter(Boolean).length;
+  const pct = Math.round(done/20*100);
+  document.getElementById('cl-score').textContent = done + ' / 20';
+  document.getElementById('cl-bar').style.width = pct + '%';
+  document.getElementById('cl-bar').style.background = pct>=80?'#1d9e75':pct>=50?'#ef9f27':'#e24b4a';
+  document.getElementById('cl-rate-top').textContent = pct + '%';
+  document.getElementById('cl-rate-sub').textContent = (pct>=80?'● ':'▲ ') + done + '/20 完了';
+  document.getElementById('cl-rate-sub').className = 'metric-delta ' + (pct>=80?'down':pct>=50?'warn':'up');
+  document.getElementById('sum-ok').textContent = done;
+  document.getElementById('sum-ng').textContent = 20-done;
+  const risk = pct>=80?'低':pct>=50?'中':'高';
+  const riskColor = pct>=80?'var(--green)':pct>=50?'#ef9f27':'var(--red)';
+  document.getElementById('sum-risk').textContent = risk;
+  document.getElementById('sum-risk').style.color = riskColor;
+}
+
+function filterCL(f, btn){
+  currentFilter = f;
+  document.querySelectorAll('.cl-filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  render();
+}
+
+// attack bars
+const attacks = [
+  {name:'プロンプトインジェクション', count:89, color:'#e24b4a'},
+  {name:'AIワーム', count:52, color:'#ef9f27'},
+  {name:'エージェント間汚染', count:44, color:'#d4537e'},
+  {name:'AIサプライチェーン', count:31, color:'#7f77dd'},
+  {name:'環境変数・APIキー漏洩', count:18, color:'#378add'},
+  {name:'OAuthトークン漏洩', count:13, color:'#1d9e75'},
+];
+const maxCount = Math.max(...attacks.map(a=>a.count));
+const container = document.getElementById('attack-bars');
+attacks.forEach(a => {
+  const pct = Math.round(a.count/maxCount*100);
+  container.innerHTML += `<div class="attack-row"><div class="attack-name">${a.name}</div><div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:${a.color};"></div></div><div class="bar-count">${a.count}</div></div>`;
+});
+
+// clock
+function updateClock(){
+  const now = new Date();
+  document.getElementById('clock').textContent =
+    now.toLocaleDateString('ja-JP') + ' ' +
+    now.toLocaleTimeString('ja-JP',{hour:'2-digit',minute:'2-digit',second:'2-digit'}) + ' 更新';
+}
+updateClock();
+setInterval(updateClock, 1000);
+
+// live counters
+let base = 247;
+setInterval(() => {
+  base += Math.floor(Math.random()*3);
+  document.getElementById('cnt').textContent = base;
+  if(Math.random() > 0.7){
+    const inj = parseInt(document.getElementById('inject').textContent);
+    document.getElementById('inject').textContent = inj + 1;
+  }
+}, 3000);
+
+render();
+updateMetrics();
+</script>
+</body>
+</html>
