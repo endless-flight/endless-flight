@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>乃木坂46 ツアー遠征プランナー | Endless Flight</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Hiragino Sans", "Yu Gothic", sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    padding: 20px;
+    color: #333;
+  }
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  header {
+    background: linear-gradient(135deg, #4a5fc1 0%, #5d3a8e 100%);
+    color: #fff;
+    padding: 24px 32px;
+  }
+  header h1 { font-size: 22px; margin-bottom: 4px; }
+  header p { opacity: 0.85; font-size: 13px; }
+
+  .stepper {
+    display: flex;
+    background: #f7f8fc;
+    border-bottom: 1px solid #e5e7eb;
+    padding: 16px 32px;
+    gap: 8px;
+    overflow-x: auto;
+  }
+  .step-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    background: #e5e7eb;
+    color: #6b7280;
+    white-space: nowrap;
+    transition: all 0.2s;
+  }
+  .step-pill.active {
+    background: #4a5fc1;
+    color: #fff;
+    font-weight: 600;
+  }
+  .step-pill.done {
+    background: #10b981;
+    color: #fff;
+  }
+  .step-pill .num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: bold;
+  }
+  .step-pill:not(.active):not(.done) .num { background: #fff; color: #9ca3af; }
+
+  main { padding: 32px; }
+  .step-section { display: none; animation: fadeIn 0.3s; }
+  .step-section.visible { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .step-section h2 { font-size: 18px; margin-bottom: 16px; color: #1f2937; }
+  .step-section .desc { color: #6b7280; font-size: 14px; margin-bottom: 20px; line-height: 1.6; }
+
+  .input-group { margin-bottom: 20px; }
+  .input-group label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-bottom: 6px; }
+  .input-group input, .input-group textarea, .input-group select {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 14px;
+    font-family: inherit;
+    transition: border 0.2s;
+  }
+  .input-group input:focus, .input-group textarea:focus, .input-group select:focus {
+    outline: none;
+    border-color: #4a5fc1;
+    box-shadow: 0 0 0 3px rgba(74,95,193,0.1);
+  }
+  .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  @media (max-width: 600px) { .input-row { grid-template-columns: 1fr; } }
+
+  .btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #4a5fc1, #5d3a8e);
+    color: #fff;
+  }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(74,95,193,0.4); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+    border: 1px solid #d1d5db;
+  }
+  .btn-secondary:hover { background: #e5e7eb; }
+  .btn-danger { background: #fee; color: #c33; border: 1px solid #fcc; }
+  .btn-danger:hover { background: #fcc; }
+
+  .alert { padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
+  .alert-success { background: #d1fae5; color: #065f46; border-left: 3px solid #10b981; }
+  .alert-error { background: #fee2e2; color: #991b1b; border-left: 3px solid #ef4444; }
+  .alert-info { background: #dbeafe; color: #1e40af; border-left: 3px solid #3b82f6; }
+  .alert-warning { background: #fef3c7; color: #92400e; border-left: 3px solid #f59e0b; }
+
+  .loader {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-right: 8px;
+    vertical-align: middle;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+  .summary-card {
+    background: linear-gradient(135deg, #fff8e7, #fef3c7);
+    border: 1px solid #fcd34d;
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+  .summary-card h3 { font-size: 14px; color: #92400e; margin-bottom: 8px; }
+  .summary-card .total { font-size: 24px; font-weight: bold; color: #78350f; }
+  .summary-card .vs-budget { font-size: 13px; margin-top: 4px; }
+  .vs-budget.over { color: #dc2626; font-weight: 600; }
+  .vs-budget.under { color: #059669; font-weight: 600; }
+
+  .global-advice {
+    background: #fef3c7;
+    border-left: 4px solid #f59e0b;
+    padding: 16px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    line-height: 1.7;
+    color: #78350f;
+    white-space: pre-wrap;
+  }
+  .global-advice strong { display: block; margin-bottom: 6px; font-size: 14px; }
+
+  .trip-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    overflow: hidden;
+    background: #fff;
+  }
+  .trip-header {
+    padding: 14px 18px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .trip-header h3 { font-size: 15px; color: #1f2937; }
+  .trip-header .badge {
+    background: #4a5fc1;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .trip-meta {
+    padding: 14px 18px;
+    background: #fff;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    font-size: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  .trip-meta .item .label { color: #6b7280; font-size: 11px; margin-bottom: 2px; }
+  .trip-meta .item .value { color: #1f2937; font-weight: 600; }
+
+  .trip-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+  }
+  .trip-table th, .trip-table td {
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 1px solid #f3f4f6;
+  }
+  .trip-table th {
+    background: #f9fafb;
+    font-weight: 600;
+    font-size: 11px;
+    color: #6b7280;
+  }
+  .trip-table .num { text-align: right; }
+  .trip-note {
+    padding: 12px 18px;
+    background: #fffbeb;
+    font-size: 12px;
+    color: #78350f;
+    border-top: 1px solid #fef3c7;
+    line-height: 1.6;
+    white-space: pre-wrap;
+  }
+  .trip-note strong { display: block; margin-bottom: 4px; }
+
+  .api-key-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f0fdf4;
+    border: 1px solid #86efac;
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    color: #166534;
+  }
+
+  .help-box {
+    background: #f9fafb;
+    border-left: 3px solid #4a5fc1;
+    padding: 12px 14px;
+    border-radius: 4px;
+    font-size: 12px;
+    color: #4b5563;
+    line-height: 1.7;
+    margin-top: 8px;
+  }
+  .help-box a { color: #4a5fc1; text-decoration: underline; }
+
+  footer { padding: 20px 32px; background: #f9fafb; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280; text-align: center; }
+  footer a { color: #4a5fc1; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>🚄 乃木坂46 ツアー遠征プランナー</h1>
+    <p>ツアーURLを入れるだけで、AIが遠征プランを自動生成します</p>
+  </header>
+
+  <div class="stepper" id="stepper">
+    <div class="step-pill active" data-step="1"><span class="num">1</span>ツアー取得</div>
+    <div class="step-pill" data-step="2"><span class="num">2</span>APIキー</div>
+    <div class="step-pill" data-step="3"><span class="num">3</span>条件入力</div>
+    <div class="step-pill" data-step="4"><span class="num">4</span>結果</div>
+  </div>
+
+  <main>
+    <!-- Step 1: ツアーURL -->
+    <section class="step-section visible" id="step1">
+      <h2>📍 Step 1：ツアー情報を取得</h2>
+      <p class="desc">公式ツアーページのURLを入力してください。中身を自動取得して、開催公演を読み取ります。</p>
+
+      <div class="input-group">
+        <label>ツアーURL</label>
+        <input type="url" id="tourUrl" placeholder="https://www.nogizaka46.com/s/n46/page/summer_tour2026" value="https://www.nogizaka46.com/s/n46/page/summer_tour2026">
+      </div>
+
+      <div id="step1-message"></div>
+
+      <div class="actions">
+        <button class="btn btn-primary" id="fetchBtn">ページを取得して次へ</button>
+      </div>
+
+      <div class="help-box" style="margin-top:20px;">
+        💡 公式ページの構造変更でうまく取得できない場合は、ページを開いて Cmd+A → Cmd+C でコピーし、ブラウザのコンソール（F12）で <code>localStorage.setItem('manualTourText', '貼り付け')</code> も将来サポート予定です。
+      </div>
+    </section>
+
+    <!-- Step 2: APIキー -->
+    <section class="step-section" id="step2">
+      <h2>🔑 Step 2：Gemini APIキーを入力</h2>
+      <p class="desc">
+        Google AI Studio で取得した APIキーを入力してください。<br>
+        キーはあなたのブラウザにのみ保存され、外部には送信されません（ブラウザ → Google直接通信）。
+      </p>
+
+      <div id="step2-fetched"></div>
+
+      <div class="input-group">
+        <label>Gemini APIキー</label>
+        <input type="password" id="apiKey" placeholder="AIza...">
+        <div class="help-box">
+          🔗 取得：<a href="https://aistudio.google.com/apikey" target="_blank">aistudio.google.com/apikey</a>（無料、クレカ不要）<br>
+          🔒 保存場所：このブラウザの localStorage のみ（他人からは見えません）
+        </div>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(1)">← 戻る</button>
+        <button class="btn btn-secondary" id="clearKeyBtn">キーを削除</button>
+        <button class="btn btn-primary" id="toStep3Btn">保存して次へ →</button>
+      </div>
+    </section>
+
+    <!-- Step 3: 条件入力 -->
+    <section class="step-section" id="step3">
+      <h2>🎯 Step 3：旅行条件を入力</h2>
+      <p class="desc">出発駅と総予算を入力してください。AIが各遠征の最適プランを考案し、予算オーバーなら削減案も提示します。</p>
+
+      <div class="input-row">
+        <div class="input-group">
+          <label>出発駅</label>
+          <input type="text" id="originStation" placeholder="例：東京駅、新横浜駅、品川駅" value="東京駅">
+        </div>
+        <div class="input-group">
+          <label>総予算（万円）</label>
+          <input type="number" id="totalBudget" placeholder="例：50" value="50" min="0" step="1">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label>追加リクエスト（任意）</label>
+        <textarea id="extraRequest" rows="3" placeholder="例：宿泊はAirbnb優先 / 新幹線はグリーン車希望 / 野球部の試合も観戦したい"></textarea>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(2)">← 戻る</button>
+        <button class="btn btn-primary" id="generateBtn">AIに遠征プランを生成させる</button>
+      </div>
+
+      <div id="step3-message" style="margin-top:16px;"></div>
+    </section>
+
+    <!-- Step 4: 結果 -->
+    <section class="step-section" id="step4">
+      <h2>✅ Step 4：生成結果</h2>
+      <p class="desc">AIが生成した遠征プランです。内容を確認して、xlsxとしてダウンロードできます。</p>
+
+      <div id="resultArea"></div>
+
+      <div class="actions">
+        <button class="btn btn-secondary" onclick="goStep(3)">← 条件を変えて再生成</button>
+        <button class="btn btn-primary" id="downloadBtn">📥 Excelダウンロード</button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    Endless Flight Tour Planner | <a href="../">サイトトップへ</a>
+  </footer>
+</div>
+
+<!-- SheetJS -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+<script>
+// ============================================================
+// 設定
+// ============================================================
+const CONFIG = {
+  // 暫定：公開CORSプロキシ。後でCloudflare WorkersのURLに差し替え
+  CORS_PROXY: 'https://corsproxy.io/?url=',
+  GEMINI_MODEL: 'gemini-2.5-flash',
+  TICKET_PRICES: {
+    concert: 12000,
+    baseball: 6000
+  }
+};
+
+// ============================================================
+// 状態管理
+// ============================================================
+let state = {
+  tourUrl: '',
+  tourText: '',
+  apiKey: '',
+  origin: '東京駅',
+  budget: 50,
+  extra: '',
+  result: null
+};
+
+// ============================================================
+// ステップ遷移
+// ============================================================
+function goStep(n) {
+  document.querySelectorAll('.step-section').forEach(s => s.classList.remove('visible'));
+  document.getElementById('step' + n).classList.add('visible');
+  document.querySelectorAll('.step-pill').forEach((pill, i) => {
+    pill.classList.remove('active', 'done');
+    if (i + 1 < n) pill.classList.add('done');
+    else if (i + 1 === n) pill.classList.add('active');
+  });
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ============================================================
+// Step 1: ツアーページ取得
+// ============================================================
+document.getElementById('fetchBtn').addEventListener('click', async () => {
+  const url = document.getElementById('tourUrl').value.trim();
+  const msgEl = document.getElementById('step1-message');
+  if (!url) {
+    msgEl.innerHTML = '<div class="alert alert-error">URLを入力してください</div>';
+    return;
+  }
+
+  const btn = document.getElementById('fetchBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span>取得中…';
+  msgEl.innerHTML = '<div class="alert alert-info">公式ページを取得しています…</div>';
+
+  try {
+    const proxyUrl = CONFIG.CORS_PROXY + encodeURIComponent(url);
+    const res = await fetch(proxyUrl);
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const html = await res.text();
+
+    // HTMLからテキストを抽出
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, 'text/html');
+    doc.querySelectorAll('script, style, nav, footer, header').forEach(el => el.remove());
+    const text = doc.body.innerText.replace(/\n{3,}/g, '\n\n').trim();
+
+    if (text.length < 100) throw new Error('取得したページの本文が短すぎます');
+
+    state.tourUrl = url;
+    state.tourText = text;
+
+    msgEl.innerHTML = `<div class="alert alert-success">✓ 取得完了：${text.length.toLocaleString()}文字</div>`;
+    document.getElementById('step2-fetched').innerHTML =
+      `<div class="alert alert-success">✓ ツアーページ取得済み（${text.length.toLocaleString()}文字）</div>`;
+
+    // 保存済みAPIキーがあれば自動入力
+    const savedKey = localStorage.getItem('geminiApiKey');
+    if (savedKey) document.getElementById('apiKey').value = savedKey;
+
+    setTimeout(() => goStep(2), 600);
+  } catch (e) {
+    msgEl.innerHTML = `<div class="alert alert-error">取得に失敗しました：${e.message}<br>暫定プロキシ（corsproxy.io）が混雑している可能性があります。少し待って再試行してください。</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'ページを取得して次へ';
+  }
+});
+
+// ============================================================
+// Step 2: APIキー保存
+// ============================================================
+document.getElementById('toStep3Btn').addEventListener('click', () => {
+  const key = document.getElementById('apiKey').value.trim();
+  if (!key) {
+    alert('APIキーを入力してください');
+    return;
+  }
+  state.apiKey = key;
+  localStorage.setItem('geminiApiKey', key);
+  goStep(3);
+});
+
+document.getElementById('clearKeyBtn').addEventListener('click', () => {
+  if (confirm('保存されたAPIキーを削除しますか？')) {
+    localStorage.removeItem('geminiApiKey');
+    document.getElementById('apiKey').value = '';
+    alert('削除しました');
+  }
+});
+
+// ============================================================
+// Step 3: AI生成
+// ============================================================
+document.getElementById('generateBtn').addEventListener('click', async () => {
+  state.origin = document.getElementById('originStation').value.trim() || '東京駅';
+  state.budget = parseFloat(document.getElementById('totalBudget').value) || 50;
+  state.extra = document.getElementById('extraRequest').value.trim();
+
+  const btn = document.getElementById('generateBtn');
+  const msgEl = document.getElementById('step3-message');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="loader"></span>AIが思考中…（30秒〜1分）';
+  msgEl.innerHTML = '<div class="alert alert-info">Gemini APIに問い合わせ中。複雑な計算を含むため少し時間がかかります…</div>';
+
+  try {
+    const result = await callGemini(state);
+    state.result = result;
+    renderResult(result);
+    goStep(4);
+  } catch (e) {
+    msgEl.innerHTML = `<div class="alert alert-error">生成に失敗しました：${e.message}</div>`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = 'AIに遠征プランを生成させる';
+  }
+});
+
+// ============================================================
+// Gemini API 呼び出し
+// ============================================================
+async function callGemini(s) {
+  const prompt = buildPrompt(s);
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${CONFIG.GEMINI_MODEL}:generateContent?key=${s.apiKey}`;
+
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        temperature: 0.4,
+        responseMimeType: 'application/json'
+      }
+    })
+  });
+
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Gemini API エラー (${res.status}): ${errText.substring(0, 200)}`);
+  }
+
+  const data = await res.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+  if (!text) throw new Error('Gemini からの応答が空でした');
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error('AI応答のJSONパースに失敗：' + text.substring(0, 200));
+  }
+}
+
+function buildPrompt(s) {
+  return `あなたは乃木坂46ファンの遠征プランナーです。以下の公式ツアーページの内容を読み取り、ユーザーの条件に合わせた遠征プランをJSON形式で生成してください。
+
+# 公式ツアーページの本文
+${s.tourText.substring(0, 8000)}
+
+# ユーザーの条件
+- 出発駅: ${s.origin}
+- 総予算: ${s.budget}万円（交通費＋宿泊費＋チケット代の合計）
+- 追加リクエスト: ${s.extra || 'なし'}
+
+# あなたへの指示
+1. ページから全公演を抽出してください（公演日・会場名・地域）。野球部の試合があればそれも含める。
+2. 同一地域・近い日程の公演はまとめて1つの「遠征」として扱ってください（例：広島と大阪の連続移動は1遠征）。
+3. 各遠征について以下を考案：
+   - 拠点エリア（宿泊する地域）
+   - 出発・到着の駅／空港、便種別、出発時刻、到着時刻
+   - 交通費・宿泊費・チケット代の見積もり（円単位）
+   - チケット代は公演1日あたり12,000円、野球部1試合あたり6,000円で計算
+4. 全遠征の総額を計算し、予算と比較してください。
+5. **予算オーバーなら**、各遠征の advice 欄に具体的な削減案（例：「グリーン車→普通車で約1万円減」「Airbnb活用で1泊3000円減」）を必ず記載。global_advice には全体の優先削減順序や合計削減見込み額をまとめてください。
+6. **予算内なら**、advice はそのまま空文字でOK、global_advice に「予算内で収まっています」と書いてください。
+
+# 出力JSONフォーマット（厳守）
+{
+  "tour_name": "ツアー名",
+  "origin": "${s.origin}",
+  "budget_man": ${s.budget},
+  "global_advice": "全体に対するアドバイス文字列",
+  "trips": [
+    {
+      "name": "①地域名",
+      "period": "M/D - M/D",
+      "base": "拠点エリア",
+      "transport_summary": "新幹線グリーン / LCC など主な交通手段",
+      "items": [
+        {
+          "date": "2026/M/D",
+          "weekday": "土",
+          "depart_time": "10:24",
+          "depart_station": "東京駅",
+          "arrive_time": "13:17",
+          "arrive_station": "福井駅",
+          "plan": "予定・便種別（例：北陸新幹線かがやき・グリーン車 / 公演Day1 / 野球部観戦）",
+          "transit_yen": 48000,
+          "lodging_yen": 0,
+          "ticket_yen": 0,
+          "note": "備考"
+        }
+      ],
+      "advice": "予算オーバー時の削減案。予算内なら空文字"
+    }
+  ]
+}
+
+# 必須ルール
+- transit_yen, lodging_yen, ticket_yen は必ず数値（円単位）。該当なしは0。
+- 移動が発生する行（出発/到着がある行）に交通費を入れる。宿泊費は遠征最終宿泊日の行に合計を入れる。チケット代は公演／野球部の各行に入れる。
+- JSON以外の余計なテキスト・コメント・マークダウンは絶対に出力しないこと。
+`;
+}
+
+// ============================================================
+// 結果レンダリング
+// ============================================================
+function renderResult(r) {
+  const total = r.trips.reduce((sum, t) =>
+    sum + t.items.reduce((s, it) => s + (it.transit_yen||0) + (it.lodging_yen||0) + (it.ticket_yen||0), 0)
+  , 0);
+  const totalMan = total / 10000;
+  const diff = totalMan - r.budget_man;
+  const isOver = diff > 0;
+
+  let html = `
+    <div class="summary-card">
+      <h3>💰 総費用サマリー</h3>
+      <div class="total">¥${total.toLocaleString()} <span style="font-size:14px;color:#92400e;">(${totalMan.toFixed(1)}万円)</span></div>
+      <div class="vs-budget ${isOver ? 'over' : 'under'}">
+        予算 ${r.budget_man}万円 に対して
+        ${isOver ? `🔺 ${diff.toFixed(1)}万円オーバー` : `✅ ${Math.abs(diff).toFixed(1)}万円の余裕`}
+      </div>
+    </div>
+  `;
+
+  if (r.global_advice) {
+    html += `
+      <div class="global-advice">
+        <strong>💡 全体に対するアドバイス</strong>${escapeHtml(r.global_advice)}
+      </div>
+    `;
+  }
+
+  r.trips.forEach((t, i) => {
+    const subtotal = t.items.reduce((s, it) => s + (it.transit_yen||0) + (it.lodging_yen||0) + (it.ticket_yen||0), 0);
+    html += `
+      <div class="trip-card">
+        <div class="trip-header">
+          <h3>${escapeHtml(t.name)} <span style="color:#9ca3af;font-weight:normal;font-size:13px;">(${escapeHtml(t.period)})</span></h3>
+          <span class="badge">小計 ¥${subtotal.toLocaleString()}</span>
+        </div>
+        <div class="trip-meta">
+          <div class="item"><div class="label">拠点</div><div class="value">${escapeHtml(t.base || '-')}</div></div>
+          <div class="item"><div class="label">交通手段</div><div class="value">${escapeHtml(t.transport_summary || '-')}</div></div>
+          <div class="item"><div class="label">日数</div><div class="value">${t.items.length}行程</div></div>
+        </div>
+        <div style="overflow-x:auto;">
+        <table class="trip-table">
+          <thead><tr>
+            <th>日付</th><th>曜</th><th>発時刻</th><th>発駅</th><th>着時刻</th><th>着駅</th><th>予定</th>
+            <th class="num">交通費</th><th class="num">宿泊費</th><th class="num">チケット</th><th>備考</th>
+          </tr></thead>
+          <tbody>
+    `;
+    t.items.forEach(it => {
+      html += `
+        <tr>
+          <td>${escapeHtml(it.date||'')}</td>
+          <td>${escapeHtml(it.weekday||'')}</td>
+          <td>${escapeHtml(it.depart_time||'')}</td>
+          <td>${escapeHtml(it.depart_station||'')}</td>
+          <td>${escapeHtml(it.arrive_time||'')}</td>
+          <td>${escapeHtml(it.arrive_station||'')}</td>
+          <td>${escapeHtml(it.plan||'')}</td>
+          <td class="num">${it.transit_yen ? '¥'+it.transit_yen.toLocaleString() : '-'}</td>
+          <td class="num">${it.lodging_yen ? '¥'+it.lodging_yen.toLocaleString() : '-'}</td>
+          <td class="num">${it.ticket_yen ? '¥'+it.ticket_yen.toLocaleString() : '-'}</td>
+          <td>${escapeHtml(it.note||'')}</td>
+        </tr>
+      `;
+    });
+    html += '</tbody></table></div>';
+
+    if (t.advice) {
+      html += `<div class="trip-note"><strong>💡 削減アドバイス</strong>${escapeHtml(t.advice)}</div>`;
+    }
+    html += '</div>';
+  });
+
+  document.getElementById('resultArea').innerHTML = html;
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+}
+
+// ============================================================
+// xlsx ダウンロード
+// ============================================================
+document.getElementById('downloadBtn').addEventListener('click', () => {
+  if (!state.result) { alert('まずプランを生成してください'); return; }
+  buildXlsx(state.result);
+});
+
+function buildXlsx(r) {
+  const wb = XLSX.utils.book_new();
+  const data = [];
+
+  // タイトル
+  data.push([`乃木坂46 ${r.tour_name || 'ツアー'} 遠征マスター`]);
+  data.push([]);
+
+  // 費用サマリー
+  data.push(['■ 費用サマリー']);
+  data.push(['遠征先', '日程', '拠点', '交通手段', '交通費(万円)', '宿泊費(万円)', 'チケット(万円)', '合計(万円)', '削減アドバイス']);
+
+  let totalT=0, totalL=0, totalK=0;
+  r.trips.forEach(t => {
+    const tT = t.items.reduce((s,it)=>s+(it.transit_yen||0),0);
+    const tL = t.items.reduce((s,it)=>s+(it.lodging_yen||0),0);
+    const tK = t.items.reduce((s,it)=>s+(it.ticket_yen||0),0);
+    const tot = tT+tL+tK;
+    totalT+=tT; totalL+=tL; totalK+=tK;
+    data.push([
+      t.name, t.period, t.base, t.transport_summary,
+      +(tT/10000).toFixed(1), +(tL/10000).toFixed(1), +(tK/10000).toFixed(1), +(tot/10000).toFixed(1),
+      t.advice || ''
+    ]);
+  });
+  data.push([
+    '合計', '', '', '',
+    +(totalT/10000).toFixed(1), +(totalL/10000).toFixed(1), +(totalK/10000).toFixed(1),
+    +((totalT+totalL+totalK)/10000).toFixed(1), ''
+  ]);
+  data.push([]);
+  const totalMan = (totalT+totalL+totalK)/10000;
+  data.push([`予算: ${r.budget_man}万円 / 実績: ${totalMan.toFixed(1)}万円 / 差: ${(totalMan-r.budget_man).toFixed(1)}万円`]);
+  data.push([]);
+  if (r.global_advice) {
+    data.push(['■ 全体アドバイス']);
+    data.push([r.global_advice]);
+    data.push([]);
+  }
+
+  // 詳細スケジュール
+  data.push(['■ 詳細スケジュール']);
+  data.push([]);
+  r.trips.forEach(t => {
+    data.push([`▼ ${t.name}（${t.period}） 拠点: ${t.base}`]);
+    data.push(['日付','曜','出発時刻','出発駅','到着時刻','到着駅','予定','交通費','宿泊費','チケット','合計','経路検索','航空券','宿(Airbnb)','ホテル(Google)','備考']);
+
+    t.items.forEach(it => {
+      const sum = (it.transit_yen||0)+(it.lodging_yen||0)+(it.ticket_yen||0);
+      const yahooUrl = buildYahooUrl(it);
+      const skyUrl = buildSkyscannerUrl(it, t);
+      const airbnbUrl = buildAirbnbUrl(t);
+      const googleUrl = buildGoogleUrl(t);
+
+      data.push([
+        it.date||'', it.weekday||'', it.depart_time||'', it.depart_station||'',
+        it.arrive_time||'', it.arrive_station||'', it.plan||'',
+        it.transit_yen||0, it.lodging_yen||0, it.ticket_yen||0, sum,
+        yahooUrl ? {t:'s', v:'🚆 検索', l:{Target:yahooUrl}} : '',
+        skyUrl ? {t:'s', v:'✈ 検索', l:{Target:skyUrl}} : '',
+        airbnbUrl ? {t:'s', v:'🏠 検索', l:{Target:airbnbUrl}} : '',
+        googleUrl ? {t:'s', v:'🔍 検索', l:{Target:googleUrl}} : '',
+        it.note||''
+      ]);
+    });
+    if (t.advice) {
+      data.push(['', '', '', '', '', '', '【削減アドバイス】', '', '', '', '', '', '', '', '', t.advice]);
+    }
+    data.push([]);
+  });
+
+  const ws = XLSX.utils.aoa_to_sheet(data);
+  ws['!cols'] = [
+    {wch:14},{wch:5},{wch:8},{wch:14},{wch:8},{wch:14},{wch:30},
+    {wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:10},{wch:30}
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, '遠征マスター');
+  XLSX.writeFile(wb, `nogizaka_tour_${Date.now()}.xlsx`);
+}
+
+// ============================================================
+// URL ビルダー
+// ============================================================
+function buildYahooUrl(it) {
+  if (!it.depart_station || !it.arrive_station || !it.depart_time || !it.date) return '';
+  const d = it.date.replace(/\//g, '').replace(/^\d{2}/, m => '20'+m);
+  if (d.length < 8) return '';
+  const [Y,M,D] = [d.substring(0,4), parseInt(d.substring(4,6)), parseInt(d.substring(6,8))];
+  const [hh, mm] = it.depart_time.split(':').map(Number);
+  const params = new URLSearchParams({
+    from: it.depart_station,
+    to: it.arrive_station,
+    y: Y, m: String(M).padStart(2,'0'), d: String(D).padStart(2,'0'),
+    hh: String(hh).padStart(2,'0'), m1: String(Math.floor(mm/10)), m2: String(mm%10),
+    type: '1'
+  });
+  return `https://transit.yahoo.co.jp/search/result?${params.toString()}`;
+}
+
+function buildSkyscannerUrl(it, t) {
+  // 空港コードのざっくりマッピング
+  const airportMap = {
+    '成田': 'NRT', '羽田': 'HND', '新千歳': 'CTS', '福岡': 'FUK',
+    '関西': 'KIX', '伊丹': 'ITM', '中部': 'NGO', '那覇': 'OKA',
+    '小松': 'KMQ', '仙台': 'SDJ', '広島': 'HIJ'
+  };
+  const fromCode = Object.entries(airportMap).find(([k]) => (it.depart_station||'').includes(k))?.[1];
+  const toCode = Object.entries(airportMap).find(([k]) => (it.arrive_station||'').includes(k))?.[1];
+  if (!fromCode || !toCode) return '';
+  const d = (it.date||'').replace(/\//g, '-');
+  if (!d) return '';
+  const dateStr = d.length === 10 ? d.substring(2).replace(/-/g,'') : '';
+  return `https://www.skyscanner.jp/transport/flights/${fromCode.toLowerCase()}/${toCode.toLowerCase()}/${dateStr}/`;
+}
+
+function buildAirbnbUrl(t) {
+  if (!t.base) return '';
+  const checkin = parsePeriodStart(t.period);
+  const checkout = parsePeriodEnd(t.period);
+  const params = new URLSearchParams({
+    query: t.base,
+    ...(checkin && {checkin}),
+    ...(checkout && {checkout})
+  });
+  return `https://www.airbnb.jp/s/${encodeURIComponent(t.base)}/homes?${params.toString()}`;
+}
+
+function buildGoogleUrl(t) {
+  if (!t.base) return '';
+  const q = `${t.base} ホテル ${t.period || ''}`;
+  return `https://www.google.com/search?q=${encodeURIComponent(q)}`;
+}
+
+function parsePeriodStart(p) {
+  // "6/13 - 6/14" → "2026-06-13"
+  const m = (p||'').match(/(\d+)\/(\d+)/);
+  if (!m) return '';
+  return `2026-${String(m[1]).padStart(2,'0')}-${String(m[2]).padStart(2,'0')}`;
+}
+function parsePeriodEnd(p) {
+  const matches = [...(p||'').matchAll(/(\d+)\/(\d+)/g)];
+  if (matches.length < 2) return '';
+  const last = matches[matches.length-1];
+  return `2026-${String(last[1]).padStart(2,'0')}-${String(last[2]).padStart(2,'0')}`;
+}
+
+// ============================================================
+// 初期化：保存済みAPIキーがあれば事前ロード
+// ============================================================
+window.addEventListener('DOMContentLoaded', () => {
+  const savedKey = localStorage.getItem('geminiApiKey');
+  if (savedKey) document.getElementById('apiKey').value = savedKey;
+});
+</script>
+</body>
+</html>
