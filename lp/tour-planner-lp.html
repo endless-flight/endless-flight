@@ -1,0 +1,1670 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-9JQ6ZMWQ6S"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-9JQ6ZMWQ6S');
+    </script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- ===== Google Search Console 確認 ===== -->
+    <meta name="google-site-verification" content="jNajtgbJAhNvjop-ebM6j2v1OA6wXXCwtKNFHo73Roc" />
+
+    <!-- ===== メタデータ（LLMO最適化） ===== -->
+    <title>【乃木坂46 真夏の全国ツアー】遠征プランナー - AIが旅程を自動生成するWebアプリ</title>
+    <meta name="description" content="乃木坂46 真夏の全国ツアーの遠征プランをAIが自動生成。公演日程・予算を入力するだけで、新幹線・宿泊・野球観戦まで含めた最適な旅程を作成。Excel出力対応、金額編集可能、追加リクエストで自由にカスタマイズ。">
+    <meta name="keywords" content="乃木坂46,真夏の全国ツアー,遠征プランナー,AI旅程,遠征計画,Webアプリ,Gemini AI,推し活,コンサート遠征,Excel出力,予算管理,野球部">
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="【乃木坂46 真夏の全国ツアー】遠征プランナー - AI旅程生成アプリ">
+    <meta property="og:description" content="公演日程と予算を入力するだけで、AIが遠征プランを自動生成。Excel出力・金額編集・追加リクエストに対応。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://endless-flight.github.io/endless-flight/lp/tour-planner.html">
+    <meta property="og:site_name" content="乃木坂46 真夏の全国ツアー 遠征プランナー">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="【乃木坂46 真夏の全国ツアー】遠征プランナー">
+    <meta name="twitter:description" content="AIが遠征プランを自動生成。Excel出力・金額編集・追加リクエストに対応。">
+
+    <!-- ===== 構造化データ: SoftwareApplication ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "【乃木坂46 真夏の全国ツアー】遠征プランナー",
+      "description": "乃木坂46の真夏の全国ツアー遠征プランをAIが自動生成するWebアプリ。公演日程・予算・出発地を入力するだけで、新幹線・飛行機・宿泊を含めた最適な旅程を提案。",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Web (All browsers)",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "JPY",
+        "description": "無料で利用可能（Gemini APIキーが必要）"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "エンドレスフライト",
+        "url": "https://note.com/endless_flight"
+      },
+      "url": "https://endless-flight.github.io/endless-flight/lp/tour-planner.html",
+      "featureList": [
+        "AI自動プラン生成（Gemini API）",
+        "予算管理・自動計算",
+        "金額編集機能",
+        "Excel出力",
+        "プラン保存機能",
+        "追加リクエストによるカスタマイズ"
+      ]
+    }
+    </script>
+
+    <!-- ===== 構造化データ: FAQPage ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "遠征プランナーは無料で使えますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい、本アプリ自体は無料でご利用いただけます。AI機能の利用にはGoogle AI Studioで取得できるGemini APIキーが必要です。APIキーには無料利用枠があります。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "どんな追加リクエストができますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "前泊・後泊の追加、観光プランの組み込み、野球観戦などの他イベントとの組み合わせ、宿泊エリアの指定など、自由に指示できます。例えば「福井は前泊で金沢泊も盛り込んでください」「乃木坂野球部の始球式も観戦したい」といった複合的なリクエストにも対応します。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "生成されたプランは編集できますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい、交通費・宿泊費・チケット代はすべて手動で編集可能です。値を変更すると、小計・合計が自動的に再計算されます。"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Excel出力やプラン保存はできますか？",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "はい、作成したプランはExcelファイルとしてダウンロードできます。また、ブラウザ内にプランを保存し、いつでも呼び出すことが可能です。"
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- ===== フォント ===== -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&family=Poppins:wght@600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ===== エンドレスフライト ナビゲーション ===== */
+        .endless-flight-nav {
+            background: linear-gradient(135deg, #FFE5F0 0%, #E5F4FF 100%);
+            padding: 20px;
+            border-bottom: 2px solid #FFB6D9;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 2000;
+        }
+
+        .endless-flight-nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .endless-flight-nav-logo {
+            font-family: 'Poppins', 'Noto Sans JP', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FF1493 0%, #FFB6D9 50%, #B4E4FF 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-decoration: none;
+        }
+
+        .endless-flight-nav-links {
+            display: flex;
+            gap: 30px;
+        }
+
+        .endless-flight-nav-links a {
+            color: #2D3436;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+
+        .endless-flight-nav-links a:hover {
+            color: #FFB6D9;
+        }
+
+        :root {
+            /* 乃木坂サマー パレット */
+            --primary: #9B7EDE;          /* 乃木坂パープル */
+            --primary-light: #B8A0F0;
+            --primary-dark: #7B5BC9;
+            --secondary: #5BC0EB;        /* サマーブルー */
+            --accent: #FFB6D9;           /* アクセントピンク */
+            --sunset: #FFCB77;           /* 夕焼けゴールド */
+            --success: #B4F4C8;
+
+            --neutral-50: #FAF8FF;
+            --neutral-100: #F3EFFB;
+            --neutral-200: #E8E0F5;
+            --neutral-800: #4A3E5C;
+            --neutral-900: #2D2440;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Hiragino Sans', sans-serif;
+            line-height: 1.8;
+            color: var(--neutral-800);
+            background: linear-gradient(180deg, #FAF8FF 0%, #F0E5FF 50%, #E5F4FF 100%);
+            padding-top: 80px;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 80px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 12px rgba(155, 126, 222, 0.15);
+            z-index: 1000;
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.25rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🎤";
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: var(--neutral-800);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        /* ===== 定義セクション ===== */
+        .definition-section {
+            background: linear-gradient(135deg, var(--neutral-50) 0%, #F0E5FF 100%);
+            padding: 2rem;
+            border-bottom: 3px solid var(--primary-light);
+            margin-top: 5rem;
+        }
+
+        .definition-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .definition-text {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: var(--neutral-900);
+            font-weight: 500;
+        }
+
+        .definition-text strong {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 5rem 2rem 6rem;
+            background: linear-gradient(135deg, #F0E5FF 0%, #D4B8FF 30%, #B8E1FF 70%, #FFE5F0 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "🎵";
+            position: absolute;
+            font-size: 3rem;
+            top: 10%;
+            left: 8%;
+            animation: float 3s ease-in-out infinite;
+            opacity: 0.7;
+        }
+
+        .hero::after {
+            content: "✨";
+            position: absolute;
+            font-size: 2.5rem;
+            top: 18%;
+            right: 12%;
+            animation: float 4s ease-in-out infinite;
+            animation-delay: 1s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: white;
+            color: var(--primary-dark);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 12px rgba(155, 126, 222, 0.25);
+            font-size: 0.95rem;
+        }
+
+        .hero h1 {
+            font-size: 3.25rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            line-height: 1.25;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 40%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2.5rem;
+            color: var(--neutral-900);
+            line-height: 1.9;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.05rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 8px 20px rgba(155, 126, 222, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 28px rgba(155, 126, 222, 0.5);
+        }
+
+        .btn-secondary {
+            background: white;
+            color: var(--primary-dark);
+            border: 2px solid var(--primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        .hero-note {
+            font-size: 0.9rem;
+            color: var(--neutral-800);
+            opacity: 0.8;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--neutral-800);
+            margin-bottom: 3.5rem;
+            opacity: 0.85;
+        }
+
+        .features-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, var(--neutral-50) 0%, white 100%);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(155, 126, 222, 0.12);
+            transition: all 0.3s;
+            border-top: 4px solid var(--primary-light);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 16px 40px rgba(155, 126, 222, 0.2);
+        }
+
+        .feature-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .feature-card h3 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+        }
+
+        .feature-card p {
+            color: var(--neutral-800);
+            line-height: 1.8;
+        }
+
+        .feature-card p strong {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .feature-specs {
+            list-style: none;
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(155, 126, 222, 0.08);
+            border-radius: 12px;
+            font-size: 0.95rem;
+        }
+
+        .feature-specs li {
+            padding: 0.25rem 0;
+            color: var(--neutral-800);
+        }
+
+        .feature-specs li::before {
+            content: "✓ ";
+            color: var(--primary);
+            font-weight: 700;
+            margin-right: 0.5rem;
+        }
+
+        /* How It Works (Flow) */
+        .how-it-works {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--neutral-50) 0%, #F3EFFB 100%);
+        }
+
+        .flow-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 80px 1fr;
+            gap: 2rem;
+            align-items: start;
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(155, 126, 222, 0.1);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .flow-step:hover {
+            transform: translateX(4px);
+            box-shadow: 0 8px 24px rgba(155, 126, 222, 0.18);
+        }
+
+        .flow-step-number {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            font-weight: 800;
+            box-shadow: 0 6px 18px rgba(155, 126, 222, 0.3);
+            flex-shrink: 0;
+        }
+
+        .flow-step-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--neutral-900);
+        }
+
+        .flow-step-content p {
+            color: var(--neutral-800);
+            line-height: 1.85;
+        }
+
+        .flow-step-content .step-detail {
+            background: var(--neutral-50);
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            border-left: 3px solid var(--primary-light);
+        }
+
+        /* Feature Showcase (with mock screens) */
+        .showcase {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .showcase-item {
+            max-width: 1200px;
+            margin: 0 auto 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .showcase-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .showcase-item.reverse {
+            direction: rtl;
+        }
+
+        .showcase-item.reverse > * {
+            direction: ltr;
+        }
+
+        .showcase-text h3 {
+            font-size: 1.9rem;
+            margin-bottom: 1rem;
+            color: var(--neutral-900);
+        }
+
+        .showcase-text .showcase-tag {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 0.35rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .showcase-text p {
+            color: var(--neutral-800);
+            line-height: 1.9;
+            margin-bottom: 1.25rem;
+        }
+
+        .showcase-text p strong {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        .showcase-features {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .showcase-features li {
+            padding: 0.5rem 0;
+            padding-left: 1.75rem;
+            position: relative;
+            color: var(--neutral-800);
+        }
+
+        .showcase-features li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: white;
+            background: var(--primary);
+            width: 1.25rem;
+            height: 1.25rem;
+            border-radius: 50%;
+            font-size: 0.75rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            top: 0.7rem;
+        }
+
+        /* Mock Screen */
+        .mock-screen {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(155, 126, 222, 0.2);
+            overflow: hidden;
+            border: 1px solid var(--neutral-200);
+        }
+
+        .mock-header {
+            background: var(--primary-dark);
+            color: white;
+            padding: 1rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+            font-weight: 700;
+        }
+
+        .mock-header-title {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .mock-header-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .mock-header-btn {
+            background: rgba(255,255,255,0.15);
+            padding: 0.35rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+        }
+
+        .mock-body {
+            padding: 1.5rem;
+        }
+
+        /* Mock: Input form */
+        .mock-input-group {
+            margin-bottom: 1rem;
+        }
+
+        .mock-label {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 0.4rem;
+            display: block;
+        }
+
+        .mock-input {
+            background: white;
+            border: 1px solid var(--neutral-200);
+            border-radius: 8px;
+            padding: 0.6rem 0.9rem;
+            font-size: 0.85rem;
+            color: var(--neutral-800);
+            width: 100%;
+        }
+
+        .mock-input-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+
+        .mock-textarea {
+            background: var(--neutral-50);
+            border: 2px solid var(--primary-light);
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-size: 0.78rem;
+            color: var(--neutral-800);
+            line-height: 1.55;
+            min-height: 80px;
+        }
+
+        .mock-generate-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            padding: 0.85rem;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-top: 1rem;
+        }
+
+        /* Mock: Summary table */
+        .mock-summary-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .mock-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.72rem;
+        }
+
+        .mock-table thead {
+            background: #4A4A8E;
+            color: white;
+        }
+
+        .mock-table th {
+            padding: 0.5rem 0.4rem;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .mock-table th:not(:first-child),
+        .mock-table td:not(:first-child) {
+            text-align: right;
+        }
+
+        .mock-table td {
+            padding: 0.45rem 0.4rem;
+            border-bottom: 1px solid var(--neutral-100);
+            color: var(--neutral-800);
+        }
+
+        .mock-table tr.total-row {
+            background: #FFF8E1;
+            font-weight: 700;
+        }
+
+        .mock-budget-bar {
+            background: #D32F2F;
+            color: white;
+            padding: 0.5rem;
+            text-align: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+        }
+
+        .mock-action-row {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .mock-action-btn {
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .mock-action-btn.excel {
+            background: #2E7D32;
+        }
+
+        .mock-action-btn.save {
+            background: var(--primary-dark);
+        }
+
+        /* Mock: Schedule card */
+        .mock-schedule-card {
+            border-radius: 10px;
+            padding: 0.85rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .mock-schedule-fukui {
+            background: #E3F2FD;
+            border-left: 4px solid #2196F3;
+        }
+
+        .mock-schedule-kanagawa {
+            background: #E8F5E9;
+            border-left: 4px solid #4CAF50;
+        }
+
+        .mock-schedule-hokkaido {
+            background: #FFF8E1;
+            border-left: 4px solid #FFA726;
+        }
+
+        .mock-schedule-header {
+            font-weight: 700;
+            color: var(--primary-dark);
+            font-size: 0.92rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .mock-schedule-meta {
+            font-size: 0.72rem;
+            color: var(--neutral-800);
+            margin-bottom: 0.5rem;
+        }
+
+        .mock-schedule-row {
+            display: grid;
+            grid-template-columns: 50px 60px 1fr 70px;
+            gap: 0.4rem;
+            font-size: 0.7rem;
+            padding: 0.3rem 0;
+            color: var(--neutral-800);
+            align-items: center;
+        }
+
+        .mock-schedule-row + .mock-schedule-row {
+            border-top: 1px dashed rgba(0,0,0,0.08);
+        }
+
+        .mock-edit-tag {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--neutral-900);
+            padding: 0.1rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            margin-left: 0.3rem;
+        }
+
+        /* Mock: Chat */
+        .mock-chat-bubble {
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            font-size: 0.83rem;
+            line-height: 1.65;
+            margin-bottom: 0.75rem;
+            max-width: 90%;
+        }
+
+        .mock-chat-user {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            margin-left: auto;
+            border-bottom-right-radius: 4px;
+        }
+
+        .mock-chat-ai {
+            background: var(--neutral-100);
+            color: var(--neutral-900);
+            border-bottom-left-radius: 4px;
+        }
+
+        .mock-chat-ai .ai-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Use Cases */
+        .use-cases {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--neutral-50) 0%, #F3EFFB 100%);
+        }
+
+        .use-cases-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .use-case {
+            background: white;
+            padding: 2rem;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 4px 16px rgba(155, 126, 222, 0.1);
+            transition: all 0.3s;
+        }
+
+        .use-case:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(155, 126, 222, 0.18);
+        }
+
+        .use-case-icon {
+            font-size: 2.75rem;
+            margin-bottom: 0.85rem;
+        }
+
+        .use-case h3 {
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            color: var(--neutral-900);
+        }
+
+        .use-case p {
+            color: var(--neutral-800);
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 2rem;
+            background: white;
+        }
+
+        .faq-container {
+            max-width: 900px;
+            margin: 0 auto;
+            display: grid;
+            gap: 1.25rem;
+        }
+
+        .faq-item {
+            background: linear-gradient(135deg, var(--neutral-50) 0%, white 100%);
+            padding: 1.75rem 2rem;
+            border-radius: 14px;
+            border-left: 4px solid var(--primary);
+            box-shadow: 0 4px 12px rgba(155, 126, 222, 0.08);
+            transition: all 0.3s;
+        }
+
+        .faq-item:hover {
+            transform: translateX(4px);
+            box-shadow: 0 6px 20px rgba(155, 126, 222, 0.15);
+        }
+
+        .faq-question {
+            font-size: 1.08rem;
+            font-weight: 700;
+            color: var(--neutral-900);
+            margin-bottom: 0.6rem;
+            line-height: 1.6;
+        }
+
+        .faq-answer {
+            font-size: 1rem;
+            line-height: 1.85;
+            color: var(--neutral-800);
+            margin: 0;
+        }
+
+        /* Story */
+        .story {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, #F3EFFB 0%, #E5F4FF 100%);
+        }
+
+        .story-content {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(155, 126, 222, 0.12);
+        }
+
+        .story-content h3 {
+            font-size: 1.65rem;
+            margin-bottom: 1.5rem;
+            color: var(--neutral-900);
+        }
+
+        .story-content p {
+            margin-bottom: 1.5rem;
+            line-height: 1.9;
+            color: var(--neutral-800);
+        }
+
+        .story-highlight {
+            color: var(--primary-dark);
+            font-weight: 700;
+        }
+
+        /* CTA */
+        .cta-section {
+            padding: 5rem 2rem;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 50%, var(--secondary) 100%);
+            text-align: center;
+            color: white;
+        }
+
+        .cta-section h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .cta-section p {
+            font-size: 1.15rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .btn-cta {
+            background: white;
+            color: var(--primary-dark);
+            padding: 1.15rem 3rem;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.15rem;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-cta:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--neutral-900);
+            color: white;
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+        }
+
+        .footer-note {
+            font-size: 0.85rem;
+            opacity: 0.7;
+            margin-top: 1rem;
+            line-height: 1.7;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 70px;
+            }
+
+            header {
+                top: 70px;
+            }
+
+            .endless-flight-nav-links {
+                gap: 15px;
+            }
+
+            .endless-flight-nav-links a {
+                font-size: 0.85rem;
+            }
+
+            .definition-section {
+                padding: 1.5rem 1rem;
+            }
+
+            .definition-text {
+                font-size: 1rem;
+            }
+
+            .hero {
+                padding: 7rem 1rem 4rem;
+            }
+
+            .hero h1 {
+                font-size: 2.25rem;
+            }
+
+            .hero p {
+                font-size: 1.05rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            .section-title {
+                font-size: 1.85rem;
+            }
+
+            .cta-section h2 {
+                font-size: 1.8rem;
+            }
+
+            .showcase-item {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .showcase-item.reverse {
+                direction: ltr;
+            }
+
+            .flow-step {
+                grid-template-columns: 60px 1fr;
+                gap: 1rem;
+                padding: 1.5rem;
+            }
+
+            .flow-step-number {
+                width: 55px;
+                height: 55px;
+                font-size: 1.4rem;
+            }
+
+            .flow-step-content h3 {
+                font-size: 1.25rem;
+            }
+
+            .story-content {
+                padding: 2rem 1.5rem;
+            }
+
+            .faq-section {
+                padding: 3rem 1rem;
+            }
+
+            .faq-item {
+                padding: 1.5rem;
+            }
+
+            .faq-question {
+                font-size: 1rem;
+            }
+
+            .faq-answer {
+                font-size: 0.95rem;
+            }
+
+            .mock-table {
+                font-size: 0.65rem;
+            }
+
+            .mock-table th,
+            .mock-table td {
+                padding: 0.35rem 0.25rem;
+            }
+
+            .mock-schedule-row {
+                grid-template-columns: 40px 50px 1fr 60px;
+                font-size: 0.65rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== エンドレスフライト ナビゲーション ===== -->
+    <div class="endless-flight-nav">
+        <div class="endless-flight-nav-container">
+            <a href="../index.html" class="endless-flight-nav-logo">Endless Flight</a>
+            <div class="endless-flight-nav-links">
+                <a href="../index.html">Top</a>
+                <a href="../column/">コラム</a>
+                <a href="./">アプリ</a>
+                <a href="https://note.com/endless_flight" target="_blank">Note</a>
+            </div>
+        </div>
+    </div>
+
+    <header>
+        <nav>
+            <div class="logo">遠征プランナー</div>
+            <ul class="nav-links">
+                <li><a href="#features">機能</a></li>
+                <li><a href="#how-it-works">使い方</a></li>
+                <li><a href="#showcase">画面紹介</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="#story">開発ストーリー</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- ===== 定義セクション ===== -->
+    <section class="definition-section">
+        <div class="definition-content">
+            <p class="definition-text">
+                <strong>【乃木坂46 真夏の全国ツアー】遠征プランナーは、AIが遠征プランを自動生成するWebアプリです。</strong>公演日程・出発地・予算を入力するだけで、新幹線/飛行機/宿泊を含めた最適な旅程を提案。Excel出力、金額編集、追加リクエストによるカスタマイズに対応。
+            </p>
+        </div>
+    </section>
+
+    <section class="hero">
+        <div class="hero-content">
+            <div class="hero-badge">🎤 AIが旅程を自動生成 🎤</div>
+            <h1>「真夏の全国ツアー」を、<br>もっと自由に推す。</h1>
+            <p>
+                公演日程・出発地・予算を入力するだけで、<br>
+                AIが新幹線・宿泊・野球観戦まで含めた遠征プランを自動作成。<br>
+                推し活のすべてを、ひとつの旅程に。
+            </p>
+            <div class="cta-buttons">
+                <a href="https://endless-flight.github.io/endless-flight/lp/tour-planner.html" class="btn btn-primary">🎤 プランナーを試す</a>
+                <a href="#how-it-works" class="btn btn-secondary">📖 使い方を見る</a>
+            </div>
+            <p class="hero-note">※ Gemini APIキー（無料枠あり）が必要です</p>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <h2 class="section-title">できること</h2>
+        <p class="section-subtitle">遠征計画のすべてが、ひとつで完結</p>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">🎤</div>
+                <h3>AIプラン生成</h3>
+                <p><strong>公演日程・出発地・予算を入力するだけで、AIが遠征プランを自動作成します。</strong>新幹線/飛行機/LCC/電車の最適な組み合わせ、宿泊エリアの提案、コンサート開場時間に合わせた移動スケジュールまで考慮された旅程が、約30秒〜1分で完成します。</p>
+                <ul class="feature-specs">
+                    <li>生成時間: 約30秒〜1分</li>
+                    <li>使用AI: Google Gemini API</li>
+                    <li>対応交通手段: 新幹線/飛行機/LCC/電車</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>予算管理・金額編集</h3>
+                <p><strong>交通費・宿泊費・チケット代はすべて手動で編集可能。</strong>値を変更すると小計・合計が即座に再計算されます。予算オーバー時は具体的な削減提案も表示。総予算と現在の合計額を視覚的に比較できる予算ゲージ付きです。</p>
+                <ul class="feature-specs">
+                    <li>金額編集: インライン編集対応</li>
+                    <li>自動計算: 小計・合計をリアルタイム反映</li>
+                    <li>予算アラート: オーバー時に削減提案を表示</li>
+                </ul>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Excel出力・プラン保存</h3>
+                <p><strong>作成したプランはExcelファイルとしてダウンロード可能。</strong>家族や同行者との共有、印刷にも便利です。プラン保存機能で複数の遠征計画を管理でき、過去のプランを呼び出して再利用することもできます。</p>
+                <ul class="feature-specs">
+                    <li>Excel出力: 1クリックでダウンロード</li>
+                    <li>プラン保存: ブラウザ内に保存</li>
+                    <li>外部リンク: 交通費・宿泊費の比較サイトへ</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works">
+        <h2 class="section-title">使い方の流れ</h2>
+        <p class="section-subtitle">5ステップで、あなただけの遠征プランが完成</p>
+        <div class="flow-container">
+            <div class="flow-step">
+                <div class="flow-step-number">1</div>
+                <div class="flow-step-content">
+                    <h3>ツアー情報URLを入力</h3>
+                    <p>乃木坂46公式サイトの「真夏の全国ツアー」ページURLを入力します。AIがページの公演情報を自動で読み取ります。</p>
+                    <div class="step-detail">
+                        <strong>例：</strong> https://www.nogizaka46.com/s/n46/page/summer_tour2026
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-step-number">2</div>
+                <div class="flow-step-content">
+                    <h3>Gemini APIキーをセット</h3>
+                    <p>Google AI Studioで取得した無料のAPIキーを入力。一度入力すればブラウザのlocalStorageに保存され、次回以降は再入力不要です。</p>
+                    <div class="step-detail">
+                        <strong>取得先：</strong> Google AI Studio（無料枠あり）<br>
+                        <strong>保存場所：</strong> お使いのブラウザ内（サーバーには送信されません）
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-step-number">3</div>
+                <div class="flow-step-content">
+                    <h3>出発地・総予算・追加リクエストを入力</h3>
+                    <p>あなたの出発駅または最寄り空港、遠征全体の総予算を入力。さらに「追加のリクエスト」欄で、自由なカスタマイズが可能です。</p>
+                    <div class="step-detail">
+                        <strong>追加リクエスト例：</strong><br>
+                        ・「福井は前泊で金沢泊も盛り込んでください」<br>
+                        ・「野球観戦も組み込みたい（試合日程指定）」<br>
+                        ・「LCCではなく新幹線で移動したい」
+                    </div>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-step-number">4</div>
+                <div class="flow-step-content">
+                    <h3>AIが遠征プランを生成（約1分）</h3>
+                    <p>「AIに遠征プランを生成させる」ボタンを押すと、Geminiが約30秒〜1分で全公演の旅程を作成。新幹線の出発時刻、宿泊エリア、移動ルートまで考慮されたプランが完成します。</p>
+                </div>
+            </div>
+
+            <div class="flow-step">
+                <div class="flow-step-number">5</div>
+                <div class="flow-step-content">
+                    <h3>金額編集・保存・Excel出力</h3>
+                    <p>生成されたプランを確認し、必要に応じて金額を編集。合計が予算内に収まっているかチェックして、Excelダウンロード or プラン保存で完成です。</p>
+                    <div class="step-detail">
+                        <strong>編集できる項目：</strong> 交通費 / 宿泊費 / チケット代（変更すると小計・合計が自動再計算）
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="showcase" class="showcase">
+        <h2 class="section-title">主な機能の画面紹介</h2>
+        <p class="section-subtitle">実際の画面と機能を、ひとつずつ解説します</p>
+
+        <!-- Feature A: Input Form -->
+        <div class="showcase-item">
+            <div class="showcase-text">
+                <span class="showcase-tag">機能 ①</span>
+                <h3>シンプルな入力フォーム</h3>
+                <p><strong>必要なのは4つの項目だけ。</strong>ツアー情報URL、Gemini APIキー、出発駅・空港、総予算（万円）を入力。さらに任意で「追加のリクエスト」欄に自由な指示を書き込めます。</p>
+                <p>「AIに遠征プランを生成させる」ボタンを押せば、あとはAIが旅程を組み立ててくれます。</p>
+                <ul class="showcase-features">
+                    <li>APIキーはブラウザ内に保存（次回入力不要）</li>
+                    <li>追加リクエスト欄に詳細条件を自由記述</li>
+                    <li>右上に「交通費を調べる」「宿泊費を調べる」の外部リンク</li>
+                </ul>
+            </div>
+            <div class="mock-screen">
+                <div class="mock-header">
+                    <div class="mock-header-title">🎤 【乃木坂46 真夏の全国ツアー】遠征プランナー</div>
+                    <div class="mock-header-buttons">
+                        <span class="mock-header-btn">🚄 交通費</span>
+                        <span class="mock-header-btn">🏨 宿泊費</span>
+                    </div>
+                </div>
+                <div class="mock-body">
+                    <div class="mock-input-group">
+                        <label class="mock-label">ツアー情報のURL</label>
+                        <div class="mock-input">https://www.nogizaka46.com/s/n46/page/summer_tour2026</div>
+                    </div>
+                    <div class="mock-input-group">
+                        <label class="mock-label">Gemini APIキー</label>
+                        <div class="mock-input">••••••••••••••••••••••••••</div>
+                    </div>
+                    <div class="mock-input-row">
+                        <div>
+                            <label class="mock-label">出発駅・空港</label>
+                            <div class="mock-input">東京駅 / 成田空港</div>
+                        </div>
+                        <div>
+                            <label class="mock-label">総予算（万円）</label>
+                            <div class="mock-input">46</div>
+                        </div>
+                    </div>
+                    <div class="mock-input-group">
+                        <label class="mock-label">追加のリクエスト（任意）</label>
+                        <div class="mock-textarea">福井は前泊で金沢泊も盛り込んでください。乃木坂野球部の始球式を見たいので、以下日程も盛り込んでください…</div>
+                    </div>
+                    <div class="mock-generate-btn">✨ AIに遠征プランを生成させる</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature B: Summary Table -->
+        <div class="showcase-item reverse">
+            <div class="showcase-text">
+                <span class="showcase-tag">機能 ②</span>
+                <h3>総費用サマリーと予算管理</h3>
+                <p><strong>全遠征先の費用が一覧で見える総費用サマリーテーブル。</strong>遠征先・日程・交通手段・交通費・宿泊費・チケット代・合計が一目で把握できます。</p>
+                <p>予算オーバー時は赤色のアラートバーが表示され、<strong>AIが具体的な削減順序を提案。</strong>「コンサート参加回数の見直し」「交通手段のグレードダウン」など、優先度付きのアドバイスが受けられます。</p>
+                <ul class="showcase-features">
+                    <li>遠征先ごとの費用を一目で確認</li>
+                    <li>予算オーバー時の削減提案を自動表示</li>
+                    <li>Excelダウンロード・プラン保存ボタンを完備</li>
+                </ul>
+            </div>
+            <div class="mock-screen">
+                <div class="mock-header">
+                    <div class="mock-header-title">💰 総費用サマリー</div>
+                </div>
+                <div class="mock-body">
+                    <table class="mock-table">
+                        <thead>
+                            <tr>
+                                <th>遠征先</th>
+                                <th>日程</th>
+                                <th>交通費</th>
+                                <th>宿泊費</th>
+                                <th>合計</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>①福井</td><td>6/13-14</td><td>¥26,000</td><td>¥22,000</td><td><strong>¥72,000</strong></td></tr>
+                            <tr><td>②神奈川</td><td>6/24-25</td><td>¥3,000</td><td>¥0</td><td><strong>¥27,000</strong></td></tr>
+                            <tr><td>③北海道</td><td>7/2-5</td><td>¥30,000</td><td>¥36,000</td><td><strong>¥96,000</strong></td></tr>
+                            <tr><td>④広島</td><td>7/11-12</td><td>¥30,000</td><td>¥12,000</td><td><strong>¥66,000</strong></td></tr>
+                            <tr><td>⑤大阪</td><td>7/15-19</td><td>¥44,000</td><td>¥12,000</td><td><strong>¥86,000</strong></td></tr>
+                            <tr class="total-row"><td>合計</td><td></td><td>¥211,000</td><td>¥104,000</td><td><strong>¥555,000</strong></td></tr>
+                        </tbody>
+                    </table>
+                    <div class="mock-budget-bar">¥555,000 / ¥460,000（¥95,000 オーバー）</div>
+                    <div class="mock-action-row">
+                        <span class="mock-action-btn excel">📥 Excelダウンロード</span>
+                        <span class="mock-action-btn save">💾 このプランを保存</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature C: Detail Schedule -->
+        <div class="showcase-item">
+            <div class="showcase-text">
+                <span class="showcase-tag">機能 ③</span>
+                <h3>遠征先ごとの詳細スケジュール</h3>
+                <p><strong>遠征先ごとに色分けされた詳細スケジュールカード。</strong>日付・曜日・発時刻・発駅・着時刻・着駅・予定・交通費・宿泊費・チケット代・小計・備考が表形式で整理されます。</p>
+                <p>備考欄には<strong>開場時刻・開演時刻、宿泊エリアの推奨</strong>などの情報も自動記載。コンサート当日の動きが手に取るようにわかります。</p>
+                <p>各セルの<strong>金額はクリックで編集可能</strong>。実際に予約した金額に修正すれば、合計が即座に再計算されます。</p>
+                <ul class="showcase-features">
+                    <li>時系列タイムラインで動きが一目瞭然</li>
+                    <li>開場/開演時刻、宿泊エリアの提案も自動付与</li>
+                    <li>金額セルをタップして即編集</li>
+                </ul>
+            </div>
+            <div class="mock-screen">
+                <div class="mock-header">
+                    <div class="mock-header-title">📅 遠征詳細スケジュール</div>
+                </div>
+                <div class="mock-body">
+                    <div class="mock-schedule-card mock-schedule-fukui">
+                        <div class="mock-schedule-header">① 福井 サンドーム福井</div>
+                        <div class="mock-schedule-meta">6/13-14 / 新幹線普通車 / 宿泊: 金沢/福井駅前 / <strong>合計 ¥72,000</strong></div>
+                        <div class="mock-schedule-row"><span>6/12 金</span><span>17:00</span><span>東京駅→金沢駅へ移動</span><span>¥22,000</span></div>
+                        <div class="mock-schedule-row"><span>6/13 土</span><span>12:00</span><span>金沢発→福井へ移動、コンサート参加</span><span>¥25,000 <span class="mock-edit-tag">編集可</span></span></div>
+                        <div class="mock-schedule-row"><span>6/14 日</span><span>13:00</span><span>コンサート参加後、東京へ帰宅</span><span>¥25,000</span></div>
+                    </div>
+                    <div class="mock-schedule-card mock-schedule-kanagawa">
+                        <div class="mock-schedule-header">② 神奈川 横浜アリーナ</div>
+                        <div class="mock-schedule-meta">6/24-25 / 電車 / 宿泊: 日帰り / <strong>合計 ¥27,000</strong></div>
+                        <div class="mock-schedule-row"><span>6/24 水</span><span>16:00</span><span>東京駅→新横浜駅、コンサート参加</span><span>¥13,500</span></div>
+                        <div class="mock-schedule-row"><span>6/25 木</span><span>16:00</span><span>東京駅→新横浜駅、コンサート参加</span><span>¥13,500</span></div>
+                    </div>
+                    <div class="mock-schedule-card mock-schedule-hokkaido">
+                        <div class="mock-schedule-header">③ 北海道 真駒内セキスイハイムアイスアリーナ</div>
+                        <div class="mock-schedule-meta">7/2-5 / LCC / 宿泊: 札幌駅周辺 / <strong>合計 ¥96,000</strong></div>
+                        <div class="mock-schedule-row"><span>7/2 木</span><span>08:00</span><span>成田→新千歳→エスコンF（始球式観戦）</span><span>¥32,000</span></div>
+                        <div class="mock-schedule-row"><span>7/4 土</span><span>14:00</span><span>真駒内アイスアリーナへ、コンサート参加</span><span>¥26,000</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feature D: Additional Request -->
+        <div class="showcase-item reverse">
+            <div class="showcase-text">
+                <span class="showcase-tag">機能 ④</span>
+                <h3>追加リクエストで自由にカスタマイズ</h3>
+                <p><strong>「追加のリクエスト」欄に自由なテキストを書き込むだけで、複合的な条件にAIが対応。</strong>前泊・後泊の追加、宿泊エリアの指定、他イベントとの組み合わせ、交通手段の変更などが、自然な文章でリクエストできます。</p>
+                <p>たとえば<strong>「乃木坂野球部の始球式を見たいので、以下4試合も盛り込んでください」</strong>という指示と、各試合の日程・球場を伝えれば、AIが既存ツアー日程との整合性を確認しながら、野球観戦込みの最適プランを再生成します。</p>
+                <ul class="showcase-features">
+                    <li>前泊・後泊・経由地の自由指定</li>
+                    <li>野球観戦・観光など他イベントの組み込み</li>
+                    <li>交通手段・宿泊エリアの変更指示</li>
+                </ul>
+            </div>
+            <div class="mock-screen">
+                <div class="mock-header">
+                    <div class="mock-header-title">💬 追加リクエストの例</div>
+                </div>
+                <div class="mock-body">
+                    <div class="mock-chat-bubble mock-chat-user">
+                        福井は前泊で金沢泊も盛り込んでください。乃木坂野球部の始球式を見たいので、以下日程も盛り込んでください：<br><br>
+                        ・7/2(木) エスコンフィールドHOKKAIDO（日本ハム vs オリックス）<br>
+                        ・7/19(日) 京セラドーム大阪（オリックス vs 日本ハム）<br>
+                        ・7/31(金) ベルーナドーム（西武 vs オリックス）<br>
+                        ・8/6(木) みずほPayPayドーム福岡（ソフトバンク vs 日本ハム）
+                    </div>
+                    <div class="mock-chat-bubble mock-chat-ai">
+                        <div class="ai-label">🤖 AI</div>
+                        承知しました。以下の通り旅程を再構成しました：<br><br>
+                        ✓ 福井公演（6/13）の前日に金沢泊を追加<br>
+                        ✓ 7/2 エスコンF観戦を北海道遠征の初日に組込<br>
+                        ✓ 7/19 京セラドームは大阪公演（7/19）と同日のため、デーゲーム→ナイト公演の順で調整<br>
+                        ✓ 7/31 ベルーナドームを日帰り遠征として追加<br>
+                        ✓ 8/6 PayPayドームを福岡遠征の初日に組込
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="use-cases">
+        <h2 class="section-title">こんな遠征に便利</h2>
+        <p class="section-subtitle">推し活のあらゆるシーンに対応</p>
+        <div class="use-cases-grid">
+            <div class="use-case">
+                <div class="use-case-icon">🎤</div>
+                <h3>全通遠征</h3>
+                <p>真夏の全国ツアー全公演を回るハードスケジュールも、AIが移動・宿泊を最適化します。</p>
+            </div>
+            <div class="use-case">
+                <div class="use-case-icon">⚾</div>
+                <h3>推し活複合遠征</h3>
+                <p>乃木坂野球部の始球式、メンバー出演イベントなどを旅程に組み込めます。</p>
+            </div>
+            <div class="use-case">
+                <div class="use-case-icon">🏨</div>
+                <h3>前泊・後泊調整</h3>
+                <p>翌日の予定や開場時間に合わせた柔軟な宿泊計画を自動で組み立てます。</p>
+            </div>
+            <div class="use-case">
+                <div class="use-case-icon">📊</div>
+                <h3>予算管理</h3>
+                <p>総予算と現在の合計を視覚化。オーバー時は具体的な削減策を提案します。</p>
+            </div>
+            <div class="use-case">
+                <div class="use-case-icon">👥</div>
+                <h3>同行者とシェア</h3>
+                <p>Excel出力で旅程を家族・友人と共有。印刷して持ち歩くのにも便利です。</p>
+            </div>
+            <div class="use-case">
+                <div class="use-case-icon">🗾</div>
+                <h3>周遊プラン</h3>
+                <p>福井→金沢→大阪など、複数都市を効率よく回るプランをAIが提案します。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <h2 class="section-title">よくある質問</h2>
+        <p class="section-subtitle">遠征プランナーについて、よく聞かれる質問にお答えします</p>
+
+        <div class="faq-container">
+            <div class="faq-item">
+                <h3 class="faq-question">Q: 遠征プランナーは無料で使えますか？</h3>
+                <p class="faq-answer">A: はい、本アプリ自体は無料でご利用いただけます。AI機能の利用にはGoogle AI Studioで取得できるGemini APIキーが必要です。APIキーには無料利用枠があり、通常の使い方であれば無料で十分使えます。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: Gemini APIキーはどこで取得できますか？</h3>
+                <p class="faq-answer">A: Google AI Studio（aistudio.google.com）から無料で取得できます。アプリ内の「Google AI Studio」リンクからもアクセス可能です。取得したキーはお使いのブラウザのlocalStorageに保存され、サーバーには送信されません。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: どんな追加リクエストができますか？</h3>
+                <p class="faq-answer">A: 前泊・後泊の追加、観光プランの組み込み、野球観戦などの他イベントとの組み合わせ、宿泊エリアの指定、交通手段の変更など、自由に指示できます。「福井は前泊で金沢泊も盛り込んでください」「乃木坂野球部の始球式も観戦したい」といった複合的なリクエストにも対応します。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: 生成された金額は編集できますか？</h3>
+                <p class="faq-answer">A: はい、交通費・宿泊費・チケット代はすべて手動で編集可能です。値を変更すると、小計・合計が自動的に再計算されます。実際に予約した金額に修正することで、正確な家計管理ができます。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: 予算をオーバーした場合はどうなりますか？</h3>
+                <p class="faq-answer">A: 予算オーバー時は赤色のアラートバーが表示され、AIが優先度付きの削減提案を表示します。「コンサート参加回数の見直し」「野球部企画の参加見送り」「交通手段のグレードダウン」など、具体的なアドバイスが受けられます。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: Excel出力やプラン保存はできますか？</h3>
+                <p class="faq-answer">A: はい、作成したプランはExcelファイルとしてダウンロードできます。また、「このプランを保存」機能でブラウザ内に保存し、いつでも呼び出すことが可能です。複数の遠征プランを比較検討するのにも便利です。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: プラン生成にどれくらい時間がかかりますか？</h3>
+                <p class="faq-answer">A: 公演数や追加リクエストの複雑さにもよりますが、通常30秒〜1分程度で生成完了します。生成中は進捗メッセージが表示されます。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: スマホからでも使えますか？</h3>
+                <p class="faq-answer">A: はい、Webアプリなのでスマホ・タブレット・PCのすべてのブラウザから利用可能です。インストール不要で、URLにアクセスするだけですぐ使えます。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: 入力したデータは外部に送信されますか？</h3>
+                <p class="faq-answer">A: APIキーやプラン情報はブラウザ内（localStorage）にのみ保存されます。プラン生成時のみ、入力内容がGoogle Gemini APIに送信されます。当方のサーバーには一切データを送りません。</p>
+            </div>
+
+            <div class="faq-item">
+                <h3 class="faq-question">Q: 乃木坂46以外のツアーにも使えますか？</h3>
+                <p class="faq-answer">A: 現在は乃木坂46 真夏の全国ツアー専用に設計されていますが、ツアー情報URLを差し替えれば他のアーティストの遠征プラン作成にも応用可能です（精度は保証されません）。</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="story" class="story">
+        <h2 class="section-title">開発ストーリー</h2>
+        <p class="section-subtitle">推し活の「めんどくさい」をAIで解決したかった</p>
+        <div class="story-content">
+            <h3>🎤 遠征プランを組むのに、毎回数時間かかってた</h3>
+            <p>
+                乃木坂46の真夏の全国ツアー。<br>
+                全国を回るのは楽しいけれど、毎回スプレッドシートを開いて、新幹線の時刻を調べて、ホテルを比較して、予算を計算して……。<br>
+                <span class="story-highlight">「これ、AIに任せられないか？」</span>
+            </p>
+            <p>
+                そう思って作ったのが、この遠征プランナーです。
+            </p>
+            <p>
+                <strong>使った技術：</strong>HTML / JavaScript / Google Gemini API<br>
+                <strong>協力者：</strong>Claude（AI）<br>
+                <strong>開発のきっかけ：</strong>真夏の全国ツアー2026の発表
+            </p>
+            <p>
+                特にこだわったのは、<strong>「追加リクエスト」の自由度</strong>です。<br>
+                「福井は前泊で金沢泊」「野球部の始球式も観戦したい」「7/19はデーゲームも入れて」──こういう複合的な要望を、自然な文章で書くだけでAIが旅程に組み込んでくれる。これが実現できたとき、本当に「使える」アプリになったと感じました。
+            </p>
+            <p>
+                完璧なアプリではありません。AIが提案する金額や時刻はあくまで目安で、実際の予約は自分でする必要があります。<br>
+                でも、<span class="story-highlight">「最初のたたき台」を5分で作れる</span>ようになったことで、遠征準備のストレスは劇的に減りました。
+            </p>
+            <p>
+                同じように推し活で遠征する人の、ちょっとした時間節約になれば嬉しいです。
+            </p>
+            <p style="text-align: right; margin-top: 2rem;">
+                <strong>- エンドレスフライト</strong>
+            </p>
+        </div>
+    </section>
+
+    <section class="cta-section">
+        <h2>あなたの夏を、AIと一緒に。</h2>
+        <p>真夏の全国ツアー2026、遠征プランは5分で完成。</p>
+        <a href="https://endless-flight.github.io/endless-flight/lp/tour-planner.html" class="btn-cta">🎤 プランナーを試す</a>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="https://note.com/endless_flight" target="_blank">開発ブログ</a>
+            <a href="#">プライバシーポリシー</a>
+            <a href="#">利用規約</a>
+            <a href="#">お問い合わせ</a>
+        </div>
+        <p>&copy; 2026 Endless Flight. All rights reserved.</p>
+        <p class="footer-note">
+            本アプリは個人開発のWebツールです。<br>
+            乃木坂46および関連団体とは一切関係ありません。<br>
+            旅程・金額はあくまで目安です。実際の予約は公式サイトでご確認ください。
+        </p>
+    </footer>
+</body>
+</html>
