@@ -288,7 +288,7 @@
 
 <header>
   <div class="header-inner">
-    <h1>🎤 乃木坂46 真夏の全国ツアー2026 遠征プランナー</h1>
+    <h1>🎤 【乃木坂46 真夏の全国ツアー】遠征プランナー</h1>
     <div class="header-actions">
       <a class="header-btn" href="https://transit.yahoo.co.jp/" target="_blank" rel="noopener">🚆 交通費を調べる</a>
       <a class="header-btn" href="https://www.airbnb.jp/" target="_blank" rel="noopener">🏠 宿泊費を調べる</a>
@@ -302,12 +302,12 @@
     <div class="form-row">
       <label for="tourUrl">ツアー情報のURL</label>
       <input type="text" id="tourUrl" value="https://www.nogizaka46.com/s/n46/page/summer_tour2026">
-      <div class="help">ツアー情報が掲載されている公式ページのURL</div>
+      <div class="help">ツアー情報が掲載されている公式ページのURLを入力</div>
     </div>
     <div class="form-row">
       <label for="apiKey">Gemini APIキー</label>
       <input type="password" id="apiKey" placeholder="AIza...">
-      <div class="help">Google AI Studio で取得（ブラウザのlocalStorageに保存されます）</div>
+      <div class="help"><a href="https://aistudio.google.com/" target="_blank" rel="noopener noreferrer">Google AI Studio</a> で取得（ブラウザのlocalStorageに保存されます）</div>
     </div>
     <div class="row-2col">
       <div class="form-row">
@@ -337,7 +337,7 @@
 // CONFIG
 // ==========================================================
 const CONFIG = {
-  CORS_PROXY: "https://corsproxy.io/?",
+  CORS_PROXY: "https://nogizaka-proxy.endless-flight.workers.dev/?url=",
   GEMINI_MODEL: "gemini-2.5-flash",
 };
 
