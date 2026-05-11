@@ -283,60 +283,245 @@
   }
   .trip-advice-label { font-weight: 600; color: #6b2c6f; margin-right: 6px; }
 
-  /* ========== スマホ向け表レイアウト調整 ========== */
+  /* ========== 保存済みプラン UI ========== */
+  .saved-plans {
+    margin-bottom: 16px;
+  }
+  .saved-plans-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b2c6f;
+    margin-bottom: 8px;
+  }
+  .saved-plan-list {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .saved-plan-item {
+    flex: 1 1 auto;
+    min-width: 0;
+    background: #faf5fb;
+    border: 1px solid #d4c8d8;
+    border-radius: 6px;
+    padding: 8px 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+  }
+  .saved-plan-name {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 600;
+    color: #444;
+  }
+  .saved-plan-date {
+    color: #888;
+    font-size: 11px;
+    white-space: nowrap;
+  }
+  .saved-plan-btn {
+    background: white;
+    border: 1px solid #c0a8c5;
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 11px;
+    cursor: pointer;
+    color: #6b2c6f;
+    white-space: nowrap;
+  }
+  .saved-plan-btn:hover { background: #f3e9f5; }
+  .saved-plan-btn.delete { color: #c62828; border-color: #e0a8a8; }
+  .saved-plan-btn.delete:hover { background: #fdecea; }
+  .save-current-btn {
+    background: #6b2c6f;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .save-current-btn:hover { background: #582359; }
+  .save-current-btn:disabled { background: #bbb; cursor: not-allowed; }
+
+  /* スマホでは表を非表示にしてカード版を表示するための仕切り */
+  .mobile-only { display: none; }
+  .desktop-only { display: block; }
+
+  /* ========== スマホ用カード型UI ========== */
   @media (max-width: 768px) {
-    /* 「曜日」「備考」列は非表示にして情報密度を上げる */
-    .trip-table th.col-dow,
-    .trip-table td.col-dow,
-    .trip-table th.col-note,
-    .trip-table td.col-note {
-      display: none;
+    /* PC用テーブル/集計テーブルを隠してモバイル版を表示 */
+    .desktop-only { display: none !important; }
+    .mobile-only { display: block; }
+
+    /* 遠征カードのヘッダー調整 */
+    .trip-head {
+      padding: 12px 14px;
+      flex-direction: column;
+      align-items: stretch;
+    }
+    .trip-totals {
+      text-align: left;
+      font-size: 12px;
+      padding-top: 6px;
+      border-top: 1px dashed rgba(107,44,111,0.2);
+      margin-top: 6px;
     }
 
-    /* 「日付」列を左端に固定（横スクロール時も常に見える） */
-    .trip-table th.col-date,
-    .trip-table td.col-date {
-      position: sticky;
-      left: 0;
-      z-index: 2;
-      background: #fff;
-      box-shadow: 2px 0 4px -2px rgba(0,0,0,0.15);
-      min-width: 76px;
-      white-space: nowrap;
+    /* 1日分の予定カード */
+    .day-card {
+      border-top: 1px solid #eee;
+      padding: 12px 14px;
     }
-    .trip-table thead th.col-date {
-      background: #f5f0f6;
+    .day-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 8px;
     }
-    .trip-table tr.subtotal td.col-date,
-    .trip-table tr[style*="background"] td.col-date {
-      /* 行ごとの背景色を上書き */
-      background: inherit;
+    .day-card-date {
+      font-weight: 700;
+      font-size: 14px;
+      color: #6b2c6f;
     }
-
-    /* フォントと余白をスマホ向けに圧縮 */
-    .trip-table {
-      font-size: 11.5px;
+    .day-card-subtotal {
+      font-size: 12px;
+      color: #555;
     }
-    .trip-table th, .trip-table td {
-      padding: 5px 6px;
+    .day-card-subtotal strong {
+      color: #6b2c6f;
+      font-size: 13px;
     }
-    .trip-table input.cell-input {
-      font-size: 11.5px;
-      padding: 3px 2px;
+    .day-card-plan {
+      font-size: 13px;
+      color: #333;
+      margin-bottom: 8px;
+      line-height: 1.5;
+      background: #fafafa;
+      padding: 8px 10px;
+      border-radius: 4px;
     }
-
-    /* 横スクロールできることを視覚的に示すための右側シャドウ */
-    .trip-table-wrap {
+    .day-card-time {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 6px;
+      align-items: center;
+      margin-bottom: 10px;
+      font-size: 12px;
+    }
+    .day-card-time-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .day-card-time-block input {
+      width: 100%;
+      padding: 4px 6px;
+      border: 1px solid #e0d4e3;
+      border-radius: 4px;
+      font-size: 12px;
+      background: #fffef5;
+    }
+    .day-card-time-block input:focus {
+      outline: 2px solid #9b4d9f;
+      background: white;
+      border-color: #9b4d9f;
+    }
+    .day-card-arrow {
+      color: #999;
+      font-size: 14px;
+      text-align: center;
+    }
+    .day-card-money {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .day-card-money-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .day-card-money-label {
+      font-size: 10.5px;
+      color: #666;
+      font-weight: 600;
+    }
+    .day-card-money-input-wrap {
       position: relative;
-      background:
-        linear-gradient(to right, white 30%, rgba(255,255,255,0)),
-        linear-gradient(to right, rgba(255,255,255,0), white 70%) 100% 0,
-        radial-gradient(farthest-side at 0 50%, rgba(0,0,0,0.15), rgba(0,0,0,0)),
-        radial-gradient(farthest-side at 100% 50%, rgba(0,0,0,0.15), rgba(0,0,0,0)) 100% 0;
-      background-repeat: no-repeat;
-      background-color: white;
-      background-size: 40px 100%, 40px 100%, 14px 100%, 14px 100%;
-      background-attachment: local, local, scroll, scroll;
+    }
+    .day-card-money-input-wrap::before {
+      content: "¥";
+      position: absolute;
+      left: 6px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #888;
+      font-size: 12px;
+      pointer-events: none;
+    }
+    .day-card-money-input-wrap input {
+      width: 100%;
+      padding: 5px 6px 5px 16px;
+      border: 1px solid #e0d4e3;
+      border-radius: 4px;
+      font-size: 13px;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      background: #fffef5;
+    }
+    .day-card-money-input-wrap input:focus {
+      outline: 2px solid #9b4d9f;
+      background: white;
+      border-color: #9b4d9f;
+    }
+    .day-card-note {
+      font-size: 11.5px;
+      color: #777;
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    /* モバイル版サマリーカード */
+    .summary-mobile {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .summary-mobile-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      background: #faf5fb;
+      border-radius: 6px;
+      font-size: 13px;
+      border-left: 3px solid #9b4d9f;
+    }
+    .summary-mobile-row .name { font-weight: 600; }
+    .summary-mobile-row .total { font-weight: 700; color: #6b2c6f; }
+    .summary-mobile-row.total-row {
+      background: #fff2cc;
+      border-left-color: #bf8f00;
+      font-weight: 700;
+      font-size: 14px;
+    }
+
+    /* ヘッダー縮小 */
+    h1 { font-size: 15px; }
+    .header-btn { font-size: 11px; padding: 6px 10px; }
+
+    /* 保存プランをスマホでも見やすく */
+    .saved-plan-item {
+      flex: 1 1 100%;
     }
   }
 </style>
@@ -354,6 +539,12 @@
 </header>
 
 <main>
+  <!-- 保存済みプラン一覧 -->
+  <div class="card saved-plans" id="savedPlansCard" style="display:none;">
+    <div class="saved-plans-title">📁 保存済みプラン</div>
+    <div class="saved-plan-list" id="savedPlanList"></div>
+  </div>
+
   <!-- 入力フォーム -->
   <div class="card">
     <div class="form-row">
@@ -418,7 +609,158 @@ document.addEventListener("DOMContentLoaded", () => {
   if (savedBudget) document.getElementById("budget").value = savedBudget;
 
   document.getElementById("generateBtn").addEventListener("click", onGenerate);
+
+  // 保存済みプラン一覧を描画
+  renderSavedPlans();
 });
+
+// ==========================================================
+// 保存プラン機能（最大3つ）
+// ==========================================================
+const SAVED_PLANS_KEY = "saved_tour_plans";
+const MAX_SAVED_PLANS = 3;
+
+function getSavedPlans() {
+  try {
+    const raw = localStorage.getItem(SAVED_PLANS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+function setSavedPlans(plans) {
+  localStorage.setItem(SAVED_PLANS_KEY, JSON.stringify(plans));
+}
+
+function renderSavedPlans() {
+  const card = document.getElementById("savedPlansCard");
+  const list = document.getElementById("savedPlanList");
+  if (!card || !list) return;
+  const plans = getSavedPlans();
+  if (plans.length === 0) {
+    card.style.display = "none";
+    return;
+  }
+  card.style.display = "block";
+  list.innerHTML = plans.map((p, i) => {
+    const date = new Date(p.savedAt);
+    const dateStr = `${date.getFullYear()}/${date.getMonth()+1}/${date.getDate()} ${String(date.getHours()).padStart(2,"0")}:${String(date.getMinutes()).padStart(2,"0")}`;
+    return `
+      <div class="saved-plan-item">
+        <div class="saved-plan-name" title="${escapeAttr(p.name)}">${escapeHtml(p.name)}</div>
+        <div class="saved-plan-date">${dateStr}</div>
+        <button class="saved-plan-btn" data-action="load" data-idx="${i}">読込</button>
+        <button class="saved-plan-btn delete" data-action="delete" data-idx="${i}">削除</button>
+      </div>
+    `;
+  }).join("");
+
+  list.querySelectorAll("button[data-action]").forEach(btn => {
+    btn.addEventListener("click", (e) => {
+      const action = e.currentTarget.dataset.action;
+      const idx = parseInt(e.currentTarget.dataset.idx, 10);
+      if (action === "load") onLoadPlan(idx);
+      else if (action === "delete") onDeletePlan(idx);
+    });
+  });
+}
+
+function onSaveCurrentPlan() {
+  if (!state.trips || state.trips.length === 0) {
+    alert("保存するプランがありません");
+    return;
+  }
+  const defaultName = state.tourName || "遠征プラン";
+  const name = prompt("プラン名を入力してください（最大40文字）", defaultName);
+  if (name === null) return; // キャンセル
+  const trimmed = name.trim().slice(0, 40) || defaultName;
+
+  let plans = getSavedPlans();
+
+  // 3つ埋まっている場合、どれを削除するか確認
+  if (plans.length >= MAX_SAVED_PLANS) {
+    const choices = plans.map((p, i) => `${i+1}. ${p.name}`).join("\n");
+    const ans = prompt(
+      `保存枠が満杯です（最大${MAX_SAVED_PLANS}件）。\n上書きするプランの番号を入力してください（キャンセルで保存中止）:\n\n${choices}`,
+      "1"
+    );
+    if (ans === null) return;
+    const overwriteIdx = parseInt(ans, 10) - 1;
+    if (isNaN(overwriteIdx) || overwriteIdx < 0 || overwriteIdx >= plans.length) {
+      alert("有効な番号を入力してください");
+      return;
+    }
+    plans[overwriteIdx] = {
+      name: trimmed,
+      savedAt: Date.now(),
+      data: {
+        tourName: state.tourName,
+        trips: state.trips,
+        globalAdvice: state.globalAdvice,
+        budgetMan: state.budgetMan,
+      },
+    };
+  } else {
+    plans.push({
+      name: trimmed,
+      savedAt: Date.now(),
+      data: {
+        tourName: state.tourName,
+        trips: state.trips,
+        globalAdvice: state.globalAdvice,
+        budgetMan: state.budgetMan,
+      },
+    });
+  }
+
+  setSavedPlans(plans);
+  renderSavedPlans();
+  // 簡易フィードバック
+  const btn = document.getElementById("saveCurrentBtn");
+  if (btn) {
+    const orig = btn.textContent;
+    btn.textContent = "✓ 保存しました";
+    btn.disabled = true;
+    setTimeout(() => {
+      btn.textContent = orig;
+      btn.disabled = false;
+    }, 1500);
+  }
+}
+
+function onLoadPlan(idx) {
+  const plans = getSavedPlans();
+  const p = plans[idx];
+  if (!p) return;
+  if (state.trips && state.trips.length > 0) {
+    if (!confirm(`「${p.name}」を読み込みます。現在表示中のプランは置き換えられます。よろしいですか？`)) return;
+  }
+  state.tourName = p.data.tourName || "";
+  state.trips = p.data.trips || [];
+  state.globalAdvice = p.data.globalAdvice || "";
+  state.budgetMan = p.data.budgetMan || 50;
+  // 予算入力欄も更新
+  const budgetInput = document.getElementById("budget");
+  if (budgetInput) budgetInput.value = state.budgetMan;
+  clearError();
+  clearProgress();
+  renderResult();
+  // 結果が見える位置にスクロール
+  document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function onDeletePlan(idx) {
+  const plans = getSavedPlans();
+  const p = plans[idx];
+  if (!p) return;
+  if (!confirm(`「${p.name}」を削除します。よろしいですか？`)) return;
+  plans.splice(idx, 1);
+  setSavedPlans(plans);
+  renderSavedPlans();
+}
 
 // ==========================================================
 // 生成ハンドラ
@@ -584,10 +926,14 @@ function renderResult() {
   summaryCard.innerHTML = `
     <h2 style="margin-top:0">💰 総費用サマリー</h2>
     <div class="summary-section" id="summarySection"></div>
-    <button class="download-btn" id="downloadBtn">📥 Excelダウンロード</button>
+    <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:8px;">
+      <button class="download-btn" id="downloadBtn">📥 Excelダウンロード</button>
+      <button class="save-current-btn" id="saveCurrentBtn">💾 このプランを保存</button>
+    </div>
   `;
   container.appendChild(summaryCard);
   document.getElementById("downloadBtn").addEventListener("click", downloadXlsx);
+  document.getElementById("saveCurrentBtn").addEventListener("click", onSaveCurrentPlan);
 
   // 各遠征カード
   state.trips.forEach((trip, idx) => {
@@ -605,6 +951,8 @@ function renderResult() {
 function renderTripCardHtml(trip, idx) {
   const color = getTripColor(idx);
   const totals = calcTripTotals(trip);
+
+  // PC用テーブル行
   const itemsHtml = trip.items.map((it, i) => `
     <tr style="background:${color.light}">
       <td class="col-date">${escapeHtml(it.date || "")}</td>
@@ -622,6 +970,52 @@ function renderTripCardHtml(trip, idx) {
     </tr>
   `).join("");
 
+  // モバイル用カードUI（1日 = 1カード）
+  const mobileItemsHtml = trip.items.map((it, i) => {
+    const rowTotal = (it.transit||0) + (it.lodging||0) + (it.ticket||0);
+    return `
+      <div class="day-card">
+        <div class="day-card-head">
+          <div class="day-card-date">${escapeHtml(it.date || "")}${it.dow ? `（${escapeHtml(it.dow)}）` : ""}</div>
+          <div class="day-card-subtotal">小計 <strong data-row-total-mobile="${idx}-${i}">${formatYen(rowTotal)}</strong></div>
+        </div>
+        ${it.plan ? `<div class="day-card-plan">${escapeHtml(it.plan)}</div>` : ""}
+        <div class="day-card-time">
+          <div class="day-card-time-block">
+            <input class="cell-input-mobile text" data-trip="${idx}" data-item="${i}" data-field="dep_time" value="${escapeAttr(it.dep_time || "")}" placeholder="発時刻">
+            <input class="cell-input-mobile text" data-trip="${idx}" data-item="${i}" data-field="dep_place" value="${escapeAttr(it.dep_place || "")}" placeholder="発駅">
+          </div>
+          <div class="day-card-arrow">→</div>
+          <div class="day-card-time-block">
+            <input class="cell-input-mobile text" data-trip="${idx}" data-item="${i}" data-field="arr_time" value="${escapeAttr(it.arr_time || "")}" placeholder="着時刻">
+            <input class="cell-input-mobile text" data-trip="${idx}" data-item="${i}" data-field="arr_place" value="${escapeAttr(it.arr_place || "")}" placeholder="着駅">
+          </div>
+        </div>
+        <div class="day-card-money">
+          <div class="day-card-money-item">
+            <div class="day-card-money-label">交通費</div>
+            <div class="day-card-money-input-wrap">
+              <input class="cell-input-mobile" data-trip="${idx}" data-item="${i}" data-field="transit" value="${it.transit || 0}" inputmode="numeric">
+            </div>
+          </div>
+          <div class="day-card-money-item">
+            <div class="day-card-money-label">宿泊費</div>
+            <div class="day-card-money-input-wrap">
+              <input class="cell-input-mobile" data-trip="${idx}" data-item="${i}" data-field="lodging" value="${it.lodging || 0}" inputmode="numeric">
+            </div>
+          </div>
+          <div class="day-card-money-item">
+            <div class="day-card-money-label">チケット</div>
+            <div class="day-card-money-input-wrap">
+              <input class="cell-input-mobile" data-trip="${idx}" data-item="${i}" data-field="ticket" value="${it.ticket || 0}" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+        ${it.note ? `<div class="day-card-note">📝 ${escapeHtml(it.note)}</div>` : ""}
+      </div>
+    `;
+  }).join("");
+
   return `
     <div class="trip-head" style="background:${color.light}">
       <div>
@@ -635,7 +1029,9 @@ function renderTripCardHtml(trip, idx) {
         合計 <strong data-trip-total="${idx}">${formatYen(totals.total)}</strong>
       </div>
     </div>
-    <div class="trip-table-wrap">
+
+    <!-- PC: テーブル形式 -->
+    <div class="trip-table-wrap desktop-only">
       <table class="trip-table">
         <thead>
           <tr>
@@ -656,12 +1052,19 @@ function renderTripCardHtml(trip, idx) {
         </tfoot>
       </table>
     </div>
+
+    <!-- スマホ: カード形式 -->
+    <div class="mobile-only">
+      ${mobileItemsHtml}
+    </div>
+
     ${trip.advice ? `<div class="trip-advice"><span class="trip-advice-label">💡 削減案:</span>${escapeHtml(trip.advice)}</div>` : ""}
   `;
 }
 
 function bindTripInputs(cardEl, idx) {
-  cardEl.querySelectorAll("input.cell-input").forEach(inp => {
+  // PC版（.cell-input）とモバイル版（.cell-input-mobile）両方を対象に
+  cardEl.querySelectorAll("input.cell-input, input.cell-input-mobile").forEach(inp => {
     inp.addEventListener("input", (e) => {
       const tripIdx = parseInt(e.target.dataset.trip, 10);
       const itemIdx = parseInt(e.target.dataset.item, 10);
@@ -669,16 +1072,34 @@ function bindTripInputs(cardEl, idx) {
       const trip = state.trips[tripIdx];
       const item = trip.items[itemIdx];
       if (["transit","lodging","ticket"].includes(field)) {
-        const v = parseInt(e.target.value.replace(/[^\d]/g, ""), 10);
+        const v = parseInt(String(e.target.value).replace(/[^\d]/g, ""), 10);
         item[field] = isNaN(v) ? 0 : v;
-        // 行小計更新
+
+        // 行小計更新（PC版・モバイル版両方）
+        const newRowTotal = formatYen(item.transit + item.lodging + item.ticket);
         const rowTotalCell = cardEl.querySelector(`[data-row-total="${tripIdx}-${itemIdx}"]`);
-        if (rowTotalCell) rowTotalCell.textContent = formatYen(item.transit + item.lodging + item.ticket);
+        if (rowTotalCell) rowTotalCell.textContent = newRowTotal;
+        const rowTotalMobile = cardEl.querySelector(`[data-row-total-mobile="${tripIdx}-${itemIdx}"]`);
+        if (rowTotalMobile) rowTotalMobile.textContent = newRowTotal;
+
+        // もう片方のUIの同じフィールドの値も同期（PC↔モバイルどちらで入力されてもいいように）
+        cardEl.querySelectorAll(
+          `input[data-trip="${tripIdx}"][data-item="${itemIdx}"][data-field="${field}"]`
+        ).forEach(other => {
+          if (other !== e.target) other.value = item[field];
+        });
+
         // 遠征小計＆全体サマリー更新
         updateTripTotalsDOM(cardEl, tripIdx);
         renderSummary();
       } else {
         item[field] = e.target.value;
+        // テキストフィールドも双方同期
+        cardEl.querySelectorAll(
+          `input[data-trip="${tripIdx}"][data-item="${itemIdx}"][data-field="${field}"]`
+        ).forEach(other => {
+          if (other !== e.target) other.value = item[field];
+        });
       }
     });
   });
@@ -728,6 +1149,20 @@ function renderSummary() {
         <td class="num"><strong>${formatYen(t.total)}</strong></td>
       </tr>`;
   }).join("");
+
+  // モバイル用：1遠征 = 1行のシンプル表示
+  const mobileRows = state.trips.map((trip, idx) => {
+    const t = calcTripTotals(trip);
+    return `
+      <div class="summary-mobile-row">
+        <div>
+          <div class="name">${escapeHtml(trip.name)}</div>
+          <div style="font-size:11px; color:#777;">${escapeHtml(trip.period || "")} / ${escapeHtml(trip.transport || "")}</div>
+        </div>
+        <div class="total">${formatYen(t.total)}</div>
+      </div>`;
+  }).join("");
+
   const grand = grandT + grandL + grandTk;
   const budgetYen = state.budgetMan * 10000;
   const ratio = budgetYen > 0 ? Math.min((grand / budgetYen) * 100, 100) : 0;
@@ -735,24 +1170,37 @@ function renderSummary() {
   const diff = grand - budgetYen;
 
   wrap.innerHTML = `
-    <table class="summary-table">
-      <thead>
-        <tr>
-          <th>遠征先</th><th>日程</th><th>交通手段</th>
-          <th>交通費</th><th>宿泊費</th><th>チケット代</th><th>合計</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${rows}
-        <tr class="total-row">
-          <td colspan="3">合計</td>
-          <td class="num">${formatYen(grandT)}</td>
-          <td class="num">${formatYen(grandL)}</td>
-          <td class="num">${formatYen(grandTk)}</td>
-          <td class="num">${formatYen(grand)}</td>
-        </tr>
-      </tbody>
-    </table>
+    <!-- PC用テーブル -->
+    <div class="desktop-only">
+      <table class="summary-table">
+        <thead>
+          <tr>
+            <th>遠征先</th><th>日程</th><th>交通手段</th>
+            <th>交通費</th><th>宿泊費</th><th>チケット代</th><th>合計</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows}
+          <tr class="total-row">
+            <td colspan="3">合計</td>
+            <td class="num">${formatYen(grandT)}</td>
+            <td class="num">${formatYen(grandL)}</td>
+            <td class="num">${formatYen(grandTk)}</td>
+            <td class="num">${formatYen(grand)}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- モバイル用カード -->
+    <div class="mobile-only summary-mobile">
+      ${mobileRows}
+      <div class="summary-mobile-row total-row">
+        <div class="name">合計</div>
+        <div class="total">${formatYen(grand)}</div>
+      </div>
+    </div>
+
     <div style="margin-top:14px; font-size:13px;">
       予算 <strong>${formatYen(budgetYen)}</strong> に対して
       ${over
