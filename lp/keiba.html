@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
@@ -23,610 +24,693 @@
     --ink: #1a1a1a;
     --gold: #d4a017;
 
-    /* 枠色 (JRA公式) */
-    --waku-1: #ffffff;
-    --waku-1-text: #000000;
-    --waku-2: #1a1a1a;
-    --waku-2-text: #ffffff;
-    --waku-3: #d63030;
-    --waku-3-text: #ffffff;
-    --waku-4: #2b6cb0;
-    --waku-4-text: #ffffff;
-    --waku-5: #f6d860;
-    --waku-5-text: #000000;
-    --waku-6: #2f9c5d;
-    --waku-6-text: #ffffff;
-    --waku-7: #f08c2e;
-    --waku-7-text: #ffffff;
-    --waku-8: #f3a8c4;
-    --waku-8-text: #000000;
-  }
-
-  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    margin: 0;
-    padding: 0;
-    background: var(--turf-deep);
-    color: var(--paper);
-    font-family: 'Noto Sans JP', sans-serif;
-    min-height: 100vh;
-    overscroll-behavior: none;
-  }
-
-  body {
-    background:
-      radial-gradient(circle at 20% 10%, rgba(31, 122, 85, 0.4) 0%, transparent 50%),
-      radial-gradient(circle at 80% 90%, rgba(20, 87, 63, 0.5) 0%, transparent 50%),
-      var(--turf-deep);
-    background-attachment: fixed;
-    padding-bottom: 80px;
-  }
-
-  /* グレインオーバーレイ */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence baseFrequency='0.9' /></filter><rect width='100' height='100' filter='url(%23n)' opacity='0.04'/></svg>");
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* ── ヘッダー ─────────────────────────────── */
-  .header {
-    position: sticky;
-    top: 0;
-    z-index: 10;
-    background: var(--lcd-bg);
-    border-bottom: 2px solid var(--gold);
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo {
-    font-family: 'DotGothic16', monospace;
-    font-size: 18px;
-    color: var(--lcd-amber);
-    letter-spacing: 0.05em;
-    text-shadow: 0 0 8px rgba(255, 182, 39, 0.5);
-  }
-
-  .logo-sub {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--lcd-dim);
-    margin-top: 2px;
-  }
-
-  .settings-btn {
-    background: transparent;
-    border: 1px solid var(--lcd-dim);
-    color: var(--lcd-amber);
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* ── メインコンテナ ─────────────────────────── */
-  .container {
-    position: relative;
-    z-index: 2;
-    padding: 20px 16px;
-    max-width: 600px;
-    margin: 0 auto;
-  }
-
-  /* ── 画面切替 ───────────────────────────── */
-  .screen { display: none; animation: fadeIn 0.3s ease; }
-  .screen.active { display: block; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  /* ── アップロード画面 ─────────────────────── */
-  .step-label {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--lcd-amber);
-    letter-spacing: 0.1em;
-    margin-bottom: 8px;
-    text-transform: uppercase;
-  }
-
-  .step-title {
-    font-family: 'DotGothic16', monospace;
-    font-size: 22px;
-    color: var(--paper);
-    margin: 0 0 24px 0;
-    line-height: 1.4;
-  }
-
-  .upload-card {
-    background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
-    padding: 20px;
-    margin-bottom: 16px;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .upload-card.filled {
-    border-color: var(--lcd-amber);
-    background: linear-gradient(135deg, rgba(255, 182, 39, 0.08), rgba(255, 182, 39, 0.02));
-  }
-
-  .upload-card .badge {
-    display: inline-block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    background: var(--lcd-bg);
-    color: var(--lcd-amber);
-    border: 1px solid var(--lcd-amber);
-    padding: 3px 8px;
-    border-radius: 4px;
-    margin-bottom: 8px;
-    letter-spacing: 0.1em;
-  }
-
-  .upload-card h3 {
-    margin: 0 0 4px 0;
-    font-size: 16px;
-    font-weight: 700;
-  }
-
-  .upload-card .desc {
-    font-size: 12px;
-    color: var(--lcd-dim);
-    margin-bottom: 14px;
-  }
-
-  .upload-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    width: 100%;
-    padding: 14px;
-    background: var(--lcd-bg);
-    color: var(--lcd-amber);
-    border: 1px dashed var(--lcd-amber);
-    border-radius: 10px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-  }
-
-  .upload-btn:active { transform: scale(0.98); }
-
-  input[type="file"] { display: none; }
-
-  .preview {
-    margin-top: 12px;
-    border-radius: 8px;
-    overflow: hidden;
-    border: 1px solid rgba(255,255,255,0.1);
-    position: relative;
-  }
-
-  .preview img {
-    width: 100%;
-    display: block;
-  }
-
-  .preview-clear {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 16px;
-  }
-
-  .analyze-btn {
-    width: 100%;
-    padding: 18px;
-    background: linear-gradient(135deg, var(--lcd-amber), var(--gold));
-    color: var(--lcd-bg);
-    border: none;
-    border-radius: 12px;
-    font-family: 'DotGothic16', monospace;
-    font-size: 18px;
-    font-weight: 700;
-    letter-spacing: 0.05em;
-    cursor: pointer;
-    margin-top: 8px;
-    box-shadow: 0 4px 20px rgba(255, 182, 39, 0.3);
-  }
-
-  .analyze-btn:disabled {
-    background: rgba(255,255,255,0.05);
-    color: var(--lcd-dim);
-    box-shadow: none;
-    cursor: not-allowed;
-  }
-
-  .analyze-btn:not(:disabled):active { transform: scale(0.98); }
-
-  /* ── 解析中画面 ───────────────────────── */
-  .loading {
-    text-align: center;
-    padding: 60px 20px;
-  }
-
-  .loading-display {
-    font-family: 'DotGothic16', monospace;
-    font-size: 24px;
-    color: var(--lcd-amber);
-    text-shadow: 0 0 12px rgba(255, 182, 39, 0.6);
-    margin-bottom: 16px;
-    animation: blink 1.2s infinite;
-  }
-
-  @keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-  }
-
-  .loading-status {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    color: var(--lcd-dim);
-    line-height: 2;
-  }
-
-  .loading-status .done { color: var(--lcd-green); }
-  .loading-status .active { color: var(--lcd-amber); }
-
-  /* ── 結果画面 ───────────────────────── */
-  .result-header {
-    background: var(--lcd-bg);
-    border: 1px solid var(--gold);
-    border-radius: 12px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .result-header .venue {
-    font-family: 'DotGothic16', monospace;
-    font-size: 18px;
-    color: var(--lcd-amber);
-    margin-bottom: 4px;
-  }
-
-  .result-header .race-name {
-    font-size: 14px;
-    color: var(--paper);
-    margin-bottom: 8px;
-    font-weight: 700;
-  }
-
-  .result-header .meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    font-size: 11px;
-    color: var(--lcd-dim);
-  }
-
-  .result-header .meta span strong {
-    color: var(--lcd-amber);
-    font-weight: 500;
-  }
-
-  .timestamps {
-    background: rgba(0,0,0,0.3);
-    border-radius: 8px;
-    padding: 10px 12px;
-    margin-top: 10px;
-    font-size: 10px;
-    color: var(--lcd-dim);
-    line-height: 1.8;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .timestamps .arrow {
-    color: var(--lcd-amber);
-    margin: 0 6px;
-  }
-
-  /* ── 並べ替えタブ ──────────────────────── */
-  .sort-tabs {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 16px;
-    background: rgba(0,0,0,0.3);
-    padding: 4px;
-    border-radius: 10px;
-  }
-
-  .sort-tab {
-    flex: 1;
-    padding: 10px;
-    background: transparent;
-    color: var(--lcd-dim);
-    border: none;
-    border-radius: 7px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-  }
-
-  .sort-tab.active {
-    background: var(--lcd-amber);
-    color: var(--lcd-bg);
-  }
-
-  /* ── 馬カード ──────────────────────────── */
-  .horse-card {
-    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
-    margin-bottom: 10px;
-    overflow: hidden;
-    position: relative;
-  }
-
-  .horse-card.trend-up {
-    border-left: 4px solid var(--lcd-blue);
-  }
-
-  .horse-card.trend-down {
-    border-left: 4px solid var(--lcd-red);
-  }
-
-  .horse-card.trend-flat {
-    border-left: 4px solid var(--lcd-dim);
-  }
-
-  .horse-row {
-    display: grid;
-    grid-template-columns: 44px 1fr auto;
-    gap: 10px;
-    padding: 12px;
-    align-items: center;
-  }
-
-  .umaban {
-    width: 44px;
-    height: 44px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: 'DotGothic16', monospace;
-    font-size: 24px;
-    font-weight: 700;
-    border: 2px solid rgba(255,255,255,0.2);
-  }
-
-  .horse-info .name {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--paper);
-    line-height: 1.2;
-    margin-bottom: 4px;
-  }
-
-  .horse-info .meta {
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px;
-    color: var(--lcd-dim);
-    line-height: 1.5;
-  }
-
-  .horse-info .meta strong {
-    color: var(--paper);
-    font-weight: 500;
-  }
-
-  .odds-block {
-    text-align: right;
-    font-family: 'JetBrains Mono', monospace;
-  }
-
-  .odds-flow {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    justify-content: flex-end;
-    font-size: 13px;
-    color: var(--paper);
-    margin-bottom: 2px;
-  }
-
-  .odds-before { color: var(--lcd-dim); }
-  .odds-arrow { color: var(--lcd-amber); }
-  .odds-after { font-weight: 700; font-size: 16px; }
-
-  .odds-delta {
-    font-size: 11px;
-    font-weight: 700;
-  }
-
-  .trend-up .odds-delta { color: var(--lcd-blue); }
-  .trend-down .odds-delta { color: var(--lcd-red); }
-  .trend-flat .odds-delta { color: var(--lcd-dim); }
-
-  .trend-badge {
-    display: inline-block;
-    font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 4px;
-    margin-top: 4px;
-    font-family: 'JetBrains Mono', monospace;
-    letter-spacing: 0.05em;
-  }
-
-  .trend-up .trend-badge {
-    background: rgba(96, 165, 250, 0.2);
-    color: var(--lcd-blue);
-    border: 1px solid var(--lcd-blue);
-  }
-
-  .trend-down .trend-badge {
-    background: rgba(255, 107, 107, 0.2);
-    color: var(--lcd-red);
-    border: 1px solid var(--lcd-red);
-  }
-
-  /* ── 戻るボタン ────────────────────────── */
-  .back-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: var(--lcd-bg);
-    color: var(--lcd-amber);
-    border: 1px solid var(--lcd-amber);
-    padding: 12px 24px;
-    border-radius: 100px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    z-index: 5;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-  }
-
-  /* ── 設定モーダル ──────────────────────── */
-  .modal-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.8);
-    z-index: 100;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  .modal-overlay.active { display: flex; }
-
-  .modal {
-    background: var(--lcd-bg);
-    border: 1px solid var(--gold);
-    border-radius: 16px;
-    padding: 24px;
-    max-width: 400px;
-    width: 100%;
-  }
-
-  .modal h2 {
-    font-family: 'DotGothic16', monospace;
-    color: var(--lcd-amber);
-    margin: 0 0 16px 0;
-    font-size: 18px;
-  }
-
-  .modal label {
-    display: block;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: var(--lcd-dim);
-    margin-bottom: 6px;
-    letter-spacing: 0.1em;
-  }
-
-  .modal input {
-    width: 100%;
-    padding: 12px;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
-    color: var(--paper);
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 13px;
-  }
-
-  .modal-notice {
-    font-size: 11px;
-    color: var(--lcd-dim);
-    margin: 12px 0;
-    line-height: 1.6;
-    background: rgba(255, 182, 39, 0.05);
-    border-left: 2px solid var(--lcd-amber);
-    padding: 10px 12px;
-  }
-
-  .modal-actions {
-    display: flex;
-    gap: 8px;
-    margin-top: 16px;
-  }
-
-  .modal-btn {
-    flex: 1;
-    padding: 12px;
-    border-radius: 8px;
-    border: none;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    letter-spacing: 0.05em;
-  }
-
-  .modal-btn.primary {
-    background: var(--lcd-amber);
-    color: var(--lcd-bg);
-  }
-
-  .modal-btn.secondary {
-    background: transparent;
-    color: var(--lcd-dim);
-    border: 1px solid var(--lcd-dim);
-  }
-
-  /* ── エラー表示 ─────────────────────── */
-  .error-box {
-    background: rgba(255, 107, 107, 0.1);
-    border: 1px solid var(--lcd-red);
-    border-radius: 10px;
-    padding: 14px;
-    margin-bottom: 16px;
-    font-size: 12px;
-    color: var(--lcd-red);
-    line-height: 1.6;
-    white-space: pre-wrap;
-    word-break: break-word;
-  }
-
-  /* ── 注釈 ───────────────────────── */
-  .footer-note {
-    text-align: center;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 9px;
-    color: var(--lcd-dim);
-    margin-top: 30px;
-    line-height: 1.8;
-    letter-spacing: 0.05em;
-  }
+```
+/* 枠色 (JRA公式) */
+--waku-1: #ffffff;
+--waku-1-text: #000000;
+--waku-2: #1a1a1a;
+--waku-2-text: #ffffff;
+--waku-3: #d63030;
+--waku-3-text: #ffffff;
+--waku-4: #2b6cb0;
+--waku-4-text: #ffffff;
+--waku-5: #f6d860;
+--waku-5-text: #000000;
+--waku-6: #2f9c5d;
+--waku-6-text: #ffffff;
+--waku-7: #f08c2e;
+--waku-7-text: #ffffff;
+--waku-8: #f3a8c4;
+--waku-8-text: #000000;
+```
+
+}
+
+- { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+margin: 0;
+padding: 0;
+background: var(–turf-deep);
+color: var(–paper);
+font-family: ‘Noto Sans JP’, sans-serif;
+min-height: 100vh;
+overscroll-behavior: none;
+}
+
+body {
+background:
+radial-gradient(circle at 20% 10%, rgba(31, 122, 85, 0.4) 0%, transparent 50%),
+radial-gradient(circle at 80% 90%, rgba(20, 87, 63, 0.5) 0%, transparent 50%),
+var(–turf-deep);
+background-attachment: fixed;
+padding-bottom: 80px;
+}
+
+/* グレインオーバーレイ */
+body::before {
+content: ‘’;
+position: fixed;
+top: 0; left: 0; right: 0; bottom: 0;
+background-image: url(“data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence baseFrequency='0.9' /></filter><rect width='100' height='100' filter='url(%23n)' opacity='0.04'/></svg>”);
+pointer-events: none;
+z-index: 1;
+}
+
+/* ── ヘッダー ─────────────────────────────── */
+.header {
+position: sticky;
+top: 0;
+z-index: 10;
+background: var(–lcd-bg);
+border-bottom: 2px solid var(–gold);
+padding: 12px 16px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+}
+
+.logo {
+font-family: ‘DotGothic16’, monospace;
+font-size: 18px;
+color: var(–lcd-amber);
+letter-spacing: 0.05em;
+text-shadow: 0 0 8px rgba(255, 182, 39, 0.5);
+}
+
+.logo-sub {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+color: var(–lcd-dim);
+margin-top: 2px;
+}
+
+.settings-btn {
+background: transparent;
+border: 1px solid var(–lcd-dim);
+color: var(–lcd-amber);
+width: 36px;
+height: 36px;
+border-radius: 50%;
+font-size: 18px;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+}
+
+/* ── メインコンテナ ─────────────────────────── */
+.container {
+position: relative;
+z-index: 2;
+padding: 20px 16px;
+max-width: 600px;
+margin: 0 auto;
+}
+
+/* ── 画面切替 ───────────────────────────── */
+.screen { display: none; animation: fadeIn 0.3s ease; }
+.screen.active { display: block; }
+
+@keyframes fadeIn {
+from { opacity: 0; transform: translateY(8px); }
+to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── アップロード画面 ─────────────────────── */
+.step-label {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 11px;
+color: var(–lcd-amber);
+letter-spacing: 0.1em;
+margin-bottom: 8px;
+text-transform: uppercase;
+}
+
+.step-title {
+font-family: ‘DotGothic16’, monospace;
+font-size: 22px;
+color: var(–paper);
+margin: 0 0 24px 0;
+line-height: 1.4;
+}
+
+.upload-card {
+background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 16px;
+padding: 20px;
+margin-bottom: 16px;
+position: relative;
+overflow: hidden;
+}
+
+.upload-card.filled {
+border-color: var(–lcd-amber);
+background: linear-gradient(135deg, rgba(255, 182, 39, 0.08), rgba(255, 182, 39, 0.02));
+}
+
+.upload-card .badge {
+display: inline-block;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+background: var(–lcd-bg);
+color: var(–lcd-amber);
+border: 1px solid var(–lcd-amber);
+padding: 3px 8px;
+border-radius: 4px;
+margin-bottom: 8px;
+letter-spacing: 0.1em;
+}
+
+.upload-card h3 {
+margin: 0 0 4px 0;
+font-size: 16px;
+font-weight: 700;
+}
+
+.upload-card .desc {
+font-size: 12px;
+color: var(–lcd-dim);
+margin-bottom: 14px;
+}
+
+.upload-btn {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 8px;
+width: 100%;
+padding: 14px;
+background: var(–lcd-bg);
+color: var(–lcd-amber);
+border: 1px dashed var(–lcd-amber);
+border-radius: 10px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 13px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.05em;
+}
+
+.upload-btn:active { transform: scale(0.98); }
+
+input[type=“file”] { display: none; }
+
+.preview {
+margin-top: 12px;
+border-radius: 8px;
+overflow: hidden;
+border: 1px solid rgba(255,255,255,0.1);
+position: relative;
+}
+
+.preview img {
+width: 100%;
+display: block;
+}
+
+.preview-clear {
+position: absolute;
+top: 8px;
+right: 8px;
+background: rgba(0,0,0,0.7);
+color: white;
+border: none;
+width: 32px;
+height: 32px;
+border-radius: 50%;
+cursor: pointer;
+font-size: 16px;
+}
+
+.analyze-btn {
+width: 100%;
+padding: 18px;
+background: linear-gradient(135deg, var(–lcd-amber), var(–gold));
+color: var(–lcd-bg);
+border: none;
+border-radius: 12px;
+font-family: ‘DotGothic16’, monospace;
+font-size: 18px;
+font-weight: 700;
+letter-spacing: 0.05em;
+cursor: pointer;
+margin-top: 8px;
+box-shadow: 0 4px 20px rgba(255, 182, 39, 0.3);
+}
+
+.analyze-btn:disabled {
+background: rgba(255,255,255,0.05);
+color: var(–lcd-dim);
+box-shadow: none;
+cursor: not-allowed;
+}
+
+.analyze-btn:not(:disabled):active { transform: scale(0.98); }
+
+/* ── 解析中画面 ───────────────────────── */
+.loading {
+text-align: center;
+padding: 60px 20px;
+}
+
+.loading-display {
+font-family: ‘DotGothic16’, monospace;
+font-size: 24px;
+color: var(–lcd-amber);
+text-shadow: 0 0 12px rgba(255, 182, 39, 0.6);
+margin-bottom: 16px;
+animation: blink 1.2s infinite;
+}
+
+@keyframes blink {
+0%, 100% { opacity: 1; }
+50% { opacity: 0.5; }
+}
+
+.loading-status {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 12px;
+color: var(–lcd-dim);
+line-height: 2;
+}
+
+.loading-status .done { color: var(–lcd-green); }
+.loading-status .active { color: var(–lcd-amber); }
+
+/* ── 結果画面 ───────────────────────── */
+.result-header {
+background: var(–lcd-bg);
+border: 1px solid var(–gold);
+border-radius: 12px;
+padding: 14px 16px;
+margin-bottom: 16px;
+font-family: ‘JetBrains Mono’, monospace;
+}
+
+.result-header .venue {
+font-family: ‘DotGothic16’, monospace;
+font-size: 18px;
+color: var(–lcd-amber);
+margin-bottom: 4px;
+}
+
+.result-header .race-name {
+font-size: 14px;
+color: var(–paper);
+margin-bottom: 8px;
+font-weight: 700;
+}
+
+.result-header .meta {
+display: flex;
+flex-wrap: wrap;
+gap: 12px;
+font-size: 11px;
+color: var(–lcd-dim);
+}
+
+.result-header .meta span strong {
+color: var(–lcd-amber);
+font-weight: 500;
+}
+
+.timestamps {
+background: rgba(0,0,0,0.3);
+border-radius: 8px;
+padding: 10px 12px;
+margin-top: 10px;
+font-size: 10px;
+color: var(–lcd-dim);
+line-height: 1.8;
+font-family: ‘JetBrains Mono’, monospace;
+}
+
+.timestamps .arrow {
+color: var(–lcd-amber);
+margin: 0 6px;
+}
+
+/* ── 並べ替えタブ ──────────────────────── */
+.sort-tabs {
+display: flex;
+gap: 6px;
+margin-bottom: 16px;
+background: rgba(0,0,0,0.3);
+padding: 4px;
+border-radius: 10px;
+}
+
+.sort-tab {
+flex: 1;
+padding: 10px;
+background: transparent;
+color: var(–lcd-dim);
+border: none;
+border-radius: 7px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 11px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.05em;
+}
+
+.sort-tab.active {
+background: var(–lcd-amber);
+color: var(–lcd-bg);
+}
+
+/* ── 馬カード ──────────────────────────── */
+.horse-card {
+background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 12px;
+margin-bottom: 10px;
+overflow: hidden;
+position: relative;
+}
+
+.horse-card.trend-up {
+border-left: 4px solid var(–lcd-blue);
+}
+
+.horse-card.trend-down {
+border-left: 4px solid var(–lcd-red);
+}
+
+.horse-card.trend-flat {
+border-left: 4px solid var(–lcd-dim);
+}
+
+.horse-row {
+display: grid;
+grid-template-columns: 44px 1fr auto;
+gap: 10px;
+padding: 12px;
+align-items: center;
+}
+
+.umaban {
+width: 44px;
+height: 44px;
+border-radius: 8px;
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: ‘DotGothic16’, monospace;
+font-size: 24px;
+font-weight: 700;
+border: 2px solid rgba(255,255,255,0.2);
+}
+
+.horse-info .name {
+font-size: 15px;
+font-weight: 700;
+color: var(–paper);
+line-height: 1.2;
+margin-bottom: 4px;
+}
+
+.horse-info .meta {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+color: var(–lcd-dim);
+line-height: 1.5;
+}
+
+.horse-info .meta strong {
+color: var(–paper);
+font-weight: 500;
+}
+
+.odds-block {
+text-align: right;
+font-family: ‘JetBrains Mono’, monospace;
+}
+
+.odds-flow {
+display: flex;
+align-items: center;
+gap: 4px;
+justify-content: flex-end;
+font-size: 13px;
+color: var(–paper);
+margin-bottom: 2px;
+}
+
+.odds-before { color: var(–lcd-dim); }
+.odds-arrow { color: var(–lcd-amber); }
+.odds-after { font-weight: 700; font-size: 16px; }
+
+.odds-delta {
+font-size: 11px;
+font-weight: 700;
+}
+
+.trend-up .odds-delta { color: var(–lcd-blue); }
+.trend-down .odds-delta { color: var(–lcd-red); }
+.trend-flat .odds-delta { color: var(–lcd-dim); }
+
+.trend-badge {
+display: inline-block;
+font-size: 9px;
+padding: 2px 6px;
+border-radius: 4px;
+margin-top: 4px;
+font-family: ‘JetBrains Mono’, monospace;
+letter-spacing: 0.05em;
+}
+
+.trend-up .trend-badge {
+background: rgba(96, 165, 250, 0.2);
+color: var(–lcd-blue);
+border: 1px solid var(–lcd-blue);
+}
+
+.trend-down .trend-badge {
+background: rgba(255, 107, 107, 0.2);
+color: var(–lcd-red);
+border: 1px solid var(–lcd-red);
+}
+
+.trend-badge.suspicious {
+background: rgba(255, 182, 39, 0.2) !important;
+color: var(–lcd-amber) !important;
+border: 1px solid var(–lcd-amber) !important;
+}
+
+.horse-card .raw-toggle {
+display: block;
+width: 100%;
+background: transparent;
+border: none;
+border-top: 1px solid rgba(255,255,255,0.08);
+color: var(–lcd-dim);
+padding: 8px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+cursor: pointer;
+}
+
+/* ── 戻るボタン ────────────────────────── */
+.back-btn {
+position: fixed;
+bottom: 20px;
+left: 50%;
+transform: translateX(-50%);
+background: var(–lcd-bg);
+color: var(–lcd-amber);
+border: 1px solid var(–lcd-amber);
+padding: 12px 24px;
+border-radius: 100px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 12px;
+font-weight: 700;
+cursor: pointer;
+z-index: 5;
+box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.debug-btn {
+position: fixed;
+bottom: 20px;
+right: 20px;
+background: var(–lcd-bg);
+color: var(–lcd-dim);
+border: 1px solid var(–lcd-dim);
+padding: 12px 16px;
+border-radius: 100px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 11px;
+cursor: pointer;
+z-index: 5;
+box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+
+.debug-panel {
+background: var(–lcd-bg);
+border: 1px solid var(–lcd-dim);
+border-radius: 12px;
+padding: 16px;
+margin-top: 20px;
+margin-bottom: 80px;
+}
+
+.debug-title {
+font-family: ‘DotGothic16’, monospace;
+color: var(–lcd-amber);
+font-size: 14px;
+margin-bottom: 12px;
+}
+
+.debug-section {
+margin-bottom: 16px;
+}
+
+.debug-section strong {
+display: block;
+font-family: ‘JetBrains Mono’, monospace;
+color: var(–lcd-amber);
+font-size: 11px;
+margin-bottom: 6px;
+}
+
+.debug-section pre {
+background: rgba(0,0,0,0.4);
+padding: 12px;
+border-radius: 8px;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+color: var(–paper);
+overflow-x: auto;
+white-space: pre-wrap;
+word-break: break-all;
+max-height: 300px;
+overflow-y: auto;
+line-height: 1.5;
+}
+
+/* ── 設定モーダル ──────────────────────── */
+.modal-overlay {
+position: fixed;
+inset: 0;
+background: rgba(0,0,0,0.8);
+z-index: 100;
+display: none;
+align-items: center;
+justify-content: center;
+padding: 20px;
+}
+
+.modal-overlay.active { display: flex; }
+
+.modal {
+background: var(–lcd-bg);
+border: 1px solid var(–gold);
+border-radius: 16px;
+padding: 24px;
+max-width: 400px;
+width: 100%;
+}
+
+.modal h2 {
+font-family: ‘DotGothic16’, monospace;
+color: var(–lcd-amber);
+margin: 0 0 16px 0;
+font-size: 18px;
+}
+
+.modal label {
+display: block;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 11px;
+color: var(–lcd-dim);
+margin-bottom: 6px;
+letter-spacing: 0.1em;
+}
+
+.modal input {
+width: 100%;
+padding: 12px;
+background: rgba(255,255,255,0.05);
+border: 1px solid rgba(255,255,255,0.1);
+border-radius: 8px;
+color: var(–paper);
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 13px;
+}
+
+.modal-notice {
+font-size: 11px;
+color: var(–lcd-dim);
+margin: 12px 0;
+line-height: 1.6;
+background: rgba(255, 182, 39, 0.05);
+border-left: 2px solid var(–lcd-amber);
+padding: 10px 12px;
+}
+
+.modal-actions {
+display: flex;
+gap: 8px;
+margin-top: 16px;
+}
+
+.modal-btn {
+flex: 1;
+padding: 12px;
+border-radius: 8px;
+border: none;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 12px;
+font-weight: 700;
+cursor: pointer;
+letter-spacing: 0.05em;
+}
+
+.modal-btn.primary {
+background: var(–lcd-amber);
+color: var(–lcd-bg);
+}
+
+.modal-btn.secondary {
+background: transparent;
+color: var(–lcd-dim);
+border: 1px solid var(–lcd-dim);
+}
+
+/* ── エラー表示 ─────────────────────── */
+.error-box {
+background: rgba(255, 107, 107, 0.1);
+border: 1px solid var(–lcd-red);
+border-radius: 10px;
+padding: 14px;
+margin-bottom: 16px;
+font-size: 12px;
+color: var(–lcd-red);
+line-height: 1.6;
+white-space: pre-wrap;
+word-break: break-word;
+}
+
+/* ── 注釈 ───────────────────────── */
+.footer-note {
+text-align: center;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 9px;
+color: var(–lcd-dim);
+margin-top: 30px;
+line-height: 1.8;
+letter-spacing: 0.05em;
+}
 </style>
+
 </head>
 <body>
 
 <!-- ヘッダー -->
+
 <header class="header">
   <div>
     <div class="logo">パドック_ODDS_DIFF</div>
@@ -638,45 +722,50 @@
 <div class="container">
 
   <!-- ① アップロード画面 -->
+
   <div class="screen active" id="screen-upload">
     <div class="step-label">▼ STEP 01 ── 画像をアップロード</div>
     <h2 class="step-title">パドック前後の<br>オッズ画像を2枚アップ</h2>
 
-    <div class="upload-card" id="card-before">
-      <div class="badge">BEFORE / 周回前</div>
-      <h3>パドック周回前のオッズ</h3>
-      <div class="desc">早めの段階の画像。「○分前」の数字が大きいほうが先。</div>
-      <label class="upload-btn">
-        📷 画像を選択 / 撮影
-        <input type="file" accept="image/*" id="file-before" onchange="handleUpload(event, 'before')">
-      </label>
-      <div id="preview-before"></div>
-    </div>
+```
+<div class="upload-card" id="card-before">
+  <div class="badge">BEFORE / 周回前</div>
+  <h3>パドック周回前のオッズ</h3>
+  <div class="desc">早めの段階の画像。「○分前」の数字が大きいほうが先。</div>
+  <label class="upload-btn">
+    📷 画像を選択 / 撮影
+    <input type="file" accept="image/*" id="file-before" onchange="handleUpload(event, 'before')">
+  </label>
+  <div id="preview-before"></div>
+</div>
 
-    <div class="upload-card" id="card-after">
-      <div class="badge">AFTER / 周回後</div>
-      <h3>パドック周回後のオッズ</h3>
-      <div class="desc">発走直前の画像。「○分前」の数字が小さいほうが後。</div>
-      <label class="upload-btn">
-        📷 画像を選択 / 撮影
-        <input type="file" accept="image/*" id="file-after" onchange="handleUpload(event, 'after')">
-      </label>
-      <div id="preview-after"></div>
-    </div>
+<div class="upload-card" id="card-after">
+  <div class="badge">AFTER / 周回後</div>
+  <h3>パドック周回後のオッズ</h3>
+  <div class="desc">発走直前の画像。「○分前」の数字が小さいほうが後。</div>
+  <label class="upload-btn">
+    📷 画像を選択 / 撮影
+    <input type="file" accept="image/*" id="file-after" onchange="handleUpload(event, 'after')">
+  </label>
+  <div id="preview-after"></div>
+</div>
 
-    <div id="error-box"></div>
+<div id="error-box"></div>
 
-    <button class="analyze-btn" id="analyze-btn" disabled onclick="analyze()">
-      ▶ 解析する
-    </button>
+<button class="analyze-btn" id="analyze-btn" disabled onclick="analyze()">
+  ▶ 解析する
+</button>
 
-    <div class="footer-note">
-      画像はGEMINI APIで解析されます<br>
-      APIキーは端末のみに保存・外部送信されません
-    </div>
+<div class="footer-note">
+  画像はGEMINI APIで解析されます<br>
+  APIキーは端末のみに保存・外部送信されません
+</div>
+```
+
   </div>
 
   <!-- ② 解析中画面 -->
+
   <div class="screen" id="screen-loading">
     <div class="loading">
       <div class="loading-display" id="loading-text">ANALYZING...</div>
@@ -689,44 +778,65 @@
   </div>
 
   <!-- ③ 結果画面 -->
+
   <div class="screen" id="screen-result">
     <div class="result-header" id="result-header"></div>
 
-    <div class="sort-tabs">
-      <button class="sort-tab active" onclick="setSort('umaban', event)">馬番順</button>
-      <button class="sort-tab" onclick="setSort('change', event)">変動率順</button>
-    </div>
+```
+<div class="sort-tabs">
+  <button class="sort-tab active" onclick="setSort('umaban', event)">馬番順</button>
+  <button class="sort-tab" onclick="setSort('change', event)">変動率順</button>
+</div>
 
-    <div id="horse-list"></div>
+<div id="horse-list"></div>
 
-    <button class="back-btn" onclick="resetToUpload()">← 戻る</button>
+<button class="back-btn" onclick="resetToUpload()">← 戻る</button>
+<button class="debug-btn" onclick="toggleDebug()">🔍 生データ</button>
+
+<div class="debug-panel" id="debug-panel" style="display:none;">
+  <div class="debug-title">📋 Gemini解析結果(JSON)</div>
+  <div class="debug-section">
+    <strong>BEFORE</strong>
+    <pre id="debug-before"></pre>
+  </div>
+  <div class="debug-section">
+    <strong>AFTER</strong>
+    <pre id="debug-after"></pre>
+  </div>
+</div>
+```
+
   </div>
 
 </div>
 
 <!-- 設定モーダル -->
+
 <div class="modal-overlay" id="settings-modal">
   <div class="modal">
     <h2>⚙ 設定</h2>
     <label>GEMINI API KEY</label>
     <input type="password" id="api-key-input" placeholder="AIza...">
 
-    <label style="margin-top: 16px;">使用モデル</label>
-    <select id="model-select" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--paper); font-family:'JetBrains Mono', monospace; font-size:13px;">
-      <option value="gemini-2.5-flash">gemini-2.5-flash (推奨・最新)</option>
-      <option value="gemini-2.0-flash">gemini-2.0-flash</option>
-      <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (軽量・高速)</option>
-      <option value="gemini-1.5-flash">gemini-1.5-flash (旧版・フォールバック)</option>
-    </select>
+```
+<label style="margin-top: 16px;">使用モデル</label>
+<select id="model-select" style="width:100%; padding:12px; background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1); border-radius:8px; color:var(--paper); font-family:'JetBrains Mono', monospace; font-size:13px;">
+  <option value="gemini-2.5-flash">gemini-2.5-flash (推奨・最新)</option>
+  <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+  <option value="gemini-2.5-flash-lite">gemini-2.5-flash-lite (軽量・高速)</option>
+  <option value="gemini-1.5-flash">gemini-1.5-flash (旧版・フォールバック)</option>
+</select>
 
-    <div class="modal-notice">
-      🔒 APIキーはこの端末のlocalStorageにのみ保存されます。Google AI Studio (aistudio.google.com) で無料取得できます。<br><br>
-      ⚠ 429エラー(quota)が出る場合はモデルを変えるか、しばらく待ってから再試行してください。
-    </div>
-    <div class="modal-actions">
-      <button class="modal-btn secondary" onclick="closeSettings()">キャンセル</button>
-      <button class="modal-btn primary" onclick="saveSettings()">保存</button>
-    </div>
+<div class="modal-notice">
+  🔒 APIキーはこの端末のlocalStorageにのみ保存されます。Google AI Studio (aistudio.google.com) で無料取得できます。<br><br>
+  ⚠ 429エラー(quota)が出る場合はモデルを変えるか、しばらく待ってから再試行してください。
+</div>
+<div class="modal-actions">
+  <button class="modal-btn secondary" onclick="closeSettings()">キャンセル</button>
+  <button class="modal-btn primary" onclick="saveSettings()">保存</button>
+</div>
+```
+
   </div>
 </div>
 
@@ -835,8 +945,8 @@ async function handleUpload(event, type) {
   const file = event.target.files[0];
   if (!file) return;
 
-  // 画像をリサイズ＆base64化
-  const { dataUrl, base64, mimeType } = await resizeImage(file, 1600);
+  // 画像をリサイズ＆base64化(高解像度: OCR精度のため2400px)
+  const { dataUrl, base64, mimeType } = await resizeImage(file, 2400);
 
   state[type + 'Image'] = { dataUrl, base64, mimeType };
 
@@ -911,10 +1021,27 @@ function resizeImage(file, maxSize) {
 // ─────────────────────────────────────
 // Gemini API呼び出し
 // ─────────────────────────────────────
-const GEMINI_PROMPT = `あなたはJRA場内ターフビジョン（または同等のオッズ表示画面）の画像を読み取るOCRです。
-画像から以下の情報をJSONで返してください。推測は禁止、読めない箇所はnullに。
+const GEMINI_PROMPT = `あなたはJRA場内ターフビジョン（電光掲示板）のオッズ表示を読み取るOCRです。
+この種の画像では、**1行に1頭分のデータ**が以下の順番で水平に並んでいます。
 
-返却フォーマット:
+【カラム順序(左から右)】
+1. 馬番(背景色つき・1〜18の整数)
+2. 馬名(カタカナ中心)
+3. 馬体重(3桁の整数 kg)
+4. 増減(±記号と1〜2桁の整数)
+5. 単勝オッズ(小数1桁)
+6. 複勝オッズ(範囲表記 "X.X-Y.Y")
+7. 騎手名(漢字・カタカナ)
+8. 斤量(57.0 等の小数)
+
+【最重要・絶対に守る指示】
+- **1つの馬番に対応するデータは、必ずその馬番の真横の行から取得すること**
+- 別の行のデータを取り違えてはならない
+- 行の高さ・y座標を厳密に確認し、馬番N+1の行の値を馬番Nに混ぜないこと
+- 馬番1から順に、画像上で**上から下へ**スキャンすること
+- 単勝オッズと複勝オッズの位置を取り違えないこと(複勝は範囲表記なので区別可能)
+
+【返却フォーマット】
 {
   "race_venue": "東京10R",
   "race_name": "青竜ステークス",
@@ -938,15 +1065,17 @@ const GEMINI_PROMPT = `あなたはJRA場内ターフビジョン（または同
   ]
 }
 
-注意事項:
-- weight_diff は +を正、-を負、±0は0として整数で
-- 馬番(umaban)は整数、枠(waku)も整数(1〜8)
-- 枠番は左端の背景色から判定: 1=白, 2=黒, 3=赤, 4=青, 5=黄, 6=緑, 7=橙, 8=桃
-- 馬名・騎手名はカタカナ・漢字を忠実に
-- 単勝オッズ(win_odds)は小数
-- 複勝は "3.8-6.5" を分解してmin/maxへ
-- minutes_before は「○分前」の数字
-- JSONのみ返却。コードブロック・説明文・前置きは禁止`;
+【注意事項】
+- weight_diff: + を正、- を負、±0 は 0
+- 枠(waku)は左端の背景色から: 1=白, 2=黒, 3=赤, 4=青, 5=黄, 6=緑, 7=橙, 8=桃
+- 馬名・騎手名はカタカナ・漢字を忠実に。濁点・半濁点(゛゜)も正確に
+- 「テ」と「デ」、「シ」と「ツ」、「ハ」と「ヘ」を混同しない
+- 読めない箇所は null(推測禁止)
+- JSONのみ返却。コードブロック・説明文・前置きは禁止
+
+【自己検証】
+出力前に、馬番1から最終馬番まで、行が連続して整列しているか確認してください。
+飛び番(例: 1,2,3,5,6...)があれば、欠けた行を見落としていないか再確認してください。`;
 
 async function callGemini(base64Image, mimeType, retryCount = 0) {
   const apiKey = localStorage.getItem('gemini_api_key');
@@ -1099,13 +1228,17 @@ function mergeResults(before, after) {
     const oddsBefore = b.win_odds;
     const oddsAfter = a?.win_odds;
 
-    let delta = null, deltaPct = null, trend = 'missing';
+    let delta = null, deltaPct = null, trend = 'missing', suspicious = false;
     if (oddsBefore != null && oddsAfter != null) {
       delta = +(oddsAfter - oddsBefore).toFixed(2);
       deltaPct = +((delta / oddsBefore) * 100).toFixed(1);
       if (Math.abs(delta) < 0.05) trend = 'flat';
       else if (delta < 0) trend = 'up';  // オッズ下落 = 人気上昇
       else trend = 'down';
+
+      // 誤読の可能性: オッズが5倍以上に変動した場合は怪しい
+      // (通常パドック前後でオッズが500%以上動くことは稀)
+      if (Math.abs(deltaPct) >= 500) suspicious = true;
     }
 
     return {
@@ -1120,7 +1253,8 @@ function mergeResults(before, after) {
       odds_after: oddsAfter,
       delta,
       deltaPct,
-      trend
+      trend,
+      suspicious
     };
   }).sort((x, y) => x.umaban - y.umaban);
 }
@@ -1177,7 +1311,9 @@ function renderHorseList() {
     const deltaPctStr = h.deltaPct != null ? `(${h.deltaPct > 0 ? '+' : ''}${h.deltaPct.toFixed(1)}%)` : '';
 
     let badge = '';
-    if (h.trend === 'up' && Math.abs(h.deltaPct) >= 10) badge = '<span class="trend-badge">🔥 人気急上昇</span>';
+    if (h.suspicious) {
+      badge = '<span class="trend-badge suspicious">❓ 誤読の可能性</span>';
+    } else if (h.trend === 'up' && Math.abs(h.deltaPct) >= 10) badge = '<span class="trend-badge">🔥 人気急上昇</span>';
     else if (h.trend === 'up') badge = '<span class="trend-badge">▲ 人気上昇</span>';
     else if (h.trend === 'down' && Math.abs(h.deltaPct) >= 10) badge = '<span class="trend-badge">⚠ 人気急落</span>';
     else if (h.trend === 'down') badge = '<span class="trend-badge">▼ 人気下落</span>';
@@ -1237,6 +1373,18 @@ function resetToUpload() {
   switchScreen('upload');
 }
 
+function toggleDebug() {
+  const panel = document.getElementById('debug-panel');
+  if (panel.style.display === 'none') {
+    document.getElementById('debug-before').textContent = JSON.stringify(state.beforeResult, null, 2);
+    document.getElementById('debug-after').textContent = JSON.stringify(state.afterResult, null, 2);
+    panel.style.display = 'block';
+    panel.scrollIntoView({ behavior: 'smooth' });
+  } else {
+    panel.style.display = 'none';
+  }
+}
+
 function setSort(mode, event) {
   state.sortMode = mode;
   document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
@@ -1257,5 +1405,6 @@ function clearError() {
 }
 
 </script>
+
 </body>
 </html>
