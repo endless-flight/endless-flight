@@ -768,16 +768,64 @@ function closeSettings() {
   document.getElementById('settings-modal').classList.remove('active');
 }
 
-function saveSettings() {
-  const key = document.getElementById('api-key-input').value.trim();
+async function saveSettings() {
+  const keyRaw = document.getElementById('api-key-input').value;
+  const key = keyRaw.trim().replace(/\s+/g, ''); // 空白・改行を除去
   const model = document.getElementById('model-select').value;
+  const testBtn = document.querySelector('.modal-btn.primary');
+
   if (!key) {
     alert('APIキーを入力してください');
     return;
   }
-  localStorage.setItem('gemini_api_key', key);
-  localStorage.setItem('gemini_model', model);
-  closeSettings();
+
+  // 形式の事前チェック
+  if (!key.startsWith('AIza')) {
+    if (!confirm('⚠ APIキーが "AIza" で始まっていません。\nGoogle Gemini のAPIキーではない可能性があります。\nそれでも保存しますか?')) {
+      return;
+    }
+  }
+
+  // APIキーの有効性を簡易テスト(モデルリスト取得)
+  testBtn.textContent = '検証中...';
+  testBtn.disabled = true;
+
+  try {
+    const testUrl = `https://generativelanguage.googleapis.com/v1beta/models?key=${key}`;
+    const res = await fetch(testUrl);
+    if (!res.ok) {
+      const errText = await res.text();
+      let msg = `❌ APIキー検証失敗 (${res.status})\n\n`;
+      if (errText.includes('API_KEY_INVALID')) {
+        msg += '原因: APIキーが無効です。\n\n';
+        msg += '対処法:\n';
+        msg += '1. https://aistudio.google.com/app/apikey で正しいキーをCopyボタンで取得\n';
+        msg += '2. 既存キーを全削除してから貼り付け\n';
+        msg += '3. キーは AIzaSy で始まる39文字です';
+      } else {
+        msg += errText.substring(0, 200);
+      }
+      alert(msg);
+      testBtn.textContent = '保存';
+      testBtn.disabled = false;
+      return;
+    }
+
+    // 成功
+    localStorage.setItem('gemini_api_key', key);
+    localStorage.setItem('gemini_model', model);
+    testBtn.textContent = '✓ 保存完了';
+    setTimeout(() => {
+      testBtn.textContent = '保存';
+      testBtn.disabled = false;
+      closeSettings();
+    }, 600);
+
+  } catch (err) {
+    alert('検証中にネットワークエラーが発生しました:\n' + err.message);
+    testBtn.textContent = '保存';
+    testBtn.disabled = false;
+  }
 }
 
 // ─────────────────────────────────────
