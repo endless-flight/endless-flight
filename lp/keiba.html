@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#0a3d2e">
+<title>パドックオッズ差分 - Endless Flight</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=JetBrains+Mono:wght@400;500;700;800&family=Noto+Sans+JP:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --turf-deep: #0a3d2e;
+    --turf-mid: #14573f;
+    --turf-light: #1f7a55;
+    --lcd-bg: #050d0a;
+    --lcd-amber: #ffb627;
+    --lcd-green: #4ade80;
+    --lcd-red: #ff6b6b;
+    --lcd-blue: #60a5fa;
+    --lcd-dim: #6b8579;
+    --paper: #f5f1e8;
+    --ink: #1a1a1a;
+    --gold: #d4a017;
+
+    /* 枠色 (JRA公式) */
+    --waku-1: #ffffff;
+    --waku-1-text: #000000;
+    --waku-2: #1a1a1a;
+    --waku-2-text: #ffffff;
+    --waku-3: #d63030;
+    --waku-3-text: #ffffff;
+    --waku-4: #2b6cb0;
+    --waku-4-text: #ffffff;
+    --waku-5: #f6d860;
+    --waku-5-text: #000000;
+    --waku-6: #2f9c5d;
+    --waku-6-text: #ffffff;
+    --waku-7: #f08c2e;
+    --waku-7-text: #ffffff;
+    --waku-8: #f3a8c4;
+    --waku-8-text: #000000;
+  }
+
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--turf-deep);
+    color: var(--paper);
+    font-family: 'Noto Sans JP', sans-serif;
+    min-height: 100vh;
+    overscroll-behavior: none;
+  }
+
+  body {
+    background:
+      radial-gradient(circle at 20% 10%, rgba(31, 122, 85, 0.4) 0%, transparent 50%),
+      radial-gradient(circle at 80% 90%, rgba(20, 87, 63, 0.5) 0%, transparent 50%),
+      var(--turf-deep);
+    background-attachment: fixed;
+    padding-bottom: 80px;
+  }
+
+  /* グレインオーバーレイ */
+  body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><filter id='n'><feTurbulence baseFrequency='0.9' /></filter><rect width='100' height='100' filter='url(%23n)' opacity='0.04'/></svg>");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── ヘッダー ─────────────────────────────── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: var(--lcd-bg);
+    border-bottom: 2px solid var(--gold);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo {
+    font-family: 'DotGothic16', monospace;
+    font-size: 18px;
+    color: var(--lcd-amber);
+    letter-spacing: 0.05em;
+    text-shadow: 0 0 8px rgba(255, 182, 39, 0.5);
+  }
+
+  .logo-sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--lcd-dim);
+    margin-top: 2px;
+  }
+
+  .settings-btn {
+    background: transparent;
+    border: 1px solid var(--lcd-dim);
+    color: var(--lcd-amber);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── メインコンテナ ─────────────────────────── */
+  .container {
+    position: relative;
+    z-index: 2;
+    padding: 20px 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* ── 画面切替 ───────────────────────────── */
+  .screen { display: none; animation: fadeIn 0.3s ease; }
+  .screen.active { display: block; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── アップロード画面 ─────────────────────── */
+  .step-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--lcd-amber);
+    letter-spacing: 0.1em;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+
+  .step-title {
+    font-family: 'DotGothic16', monospace;
+    font-size: 22px;
+    color: var(--paper);
+    margin: 0 0 24px 0;
+    line-height: 1.4;
+  }
+
+  .upload-card {
+    background: linear-gradient(135deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .upload-card.filled {
+    border-color: var(--lcd-amber);
+    background: linear-gradient(135deg, rgba(255, 182, 39, 0.08), rgba(255, 182, 39, 0.02));
+  }
+
+  .upload-card .badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    background: var(--lcd-bg);
+    color: var(--lcd-amber);
+    border: 1px solid var(--lcd-amber);
+    padding: 3px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    letter-spacing: 0.1em;
+  }
+
+  .upload-card h3 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .upload-card .desc {
+    font-size: 12px;
+    color: var(--lcd-dim);
+    margin-bottom: 14px;
+  }
+
+  .upload-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 14px;
+    background: var(--lcd-bg);
+    color: var(--lcd-amber);
+    border: 1px dashed var(--lcd-amber);
+    border-radius: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  .upload-btn:active { transform: scale(0.98); }
+
+  input[type="file"] { display: none; }
+
+  .preview {
+    margin-top: 12px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+  }
+
+  .preview img {
+    width: 100%;
+    display: block;
+  }
+
+  .preview-clear {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .analyze-btn {
+    width: 100%;
+    padding: 18px;
+    background: linear-gradient(135deg, var(--lcd-amber), var(--gold));
+    color: var(--lcd-bg);
+    border: none;
+    border-radius: 12px;
+    font-family: 'DotGothic16', monospace;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    margin-top: 8px;
+    box-shadow: 0 4px 20px rgba(255, 182, 39, 0.3);
+  }
+
+  .analyze-btn:disabled {
+    background: rgba(255,255,255,0.05);
+    color: var(--lcd-dim);
+    box-shadow: none;
+    cursor: not-allowed;
+  }
+
+  .analyze-btn:not(:disabled):active { transform: scale(0.98); }
+
+  /* ── 解析中画面 ───────────────────────── */
+  .loading {
+    text-align: center;
+    padding: 60px 20px;
+  }
+
+  .loading-display {
+    font-family: 'DotGothic16', monospace;
+    font-size: 24px;
+    color: var(--lcd-amber);
+    text-shadow: 0 0 12px rgba(255, 182, 39, 0.6);
+    margin-bottom: 16px;
+    animation: blink 1.2s infinite;
+  }
+
+  @keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  .loading-status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--lcd-dim);
+    line-height: 2;
+  }
+
+  .loading-status .done { color: var(--lcd-green); }
+  .loading-status .active { color: var(--lcd-amber); }
+
+  /* ── 結果画面 ───────────────────────── */
+  .result-header {
+    background: var(--lcd-bg);
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .result-header .venue {
+    font-family: 'DotGothic16', monospace;
+    font-size: 18px;
+    color: var(--lcd-amber);
+    margin-bottom: 4px;
+  }
+
+  .result-header .race-name {
+    font-size: 14px;
+    color: var(--paper);
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  .result-header .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--lcd-dim);
+  }
+
+  .result-header .meta span strong {
+    color: var(--lcd-amber);
+    font-weight: 500;
+  }
+
+  .timestamps {
+    background: rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-top: 10px;
+    font-size: 10px;
+    color: var(--lcd-dim);
+    line-height: 1.8;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .timestamps .arrow {
+    color: var(--lcd-amber);
+    margin: 0 6px;
+  }
+
+  /* ── 並べ替えタブ ──────────────────────── */
+  .sort-tabs {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    background: rgba(0,0,0,0.3);
+    padding: 4px;
+    border-radius: 10px;
+  }
+
+  .sort-tab {
+    flex: 1;
+    padding: 10px;
+    background: transparent;
+    color: var(--lcd-dim);
+    border: none;
+    border-radius: 7px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  .sort-tab.active {
+    background: var(--lcd-amber);
+    color: var(--lcd-bg);
+  }
+
+  /* ── 馬カード ──────────────────────────── */
+  .horse-card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 12px;
+    margin-bottom: 10px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .horse-card.trend-up {
+    border-left: 4px solid var(--lcd-blue);
+  }
+
+  .horse-card.trend-down {
+    border-left: 4px solid var(--lcd-red);
+  }
+
+  .horse-card.trend-flat {
+    border-left: 4px solid var(--lcd-dim);
+  }
+
+  .horse-row {
+    display: grid;
+    grid-template-columns: 44px 1fr auto;
+    gap: 10px;
+    padding: 12px;
+    align-items: center;
+  }
+
+  .umaban {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DotGothic16', monospace;
+    font-size: 24px;
+    font-weight: 700;
+    border: 2px solid rgba(255,255,255,0.2);
+  }
+
+  .horse-info .name {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--paper);
+    line-height: 1.2;
+    margin-bottom: 4px;
+  }
+
+  .horse-info .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--lcd-dim);
+    line-height: 1.5;
+  }
+
+  .horse-info .meta strong {
+    color: var(--paper);
+    font-weight: 500;
+  }
+
+  .odds-block {
+    text-align: right;
+    font-family: 'JetBrains Mono', monospace;
+  }
+
+  .odds-flow {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-end;
+    font-size: 13px;
+    color: var(--paper);
+    margin-bottom: 2px;
+  }
+
+  .odds-before { color: var(--lcd-dim); }
+  .odds-arrow { color: var(--lcd-amber); }
+  .odds-after { font-weight: 700; font-size: 16px; }
+
+  .odds-delta {
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .trend-up .odds-delta { color: var(--lcd-blue); }
+  .trend-down .odds-delta { color: var(--lcd-red); }
+  .trend-flat .odds-delta { color: var(--lcd-dim); }
+
+  .trend-badge {
+    display: inline-block;
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    margin-top: 4px;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .trend-up .trend-badge {
+    background: rgba(96, 165, 250, 0.2);
+    color: var(--lcd-blue);
+    border: 1px solid var(--lcd-blue);
+  }
+
+  .trend-down .trend-badge {
+    background: rgba(255, 107, 107, 0.2);
+    color: var(--lcd-red);
+    border: 1px solid var(--lcd-red);
+  }
+
+  /* ── 戻るボタン ────────────────────────── */
+  .back-btn {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--lcd-bg);
+    color: var(--lcd-amber);
+    border: 1px solid var(--lcd-amber);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+  }
+
+  /* ── 設定モーダル ──────────────────────── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.8);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--lcd-bg);
+    border: 1px solid var(--gold);
+    border-radius: 16px;
+    padding: 24px;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .modal h2 {
+    font-family: 'DotGothic16', monospace;
+    color: var(--lcd-amber);
+    margin: 0 0 16px 0;
+    font-size: 18px;
+  }
+
+  .modal label {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--lcd-dim);
+    margin-bottom: 6px;
+    letter-spacing: 0.1em;
+  }
+
+  .modal input {
+    width: 100%;
+    padding: 12px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+  }
+
+  .modal-notice {
+    font-size: 11px;
+    color: var(--lcd-dim);
+    margin: 12px 0;
+    line-height: 1.6;
+    background: rgba(255, 182, 39, 0.05);
+    border-left: 2px solid var(--lcd-amber);
+    padding: 10px 12px;
+  }
+
+  .modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+
+  .modal-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    letter-spacing: 0.05em;
+  }
+
+  .modal-btn.primary {
+    background: var(--lcd-amber);
+    color: var(--lcd-bg);
+  }
+
+  .modal-btn.secondary {
+    background: transparent;
+    color: var(--lcd-dim);
+    border: 1px solid var(--lcd-dim);
+  }
+
+  /* ── エラー表示 ─────────────────────── */
+  .error-box {
+    background: rgba(255, 107, 107, 0.1);
+    border: 1px solid var(--lcd-red);
+    border-radius: 10px;
+    padding: 14px;
+    margin-bottom: 16px;
+    font-size: 12px;
+    color: var(--lcd-red);
+    line-height: 1.6;
+  }
+
+  /* ── 注釈 ───────────────────────── */
+  .footer-note {
+    text-align: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--lcd-dim);
+    margin-top: 30px;
+    line-height: 1.8;
+    letter-spacing: 0.05em;
+  }
+</style>
+</head>
+<body>
+
+<!-- ヘッダー -->
+<header class="header">
+  <div>
+    <div class="logo">パドック_ODDS_DIFF</div>
+    <div class="logo-sub">ENDLESS FLIGHT // v0.1</div>
+  </div>
+  <button class="settings-btn" onclick="openSettings()">⚙</button>
+</header>
+
+<div class="container">
+
+  <!-- ① アップロード画面 -->
+  <div class="screen active" id="screen-upload">
+    <div class="step-label">▼ STEP 01 ── 画像をアップロード</div>
+    <h2 class="step-title">パドック前後の<br>オッズ画像を2枚アップ</h2>
+
+    <div class="upload-card" id="card-before">
+      <div class="badge">BEFORE / 周回前</div>
+      <h3>パドック周回前のオッズ</h3>
+      <div class="desc">早めの段階の画像。「○分前」の数字が大きいほうが先。</div>
+      <label class="upload-btn">
+        📷 画像を選択 / 撮影
+        <input type="file" accept="image/*" id="file-before" onchange="handleUpload(event, 'before')">
+      </label>
+      <div id="preview-before"></div>
+    </div>
+
+    <div class="upload-card" id="card-after">
+      <div class="badge">AFTER / 周回後</div>
+      <h3>パドック周回後のオッズ</h3>
+      <div class="desc">発走直前の画像。「○分前」の数字が小さいほうが後。</div>
+      <label class="upload-btn">
+        📷 画像を選択 / 撮影
+        <input type="file" accept="image/*" id="file-after" onchange="handleUpload(event, 'after')">
+      </label>
+      <div id="preview-after"></div>
+    </div>
+
+    <div id="error-box"></div>
+
+    <button class="analyze-btn" id="analyze-btn" disabled onclick="analyze()">
+      ▶ 解析する
+    </button>
+
+    <div class="footer-note">
+      画像はGEMINI APIで解析されます<br>
+      APIキーは端末のみに保存・外部送信されません
+    </div>
+  </div>
+
+  <!-- ② 解析中画面 -->
+  <div class="screen" id="screen-loading">
+    <div class="loading">
+      <div class="loading-display" id="loading-text">ANALYZING...</div>
+      <div class="loading-status" id="loading-status">
+        <div id="status-before">○ 周回前画像をOCR中...</div>
+        <div id="status-after">○ 周回後画像をOCR中...</div>
+        <div id="status-merge">○ 差分突合中...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ③ 結果画面 -->
+  <div class="screen" id="screen-result">
+    <div class="result-header" id="result-header"></div>
+
+    <div class="sort-tabs">
+      <button class="sort-tab active" onclick="setSort('umaban', event)">馬番順</button>
+      <button class="sort-tab" onclick="setSort('change', event)">変動率順</button>
+    </div>
+
+    <div id="horse-list"></div>
+
+    <button class="back-btn" onclick="resetToUpload()">← 戻る</button>
+  </div>
+
+</div>
+
+<!-- 設定モーダル -->
+<div class="modal-overlay" id="settings-modal">
+  <div class="modal">
+    <h2>⚙ 設定</h2>
+    <label>GEMINI API KEY</label>
+    <input type="password" id="api-key-input" placeholder="AIza...">
+    <div class="modal-notice">
+      🔒 APIキーはこの端末のlocalStorageにのみ保存されます。Google AI Studio (aistudio.google.com) で無料取得できます。
+    </div>
+    <div class="modal-actions">
+      <button class="modal-btn secondary" onclick="closeSettings()">キャンセル</button>
+      <button class="modal-btn primary" onclick="saveSettings()">保存</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────
+// 状態管理
+// ─────────────────────────────────────
+const state = {
+  beforeImage: null,   // { dataUrl, base64, mimeType }
+  afterImage: null,
+  beforeResult: null,  // Gemini解析結果
+  afterResult: null,
+  merged: [],          // 突合後データ
+  analyzedAt: null,    // 解析実行時刻
+  sortMode: 'umaban'
+};
+
+// ─────────────────────────────────────
+// 初期化
+// ─────────────────────────────────────
+window.addEventListener('DOMContentLoaded', () => {
+  // 初回起動時にAPIキーがなければ設定モーダルを開く
+  if (!localStorage.getItem('gemini_api_key')) {
+    openSettings();
+  }
+});
+
+// ─────────────────────────────────────
+// 設定モーダル
+// ─────────────────────────────────────
+function openSettings() {
+  const modal = document.getElementById('settings-modal');
+  document.getElementById('api-key-input').value = localStorage.getItem('gemini_api_key') || '';
+  modal.classList.add('active');
+}
+
+function closeSettings() {
+  document.getElementById('settings-modal').classList.remove('active');
+}
+
+function saveSettings() {
+  const key = document.getElementById('api-key-input').value.trim();
+  if (!key) {
+    alert('APIキーを入力してください');
+    return;
+  }
+  localStorage.setItem('gemini_api_key', key);
+  closeSettings();
+}
+
+// ─────────────────────────────────────
+// 画像アップロード処理
+// ─────────────────────────────────────
+async function handleUpload(event, type) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  // 画像をリサイズ＆base64化
+  const { dataUrl, base64, mimeType } = await resizeImage(file, 1600);
+
+  state[type + 'Image'] = { dataUrl, base64, mimeType };
+
+  // プレビュー
+  const preview = document.getElementById('preview-' + type);
+  preview.innerHTML = `
+    <div class="preview">
+      <button class="preview-clear" onclick="clearImage('${type}')">✕</button>
+      <img src="${dataUrl}">
+    </div>
+  `;
+
+  // カードのスタイル更新
+  document.getElementById('card-' + type).classList.add('filled');
+
+  // 解析ボタン活性化チェック
+  updateAnalyzeButton();
+}
+
+function clearImage(type) {
+  state[type + 'Image'] = null;
+  document.getElementById('preview-' + type).innerHTML = '';
+  document.getElementById('card-' + type).classList.remove('filled');
+  document.getElementById('file-' + type).value = '';
+  updateAnalyzeButton();
+}
+
+function updateAnalyzeButton() {
+  const btn = document.getElementById('analyze-btn');
+  btn.disabled = !(state.beforeImage && state.afterImage);
+}
+
+// 画像リサイズ（長辺を指定サイズに、JPEG変換）
+function resizeImage(file, maxSize) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        let { width, height } = img;
+
+        if (width > height) {
+          if (width > maxSize) {
+            height = Math.round(height * maxSize / width);
+            width = maxSize;
+          }
+        } else {
+          if (height > maxSize) {
+            width = Math.round(width * maxSize / height);
+            height = maxSize;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+
+        const dataUrl = canvas.toDataURL('image/jpeg', 0.9);
+        const base64 = dataUrl.split(',')[1];
+        resolve({ dataUrl, base64, mimeType: 'image/jpeg' });
+      };
+      img.onerror = reject;
+      img.src = e.target.result;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+// ─────────────────────────────────────
+// Gemini API呼び出し
+// ─────────────────────────────────────
+const GEMINI_PROMPT = `あなたはJRA場内ターフビジョン（または同等のオッズ表示画面）の画像を読み取るOCRです。
+画像から以下の情報をJSONで返してください。推測は禁止、読めない箇所はnullに。
+
+返却フォーマット:
+{
+  "race_venue": "東京10R",
+  "race_name": "青竜ステークス",
+  "race_condition": "ダート・左1600m",
+  "track_condition": "良",
+  "post_time": "15:05",
+  "minutes_before": 25,
+  "horses": [
+    {
+      "umaban": 1,
+      "waku": 1,
+      "horse_name": "サンライズケヴィン",
+      "weight": 494,
+      "weight_diff": 4,
+      "win_odds": 20.1,
+      "place_odds_min": 3.8,
+      "place_odds_max": 6.5,
+      "jockey": "松若 風馬",
+      "kinryo": 57.0
+    }
+  ]
+}
+
+注意事項:
+- weight_diff は +を正、-を負、±0は0として整数で
+- 馬番(umaban)は整数、枠(waku)も整数(1〜8)
+- 枠番は左端の背景色から判定: 1=白, 2=黒, 3=赤, 4=青, 5=黄, 6=緑, 7=橙, 8=桃
+- 馬名・騎手名はカタカナ・漢字を忠実に
+- 単勝オッズ(win_odds)は小数
+- 複勝は "3.8-6.5" を分解してmin/maxへ
+- minutes_before は「○分前」の数字
+- JSONのみ返却。コードブロック・説明文・前置きは禁止`;
+
+async function callGemini(base64Image, mimeType) {
+  const apiKey = localStorage.getItem('gemini_api_key');
+  if (!apiKey) throw new Error('APIキーが設定されていません');
+
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+  const body = {
+    contents: [{
+      parts: [
+        { text: GEMINI_PROMPT },
+        { inline_data: { mime_type: mimeType, data: base64Image } }
+      ]
+    }],
+    generationConfig: {
+      response_mime_type: "application/json",
+      temperature: 0.1
+    }
+  };
+
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  });
+
+  if (!response.ok) {
+    const errText = await response.text();
+    throw new Error(`Gemini API エラー: ${response.status} - ${errText}`);
+  }
+
+  const data = await response.json();
+  const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+  if (!text) throw new Error('Geminiから応答が得られませんでした');
+
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error('JSONパースエラー: ' + text.substring(0, 200));
+  }
+}
+
+// ─────────────────────────────────────
+// メイン解析処理
+// ─────────────────────────────────────
+async function analyze() {
+  if (!localStorage.getItem('gemini_api_key')) {
+    showError('Gemini APIキーが設定されていません。右上の⚙から設定してください。');
+    openSettings();
+    return;
+  }
+
+  clearError();
+  switchScreen('loading');
+
+  try {
+    // 周回前
+    setStatus('before', 'active', '▶ 周回前画像を解析中...');
+    state.beforeResult = await callGemini(state.beforeImage.base64, state.beforeImage.mimeType);
+    setStatus('before', 'done', '✓ 周回前画像 解析完了');
+
+    // 周回後
+    setStatus('after', 'active', '▶ 周回後画像を解析中...');
+    state.afterResult = await callGemini(state.afterImage.base64, state.afterImage.mimeType);
+    setStatus('after', 'done', '✓ 周回後画像 解析完了');
+
+    // 突合
+    setStatus('merge', 'active', '▶ 差分を計算中...');
+    state.merged = mergeResults(state.beforeResult, state.afterResult);
+    state.analyzedAt = new Date();
+    setStatus('merge', 'done', '✓ 完了');
+
+    // 周回前後を minutes_before で自動入れ替え
+    autoOrientResults();
+
+    await new Promise(r => setTimeout(r, 400));
+    renderResult();
+    switchScreen('result');
+
+  } catch (err) {
+    console.error(err);
+    switchScreen('upload');
+    showError('解析エラー: ' + err.message);
+  }
+}
+
+// minutes_before が大きい方をbefore、小さい方をafterとする
+function autoOrientResults() {
+  const b = state.beforeResult?.minutes_before;
+  const a = state.afterResult?.minutes_before;
+  if (b != null && a != null && b < a) {
+    // 入れ替え
+    [state.beforeResult, state.afterResult] = [state.afterResult, state.beforeResult];
+    [state.beforeImage, state.afterImage] = [state.afterImage, state.beforeImage];
+    state.merged = mergeResults(state.beforeResult, state.afterResult);
+  }
+}
+
+function setStatus(key, cls, text) {
+  const el = document.getElementById('status-' + key);
+  el.className = cls;
+  el.textContent = text;
+}
+
+// ─────────────────────────────────────
+// 結果突合
+// ─────────────────────────────────────
+function mergeResults(before, after) {
+  const beforeHorses = before.horses || [];
+  const afterHorses = after.horses || [];
+
+  return beforeHorses.map(b => {
+    const a = afterHorses.find(h => h.umaban === b.umaban);
+    const oddsBefore = b.win_odds;
+    const oddsAfter = a?.win_odds;
+
+    let delta = null, deltaPct = null, trend = 'missing';
+    if (oddsBefore != null && oddsAfter != null) {
+      delta = +(oddsAfter - oddsBefore).toFixed(2);
+      deltaPct = +((delta / oddsBefore) * 100).toFixed(1);
+      if (Math.abs(delta) < 0.05) trend = 'flat';
+      else if (delta < 0) trend = 'up';  // オッズ下落 = 人気上昇
+      else trend = 'down';
+    }
+
+    return {
+      umaban: b.umaban,
+      waku: a?.waku ?? b.waku,
+      horse_name: a?.horse_name || b.horse_name,
+      jockey: a?.jockey || b.jockey,
+      weight: a?.weight ?? b.weight,
+      weight_diff: a?.weight_diff ?? b.weight_diff,
+      kinryo: a?.kinryo ?? b.kinryo,
+      odds_before: oddsBefore,
+      odds_after: oddsAfter,
+      delta,
+      deltaPct,
+      trend
+    };
+  }).sort((x, y) => x.umaban - y.umaban);
+}
+
+// ─────────────────────────────────────
+// 結果描画
+// ─────────────────────────────────────
+function renderResult() {
+  const before = state.beforeResult;
+  const after = state.afterResult;
+  const analyzedAtStr = formatTime(state.analyzedAt);
+
+  // ヘッダー
+  const header = document.getElementById('result-header');
+  header.innerHTML = `
+    <div class="venue">${before.race_venue || '会場不明'}</div>
+    <div class="race-name">${before.race_name || ''} ${before.race_condition ? '— ' + before.race_condition : ''}</div>
+    <div class="meta">
+      ${before.post_time ? `<span>発走 <strong>${before.post_time}</strong></span>` : ''}
+      ${before.track_condition ? `<span>馬場 <strong>${before.track_condition}</strong></span>` : ''}
+      <span>頭数 <strong>${state.merged.length}</strong></span>
+    </div>
+    <div class="timestamps">
+      BEFORE: 発走 ${before.minutes_before ?? '?'} 分前 <span class="arrow">→</span> AFTER: 発走 ${after.minutes_before ?? '?'} 分前<br>
+      解析実行: ${analyzedAtStr}
+    </div>
+  `;
+
+  // 馬リスト
+  renderHorseList();
+}
+
+function renderHorseList() {
+  const list = document.getElementById('horse-list');
+  let horses = [...state.merged];
+
+  if (state.sortMode === 'change') {
+    horses.sort((a, b) => {
+      const aPct = a.deltaPct == null ? 0 : Math.abs(a.deltaPct);
+      const bPct = b.deltaPct == null ? 0 : Math.abs(b.deltaPct);
+      return bPct - aPct;
+    });
+  } else {
+    horses.sort((a, b) => a.umaban - b.umaban);
+  }
+
+  list.innerHTML = horses.map(h => {
+    const wakuColor = `var(--waku-${h.waku || 1})`;
+    const wakuText = `var(--waku-${h.waku || 1}-text)`;
+    const weightDiffStr = formatWeightDiff(h.weight_diff);
+    const oddsBeforeStr = h.odds_before != null ? h.odds_before.toFixed(1) : '—';
+    const oddsAfterStr = h.odds_after != null ? h.odds_after.toFixed(1) : '—';
+    const deltaStr = h.delta != null ? (h.delta > 0 ? '+' : '') + h.delta.toFixed(1) : '—';
+    const deltaPctStr = h.deltaPct != null ? `(${h.deltaPct > 0 ? '+' : ''}${h.deltaPct.toFixed(1)}%)` : '';
+
+    let badge = '';
+    if (h.trend === 'up' && Math.abs(h.deltaPct) >= 10) badge = '<span class="trend-badge">🔥 人気急上昇</span>';
+    else if (h.trend === 'up') badge = '<span class="trend-badge">▲ 人気上昇</span>';
+    else if (h.trend === 'down' && Math.abs(h.deltaPct) >= 10) badge = '<span class="trend-badge">⚠ 人気急落</span>';
+    else if (h.trend === 'down') badge = '<span class="trend-badge">▼ 人気下落</span>';
+
+    return `
+      <div class="horse-card trend-${h.trend}">
+        <div class="horse-row">
+          <div class="umaban" style="background: ${wakuColor}; color: ${wakuText};">${h.umaban}</div>
+          <div class="horse-info">
+            <div class="name">${h.horse_name || '?'}</div>
+            <div class="meta">
+              ${h.jockey || '?'} ${h.kinryo ? '/ ' + h.kinryo : ''}<br>
+              <strong>${h.weight ?? '?'}kg</strong> ${weightDiffStr}
+            </div>
+            ${badge}
+          </div>
+          <div class="odds-block">
+            <div class="odds-flow">
+              <span class="odds-before">${oddsBeforeStr}</span>
+              <span class="odds-arrow">→</span>
+              <span class="odds-after">${oddsAfterStr}</span>
+            </div>
+            <div class="odds-delta">${deltaStr} ${deltaPctStr}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatWeightDiff(d) {
+  if (d == null) return '';
+  if (d === 0) return '(±0)';
+  return `(${d > 0 ? '+' : ''}${d})`;
+}
+
+function formatTime(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+  return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+}
+
+// ─────────────────────────────────────
+// 画面切替
+// ─────────────────────────────────────
+function switchScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + name).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function resetToUpload() {
+  switchScreen('upload');
+}
+
+function setSort(mode, event) {
+  state.sortMode = mode;
+  document.querySelectorAll('.sort-tab').forEach(t => t.classList.remove('active'));
+  event.target.classList.add('active');
+  renderHorseList();
+}
+
+// ─────────────────────────────────────
+// エラー表示
+// ─────────────────────────────────────
+function showError(msg) {
+  const box = document.getElementById('error-box');
+  box.innerHTML = `<div class="error-box">⚠ ${msg}</div>`;
+}
+
+function clearError() {
+  document.getElementById('error-box').innerHTML = '';
+}
+
+</script>
+</body>
+</html>
