@@ -112,11 +112,16 @@ color: var(–lcd-amber);
 width: 36px;
 height: 36px;
 border-radius: 50%;
-font-size: 18px;
+font-size: 16px;
 cursor: pointer;
 display: flex;
 align-items: center;
 justify-content: center;
+}
+
+.header-actions {
+display: flex;
+gap: 8px;
 }
 
 /* ── メインコンテナ ─────────────────────────── */
@@ -591,6 +596,112 @@ overflow-y: auto;
 line-height: 1.5;
 }
 
+/* ── 履歴一覧 ──────────────────────── */
+.history-item {
+background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.01));
+border: 1px solid rgba(255,255,255,0.08);
+border-radius: 12px;
+padding: 14px;
+margin-bottom: 10px;
+cursor: pointer;
+position: relative;
+transition: transform 0.1s;
+}
+
+.history-item:active { transform: scale(0.98); }
+
+.history-item .venue {
+font-family: ‘DotGothic16’, monospace;
+color: var(–lcd-amber);
+font-size: 15px;
+margin-bottom: 2px;
+}
+
+.history-item .race-name {
+font-size: 13px;
+font-weight: 700;
+color: var(–paper);
+margin-bottom: 6px;
+}
+
+.history-item .analyzed-at {
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+color: var(–lcd-dim);
+margin-bottom: 8px;
+}
+
+.history-item .summary {
+display: flex;
+gap: 8px;
+flex-wrap: wrap;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 10px;
+}
+
+.history-item .summary span {
+background: rgba(0,0,0,0.3);
+padding: 4px 8px;
+border-radius: 5px;
+color: var(–lcd-dim);
+}
+
+.history-item .summary .top-up {
+color: var(–lcd-blue);
+border: 1px solid rgba(96, 165, 250, 0.3);
+}
+
+.history-item .summary .top-down {
+color: var(–lcd-red);
+border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.history-item .delete-btn {
+position: absolute;
+top: 10px;
+right: 10px;
+background: transparent;
+border: 1px solid var(–lcd-dim);
+color: var(–lcd-dim);
+width: 28px;
+height: 28px;
+border-radius: 50%;
+font-size: 11px;
+cursor: pointer;
+}
+
+.history-item .delete-btn:hover {
+color: var(–lcd-red);
+border-color: var(–lcd-red);
+}
+
+.history-empty {
+text-align: center;
+padding: 60px 20px;
+font-family: ‘JetBrains Mono’, monospace;
+color: var(–lcd-dim);
+font-size: 12px;
+line-height: 2;
+}
+
+.history-actions {
+margin-top: 20px;
+margin-bottom: 80px;
+}
+
+/* 結果画面で「履歴として保存済み」表示 */
+.saved-indicator {
+display: inline-block;
+font-family: ‘JetBrains Mono’, monospace;
+font-size: 9px;
+background: rgba(74, 222, 128, 0.15);
+color: var(–lcd-green);
+border: 1px solid var(–lcd-green);
+padding: 2px 6px;
+border-radius: 4px;
+margin-left: 8px;
+}
+
 /* ── 設定モーダル ──────────────────────── */
 .modal-overlay {
 position: fixed;
@@ -714,9 +825,12 @@ letter-spacing: 0.05em;
 <header class="header">
   <div>
     <div class="logo">パドック_ODDS_DIFF</div>
-    <div class="logo-sub">ENDLESS FLIGHT // v0.1</div>
+    <div class="logo-sub">ENDLESS FLIGHT // v0.2</div>
   </div>
-  <button class="settings-btn" onclick="openSettings()">⚙</button>
+  <div class="header-actions">
+    <button class="settings-btn" onclick="openHistory()" title="履歴">📋</button>
+    <button class="settings-btn" onclick="openSettings()" title="設定">⚙</button>
+  </div>
 </header>
 
 <div class="container">
@@ -775,6 +889,24 @@ letter-spacing: 0.05em;
         <div id="status-merge">○ 差分突合中...</div>
       </div>
     </div>
+  </div>
+
+  <!-- ④ 履歴画面 -->
+
+  <div class="screen" id="screen-history">
+    <div class="step-label">▼ HISTORY ── 解析履歴</div>
+    <h2 class="step-title">過去の解析結果<br><span style="font-size:13px; color:var(--lcd-dim); font-family: 'JetBrains Mono', monospace;">直近20件まで自動保存</span></h2>
+
+```
+<div id="history-list"></div>
+
+<div class="history-actions" id="history-actions" style="display:none;">
+  <button class="modal-btn secondary" onclick="clearAllHistory()" style="width:100%;">🗑 全履歴を削除</button>
+</div>
+
+<button class="back-btn" onclick="resetToUpload()">← 戻る</button>
+```
+
   </div>
 
   <!-- ③ 結果画面 -->
@@ -851,7 +983,8 @@ const state = {
   afterResult: null,
   merged: [],          // 突合後データ
   analyzedAt: null,    // 解析実行時刻
-  sortMode: 'umaban'
+  sortMode: 'umaban',
+  currentHistoryId: null  // 履歴から読み込んだ場合のID
 };
 
 // ─────────────────────────────────────
@@ -863,6 +996,180 @@ window.addEventListener('DOMContentLoaded', () => {
     openSettings();
   }
 });
+
+// ─────────────────────────────────────
+// 履歴管理 (localStorage)
+// ─────────────────────────────────────
+const HISTORY_KEY = 'paddock_odds_history';
+const MAX_HISTORY = 20;
+
+function loadHistory() {
+  try {
+    const raw = localStorage.getItem(HISTORY_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.error('履歴読込エラー:', e);
+    return [];
+  }
+}
+
+function saveHistory(historyArr) {
+  try {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(historyArr));
+    return true;
+  } catch (e) {
+    // 容量オーバー時は古い半分を削除して再試行
+    if (e.name === 'QuotaExceededError') {
+      const trimmed = historyArr.slice(0, Math.floor(historyArr.length / 2));
+      try {
+        localStorage.setItem(HISTORY_KEY, JSON.stringify(trimmed));
+        return true;
+      } catch (e2) {
+        return false;
+      }
+    }
+    return false;
+  }
+}
+
+// 現在の解析結果を履歴に追加
+function addToHistory() {
+  if (!state.beforeResult || !state.afterResult) return;
+
+  const history = loadHistory();
+  const id = 'h_' + Date.now();
+
+  const entry = {
+    id,
+    analyzedAt: state.analyzedAt.toISOString(),
+    raceVenue: state.beforeResult.race_venue || '',
+    raceName: state.beforeResult.race_name || '',
+    raceCondition: state.beforeResult.race_condition || '',
+    trackCondition: state.beforeResult.track_condition || '',
+    postTime: state.beforeResult.post_time || '',
+    beforeResult: state.beforeResult,
+    afterResult: state.afterResult,
+    merged: state.merged
+  };
+
+  // 重複チェック: 同じレースを直近1時間以内に解析してた場合は上書き
+  const oneHourAgo = Date.now() - 3600 * 1000;
+  const dupIndex = history.findIndex(h =>
+    h.raceVenue === entry.raceVenue &&
+    h.raceName === entry.raceName &&
+    new Date(h.analyzedAt).getTime() > oneHourAgo
+  );
+
+  if (dupIndex >= 0) {
+    history[dupIndex] = entry;
+  } else {
+    history.unshift(entry); // 先頭に追加
+  }
+
+  // 上限調整
+  const trimmed = history.slice(0, MAX_HISTORY);
+  saveHistory(trimmed);
+  state.currentHistoryId = id;
+}
+
+// 履歴から1件読込
+function loadHistoryEntry(id) {
+  const history = loadHistory();
+  const entry = history.find(h => h.id === id);
+  if (!entry) return false;
+
+  state.beforeResult = entry.beforeResult;
+  state.afterResult = entry.afterResult;
+  state.merged = entry.merged;
+  state.analyzedAt = new Date(entry.analyzedAt);
+  state.currentHistoryId = id;
+
+  renderResult();
+  switchScreen('result');
+  return true;
+}
+
+// 履歴1件削除
+function deleteHistoryEntry(id, event) {
+  if (event) event.stopPropagation();
+  if (!confirm('この履歴を削除しますか?')) return;
+  const history = loadHistory().filter(h => h.id !== id);
+  saveHistory(history);
+  renderHistoryList();
+}
+
+// 全履歴削除
+function clearAllHistory() {
+  if (!confirm('⚠ すべての履歴を削除します。よろしいですか?')) return;
+  localStorage.removeItem(HISTORY_KEY);
+  renderHistoryList();
+}
+
+// 履歴画面を開く
+function openHistory() {
+  renderHistoryList();
+  switchScreen('history');
+}
+
+// 履歴一覧を描画
+function renderHistoryList() {
+  const history = loadHistory();
+  const list = document.getElementById('history-list');
+  const actions = document.getElementById('history-actions');
+
+  if (history.length === 0) {
+    list.innerHTML = `
+      <div class="history-empty">
+        まだ解析履歴がありません<br>
+        画像をアップして解析すると<br>
+        ここに自動保存されます
+      </div>
+    `;
+    actions.style.display = 'none';
+    return;
+  }
+
+  actions.style.display = 'block';
+
+  list.innerHTML = history.map(h => {
+    const date = new Date(h.analyzedAt);
+    const dateStr = formatTimeShort(date);
+    const merged = h.merged || [];
+
+    // 最も人気上昇/下落した馬を表示
+    const sorted = [...merged].filter(m => m.deltaPct != null && !m.suspicious);
+    sorted.sort((a, b) => a.deltaPct - b.deltaPct);
+    const topUp = sorted[0];
+    const topDown = sorted[sorted.length - 1];
+
+    let summary = '';
+    if (topUp && topUp.deltaPct < 0) {
+      summary += `<span class="top-up">▲ ${topUp.umaban}番 ${topUp.horse_name || '?'} (${topUp.deltaPct.toFixed(1)}%)</span>`;
+    }
+    if (topDown && topDown.deltaPct > 0 && topDown.umaban !== topUp?.umaban) {
+      summary += `<span class="top-down">▼ ${topDown.umaban}番 ${topDown.horse_name || '?'} (+${topDown.deltaPct.toFixed(1)}%)</span>`;
+    }
+    summary += `<span>${merged.length}頭</span>`;
+
+    return `
+      <div class="history-item" onclick="loadHistoryEntry('${h.id}')">
+        <button class="delete-btn" onclick="deleteHistoryEntry('${h.id}', event)">✕</button>
+        <div class="venue">${h.raceVenue || '会場不明'}</div>
+        <div class="race-name">${h.raceName || ''} ${h.raceCondition ? '— ' + h.raceCondition : ''}</div>
+        <div class="analyzed-at">解析: ${dateStr}</div>
+        <div class="summary">${summary}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+function formatTimeShort(date) {
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  const hh = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  return `${m}/${d} ${hh}:${mm}`;
+}
 
 // ─────────────────────────────────────
 // 設定モーダル
@@ -1188,6 +1495,10 @@ async function analyze() {
     autoOrientResults();
 
     await new Promise(r => setTimeout(r, 400));
+
+    // 履歴に自動保存
+    addToHistory();
+
     renderResult();
     switchScreen('result');
 
@@ -1266,11 +1577,12 @@ function renderResult() {
   const before = state.beforeResult;
   const after = state.afterResult;
   const analyzedAtStr = formatTime(state.analyzedAt);
+  const savedBadge = state.currentHistoryId ? '<span class="saved-indicator">✓ 履歴保存済</span>' : '';
 
   // ヘッダー
   const header = document.getElementById('result-header');
   header.innerHTML = `
-    <div class="venue">${before.race_venue || '会場不明'}</div>
+    <div class="venue">${before.race_venue || '会場不明'}${savedBadge}</div>
     <div class="race-name">${before.race_name || ''} ${before.race_condition ? '— ' + before.race_condition : ''}</div>
     <div class="meta">
       ${before.post_time ? `<span>発走 <strong>${before.post_time}</strong></span>` : ''}
@@ -1370,6 +1682,7 @@ function switchScreen(name) {
 }
 
 function resetToUpload() {
+  state.currentHistoryId = null;
   switchScreen('upload');
 }
 
